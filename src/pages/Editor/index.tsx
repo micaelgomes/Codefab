@@ -1,14 +1,8 @@
 import React from "react";
 
-import CodeMirror from "@uiw/react-codemirror";
-import "codemirror/addon/display/autorefresh";
-import "codemirror/addon/comment/comment";
-import "codemirror/addon/edit/matchbrackets";
-import "codemirror/addon/lint/lint";
-import "codemirror/keymap/sublime";
-import "codemirror/theme/monokai.css";
-
 import * as S from "./styled";
+import Navbar from "../../components/Navbar";
+import Sidenav from "../../components/Sidenav";
 
 const code = `
 <?xml version="1.0"?>
@@ -30,16 +24,22 @@ const code = `
 const Editor: React.FC = () => {
   return (
     <S.Container>
-      <CodeMirror
-        value={code}
-        options={{
-          theme: "monokai",
-          tabSize: 2,
-          keyMap: "sublime",
-          mode: "xml",
-          renderLine: true,
-        }}
-      />
+      <Navbar />
+
+      <S.Content>
+        <Sidenav />
+
+        <S.Playground
+          value={code}
+          options={{
+            theme: "monokai",
+            tabSize: 2,
+            keyMap: "sublime",
+            mode: "xml",
+            renderLine: true,
+          }}
+        />
+      </S.Content>
     </S.Container>
   );
 };
