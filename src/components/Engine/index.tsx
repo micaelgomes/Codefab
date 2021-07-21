@@ -1,78 +1,37 @@
-import React, { useEffect, useRef } from "react";
-import { Stage, Layer, Text, Sprite } from "react-konva";
-// import Konva from "konva";
-
+import React from "react";
+import { useState, useEffect } from "react";
+import { Stage, Layer, Text, Image } from "react-konva";
 import useImage from "use-image";
-import pathSprite from "./assets/run.png";
-import pathSpriteAttack from "./assets/attack.png";
-
-const animations = {
-  run: [
-    0,
-    0,
-    135,
-    135,
-    270,
-    0,
-    135,
-    135,
-    405,
-    0,
-    135,
-    135,
-    540,
-    0,
-    135,
-    135,
-    675,
-    0,
-    135,
-    135,
-  ],
-};
+import { SceneDTO, useEngine } from "../../hooks/engine";
 
 const Engine = () => {
-  const [sprite] = useImage(pathSprite);
-  const [attack] = useImage(pathSpriteAttack);
+  const { scenes, sceneIndex } = useEngine();
+  const [render, setRender] = useState<SceneDTO>({} as SceneDTO);
+  const [background] = useImage(`/${scenes?.[sceneIndex].background}`);
+  const [start, setStart] = useState<boolean>(false);
 
-  const spriteRef = useRef<any>(null);
-  const attackRef = useRef<any>(null);
+  const [propsScreen] = useState({
+    with: 500,
+    height: 500
+  })
 
   useEffect(() => {
-    if (spriteRef.current) {
-      spriteRef.current.start();
-      attackRef.current.start();
+    const renderScene = {
+      background,
+      sound: scenes?.[sceneIndex].sound,
+      title: scenes?.[sceneIndex].title,
     }
-  }, [spriteRef]);
+
+    setRender(renderScene);
+    setStart(true);
+  }, [background, sceneIndex, scenes]);
 
   return (
-    <Stage width={window.innerWidth - 16} height={window.innerHeight - 16}>
+    <Stage width={propsScreen.with} height={propsScreen.height}>
       <Layer>
-        <Text text="Runnig..." />
-        {/* 
-        <Sprite
-          key="sprite"
-          image={sprite}
-          ref={spriteRef}
-          animation="run"
-          frameRate={10}
-          frameIndex={0}
-          animations={animations}
-          x={0}
-          y={0}
-        />
-
-        <Sprite
-          key="atack"
-          image={attack}
-          ref={attackRef}
-          animation="run"
-          frameRate={10}
-          frameIndex={0}
-          animations={animations}
-          x={0}
-          y={200}
-        /> */}
+        {start && (<Text x={180} y={230} fontStyle="bold" fontFamily="Helvetica, sans-serif" fontSize={24} text={"Run Preview!"} />)}
+        {render.background && (<Image width={500} height={500} image={render.background} />)}
+        {render.title && (<Text x={50} y={50} fontSize={24} fontFamily="Press Start 2P" text={render.title} />)}
       </Layer>
     </Stage>
   );

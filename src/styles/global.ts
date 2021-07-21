@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import "typeface-press-start-2p";
 
 export default createGlobalStyle`
   * {

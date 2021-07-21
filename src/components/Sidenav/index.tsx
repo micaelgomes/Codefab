@@ -1,11 +1,15 @@
 import React from "react";
 
 import * as S from "./styled";
+import { useEffect } from "react";
+
 
 const Sidenav: React.FC = () => {
+  useEffect(() => {}, []);
+
   return (
     <S.Container>
-      <h1>Sidenav</h1>
+      <p style={{margin: 16}}>Sidenav</p>
     </S.Container>
   );
 };

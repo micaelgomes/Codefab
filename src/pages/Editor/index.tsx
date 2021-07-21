@@ -1,36 +1,49 @@
-import React from "react";
+import React, { useRef } from "react";
+import ReactCodemirror from "@uiw/react-codemirror";
+import XMLParser from "react-xml-parser";
 
 import * as S from "./styled";
 import Navbar from "../../components/Navbar";
 import Sidenav from "../../components/Sidenav";
 
-const code = `
-<?xml version="1.0"?>
-<!DOCTYPE smil PUBLIC "-//W3C//DTD SMIL 2.0//EN" "http://www.w3.org/2001/SMIL20/SMIL20.dtd">
-<smil xmlns="http://www.w3.org/2001/SMIL20/Language">
-  <head>
-  </head>
-  <body>
-    <img src="dart.jpeg" alt="Dart pai" dur="10s"/>
-    <img src="leia.jpeg" alt="Leia sorrindo" dur="7s"/>
-    <par>
-      <img src="luke.jpeg" alt="Luke bolado" dur="5s"/>
-      <video src="video.mp4" dur="2s"/>
-    </par>
-  </body>
-</smil>
-`;
+import { useEngine } from "../../hooks/engine";
+
+const code = `<fable>
+  <scene background="bg.png">
+
+    <agent name="caixa" img="box.png" x="200" y="200" width="120" height="120" intial-state="fechada">
+
+      <state id="fechada" on-touch="aberta" />
+
+      <state id="aberta" on-transition="fade-out" on-change="img:box_open.png"/>
+
+    </agent>
+  </scene>
+</fable>`;
 
 const Editor: React.FC = () => {
+  const inputRef = useRef<ReactCodemirror>(null);
+  const { createFable } = useEngine();
+
+  const parseXmlCode = () => {
+    const smilDom = new XMLParser().parseFromString(
+      inputRef.current?.editor?.getValue()
+    );
+
+    console.log('-- smilDOm --', smilDom);
+    createFable(smilDom);
+  };
+
   return (
     <S.Container>
-      <Navbar />
+      <Navbar runPreview={parseXmlCode} />
 
       <S.Content>
         <Sidenav />
 
         <S.Playground
           value={code}
+          ref={inputRef}
           options={{
             theme: "monokai",
             tabSize: 2,
