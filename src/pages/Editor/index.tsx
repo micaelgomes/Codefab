@@ -1,12 +1,12 @@
-import React, { useRef } from "react";
-import ReactCodemirror from "@uiw/react-codemirror";
-import XMLParser from "react-xml-parser";
+import React, { useRef } from 'react';
+import ReactCodemirror from '@uiw/react-codemirror';
+import XMLParser from 'react-xml-parser';
 
-import * as S from "./styled";
-import Navbar from "../../components/Navbar";
-import Sidenav from "../../components/Sidenav";
+import * as S from './styled';
+import Navbar from '../../components/Navbar';
+import Sidenav from '../../components/Sidenav';
 
-import { useEngine } from "../../hooks/engine";
+import { useEngine } from '../../hooks/engine';
 
 const code = `<fable>
   <scene background="bg.png">
@@ -27,10 +27,9 @@ const Editor: React.FC = () => {
 
   const parseXmlCode = () => {
     const smilDom = new XMLParser().parseFromString(
-      inputRef.current?.editor?.getValue()
+      inputRef.current?.editor?.getValue(),
     );
 
-    console.log('-- smilDOm --', smilDom);
     createFable(smilDom);
   };
 
@@ -45,10 +44,10 @@ const Editor: React.FC = () => {
           value={code}
           ref={inputRef}
           options={{
-            theme: "monokai",
+            theme: 'monokai',
             tabSize: 2,
-            keyMap: "sublime",
-            mode: "xml",
+            keyMap: 'sublime',
+            mode: 'xml',
             renderLine: true,
           }}
         />
