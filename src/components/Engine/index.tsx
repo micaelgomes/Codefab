@@ -59,10 +59,10 @@ const Engine = () => {
           <Image
             key={i}
             image={agentImage}
-            height={100}
-            width={100}
-            x={100}
-            y={100}
+            height={Number(agent.attributes.height)}
+            width={Number(agent.attributes.width)}
+            x={Number(agent.attributes.x)}
+            y={Number(agent.attributes.y)}
           />
         ))}
       </Layer>
