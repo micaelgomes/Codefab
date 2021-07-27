@@ -29,10 +29,14 @@ const EngineProvider: React.FC = ({ children }) => {
 
   const createFable = (smilDom: any) => {
     const newScenes = smilDom?.children.map((scene: any) => scene?.attributes);
-    const agentsScenes = smilDom?.children.map((scene: any) => ({
-      attributes: scene?.children?.[0]?.attributes,
-      states: scene?.children?.[0]?.children,
-    }));
+    const agentsScenes = smilDom?.children.map((scene: any, i: number) =>
+      scene?.children?.map((agent: any) => ({
+        attributes: agent?.attributes,
+        states: agent?.children,
+      })),
+    );
+
+    console.log(agentsScenes);
 
     setScenes(newScenes);
     setAgents(agentsScenes);

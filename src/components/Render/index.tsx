@@ -2,16 +2,16 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Stage, Layer, Text, Image } from 'react-konva';
 import useImage from 'use-image';
-import { SceneDTO, useEngine } from '../../hooks/engine';
+import { useEngine } from '../../hooks/engine';
 // import Agent from '../Agent';
 
-const Engine = () => {
+const Render = () => {
   const { scenes, agents, sceneIndex } = useEngine();
-  const [render, setRender] = useState<SceneDTO>({} as SceneDTO);
+  const [render, setRender] = useState({} as any);
   const [background] = useImage(`/${scenes?.[sceneIndex].background}`);
   const [start, setStart] = useState<boolean>(false);
 
-  const [agentImage] = useImage(`/${agents?.[0]?.attributes?.img}`);
+  const [agentImage] = useImage(`/box.png`);
 
   const [propsScreen] = useState({
     with: 500,
@@ -23,7 +23,7 @@ const Engine = () => {
       background,
       sound: scenes?.[sceneIndex].sound,
       title: scenes?.[sceneIndex].title,
-      agents,
+      agents: agents?.[sceneIndex],
     };
 
     setRender(renderScene);
@@ -55,7 +55,7 @@ const Engine = () => {
             text={render.title}
           />
         )}
-        {agents?.map((agent: any, i: number) => (
+        {render?.agents?.map((agent: any, i: number) => (
           <Image
             key={i}
             image={agentImage}
@@ -70,4 +70,4 @@ const Engine = () => {
   );
 };
 
-export default Engine;
+export default Render;

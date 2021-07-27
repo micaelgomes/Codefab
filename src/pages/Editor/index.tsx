@@ -11,13 +11,20 @@ import { useEngine } from '../../hooks/engine';
 const code = `<fable>
   <scene background="bg.png">
 
-    <agent name="caixa" img="box.png" x="200" y="200" width="120" height="120" intial-state="fechada">
+    <agent name="caixa" img="box.png" x="200" y="200" width="50" height="50" intial-state="fechada">
 
       <state id="fechada" on-touch="aberta" />
 
       <state id="aberta" on-transition="fade-out" on-change="img:box_open.png"/>
 
     </agent>
+
+    <agent name="caixa" img="box.png" x="200" y="200" width="50" height="50" intial-state="fechada" />
+
+    <agent name="caixa" img="box.png" x="200" y="200" width="50" height="50" intial-state="fechada" />
+
+    <agent name="caixa" img="box.png" x="200" y="200" width="50" height="50" intial-state="fechada" />
+
   </scene>
 </fable>`;
 
