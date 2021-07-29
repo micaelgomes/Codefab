@@ -1,17 +1,20 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Stage, Layer, Text, Image } from 'react-konva';
-import useImage from 'use-image';
 import { useEngine } from '../../hooks/engine';
 // import Agent from '../Agent';
 
 const Render = () => {
   const { scenes, agents, sceneIndex } = useEngine();
   const [render, setRender] = useState({} as any);
-  const [background] = useImage(`/${scenes?.[sceneIndex].background}`);
   const [start, setStart] = useState<boolean>(false);
 
-  const [agentImage] = useImage(`/box.png`);
+  const renderImage = (imageSrc: string) => {
+    const image = new window.Image();
+    image.src = `/${imageSrc}`;
+
+    return image;
+  };
 
   const [propsScreen] = useState({
     with: 500,
@@ -20,7 +23,7 @@ const Render = () => {
 
   useEffect(() => {
     const renderScene = {
-      background,
+      background: renderImage(scenes?.[sceneIndex].background),
       sound: scenes?.[sceneIndex].sound,
       title: scenes?.[sceneIndex].title,
       agents: agents?.[sceneIndex],
@@ -28,7 +31,7 @@ const Render = () => {
 
     setRender(renderScene);
     setStart(true);
-  }, [agents, background, sceneIndex, scenes]);
+  }, [agents, sceneIndex, scenes]);
 
   return (
     <Stage width={propsScreen.with} height={propsScreen.height}>
@@ -58,7 +61,7 @@ const Render = () => {
         {render?.agents?.map((agent: any, i: number) => (
           <Image
             key={i}
-            image={agentImage}
+            image={renderImage(agent.attributes.img)}
             height={Number(agent.attributes.height)}
             width={Number(agent.attributes.width)}
             x={Number(agent.attributes.x)}

@@ -11,7 +11,7 @@ import { useEngine } from '../../hooks/engine';
 const code = `<fable>
   <scene background="bg.png">
 
-    <agent name="caixa" img="box.png" x="200" y="200" width="50" height="50" intial-state="fechada">
+    <agent name="caixa" img="box.png" x="50" y="50" width="50" height="50" intial-state="fechada">
 
       <state id="fechada" on-touch="aberta" />
 
@@ -21,9 +21,17 @@ const code = `<fable>
 
     <agent name="caixa" img="box.png" x="200" y="200" width="50" height="50" intial-state="fechada" />
 
-    <agent name="caixa" img="box.png" x="200" y="200" width="50" height="50" intial-state="fechada" />
+    <agent name="caixa" img="box.png" x="250" y="350" width="50" height="50" intial-state="fechada" />
 
-    <agent name="caixa" img="box.png" x="200" y="200" width="50" height="50" intial-state="fechada" />
+    <agent name="caixa" img="block.png" x="0" y="400" width="100" height="100" intial-state="fechada" />
+
+    <agent name="caixa" img="block.png" x="100" y="400" width="100" height="100" intial-state="fechada" />
+
+    <agent name="caixa" img="block.png" x="200" y="400" width="100" height="100" intial-state="fechada" />
+
+    <agent name="caixa" img="block.png" x="300" y="400" width="100" height="100" intial-state="fechada" />
+
+    <agent name="caixa" img="block.png" x="400" y="400" width="100" height="100" intial-state="fechada" />
 
   </scene>
 </fable>`;
