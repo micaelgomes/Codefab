@@ -1,6 +1,6 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
-import { Stage, Layer, Text, Image } from 'react-konva';
+import { useState, useEffect, useRef } from 'react';
+import { Stage, Layer, Text, Image, Sprite } from 'react-konva';
 import { useEngine } from '../../hooks/engine';
 // import Agent from '../Agent';
 
@@ -21,6 +21,14 @@ const Render = () => {
     height: 500,
   });
 
+  const spriteRef = useRef<any>(null);
+  const animations = {
+    run: [
+      0, 0, 164, 113, 164, 0, 164, 113, 328, 0, 164, 113, 492, 0, 164, 113, 656,
+      0, 164, 113, 820, 0, 164, 113,
+    ],
+  };
+
   useEffect(() => {
     const renderScene = {
       background: renderImage(scenes?.[sceneIndex].background),
@@ -31,6 +39,7 @@ const Render = () => {
 
     setRender(renderScene);
     setStart(true);
+    spriteRef.current?.start();
   }, [agents, sceneIndex, scenes]);
 
   return (
@@ -58,16 +67,32 @@ const Render = () => {
             text={render.title}
           />
         )}
-        {render?.agents?.map((agent: any, i: number) => (
-          <Image
-            key={i}
-            image={renderImage(agent.attributes.img)}
-            height={Number(agent.attributes.height)}
-            width={Number(agent.attributes.width)}
-            x={Number(agent.attributes.x)}
-            y={Number(agent.attributes.y)}
-          />
-        ))}
+        {render?.agents?.map((agent: any, i: number) =>
+          agent.attributes.img ? (
+            <Image
+              key={i}
+              image={renderImage(agent.attributes.img)}
+              height={Number(agent.attributes.height)}
+              width={Number(agent.attributes.width)}
+              x={Number(agent.attributes.x)}
+              y={Number(agent.attributes.y)}
+            />
+          ) : (
+            <Sprite
+              key={i}
+              ref={spriteRef}
+              height={Number(agent.attributes.height)}
+              width={Number(agent.attributes.width)}
+              x={Number(agent.attributes.x)}
+              y={Number(agent.attributes.y)}
+              image={renderImage(agent.attributes.sprite) as HTMLImageElement}
+              animation="run"
+              animations={animations}
+              frameRate={7}
+              frameIndex={0}
+            />
+          ),
+        )}
       </Layer>
     </Stage>
   );

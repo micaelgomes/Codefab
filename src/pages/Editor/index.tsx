@@ -9,9 +9,10 @@ import Sidenav from '../../components/Sidenav';
 import { useEngine } from '../../hooks/engine';
 
 const code = `<fable>
+
   <scene background="bg.png">
 
-    <agent name="caixa" img="box.png" x="50" y="50" width="50" height="50" intial-state="fechada">
+    <agent img="box.png" x="300" y="300" width="50" height="50" intial-state="fechada">
 
       <state id="fechada" on-touch="aberta" />
 
@@ -19,21 +20,24 @@ const code = `<fable>
 
     </agent>
 
-    <agent name="caixa" img="box.png" x="200" y="200" width="50" height="50" intial-state="fechada" />
+    <agent img="box.png" x="310" y="350" width="50" height="50" />
 
-    <agent name="caixa" img="box.png" x="250" y="350" width="50" height="50" intial-state="fechada" />
+    <agent img="box.png" x="250" y="350" width="50" height="50" />
 
-    <agent name="caixa" img="block.png" x="0" y="400" width="100" height="100" intial-state="fechada" />
+    <agent img="block.png" x="0" y="400" width="100" height="100" />
 
-    <agent name="caixa" img="block.png" x="100" y="400" width="100" height="100" intial-state="fechada" />
+    <agent img="block.png" x="100" y="400" width="100" height="100" />
 
-    <agent name="caixa" img="block.png" x="200" y="400" width="100" height="100" intial-state="fechada" />
+    <agent img="block.png" x="200" y="400" width="100" height="100" />
 
-    <agent name="caixa" img="block.png" x="300" y="400" width="100" height="100" intial-state="fechada" />
+    <agent img="block.png" x="300" y="400" width="100" height="100" />
 
-    <agent name="caixa" img="block.png" x="400" y="400" width="100" height="100" intial-state="fechada" />
+    <agent img="block.png" x="400" y="400" width="100" height="100" />
+
+    <agent sprite="idle.png" x="0" y="290" width="64" height="44" />
 
   </scene>
+
 </fable>`;
 
 const Editor: React.FC = () => {
