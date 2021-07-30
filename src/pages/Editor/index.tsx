@@ -8,6 +8,21 @@ import Sidenav from '../../components/Sidenav';
 
 import { useEngine } from '../../hooks/engine';
 
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/addon/hint/show-hint';
+import 'codemirror/addon/hint/xml-hint';
+import 'codemirror/addon/hint/show-hint.css';
+import 'codemirror/keymap/sublime';
+import 'codemirror/addon/edit/closebrackets';
+import 'codemirror/addon/edit/closetag';
+import 'codemirror/addon/fold/foldcode';
+import 'codemirror/addon/fold/foldgutter';
+import 'codemirror/addon/fold/brace-fold';
+import 'codemirror/addon/fold/comment-fold';
+import 'codemirror/addon/fold/foldgutter.css';
+
 const code = `<fable>
 
   <scene background="bg.png">
@@ -40,6 +55,46 @@ const code = `<fable>
 
 </fable>`;
 
+const tags = {
+  '!top': ['add-item', 'query-items', 'print-item', 'remove-item'],
+  '!attrs': {},
+  toto: {},
+  'add-item': {
+    attrs: {
+      id: null,
+      'item-descriptor': null,
+    },
+    children: ['set-property'],
+  },
+  'print-item': {
+    attrs: {
+      id: null,
+      'item-descriptor': null,
+    },
+    children: [],
+  },
+  'remove-item': {
+    attrs: {
+      id: null,
+      'item-descriptor': null,
+    },
+    children: ['set-property'],
+  },
+  'query-items': {
+    attrs: {
+      'item-descriptor': null,
+      'id-only': ['true', 'false'],
+    },
+    children: [],
+  },
+  'set-property': {
+    attrs: {
+      name: null,
+    },
+    children: [],
+  },
+};
+
 const Editor: React.FC = () => {
   const inputRef = useRef<ReactCodemirror>(null);
   const { createFable } = useEngine();
@@ -67,10 +122,21 @@ const Editor: React.FC = () => {
           ref={inputRef}
           options={{
             theme: 'monokai',
+            lineWrapping: true,
+            smartIndent: true,
             tabSize: 2,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
             keyMap: 'sublime',
             mode: 'jsx',
             renderLine: true,
+            autoCloseTags: true,
+            extraKeys: {
+              'Ctrl-Space': 'autocomplete',
+            },
+            hintOptions: {
+              schemaInfo: tags,
+            },
           }}
         />
       </S.Content>
