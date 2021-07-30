@@ -49,6 +49,9 @@ const Editor: React.FC = () => {
       inputRef.current?.editor?.getValue(),
     );
 
+    // const scenes = smilDom.getElementsByTagName('scene');
+    // console.log('scenes + ', scenes);
+
     createFable(smilDom);
   };
 
@@ -66,7 +69,7 @@ const Editor: React.FC = () => {
             theme: 'monokai',
             tabSize: 2,
             keyMap: 'sublime',
-            mode: 'xml',
+            mode: 'jsx',
             renderLine: true,
           }}
         />
