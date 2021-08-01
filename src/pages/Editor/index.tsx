@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactCodemirror from '@uiw/react-codemirror';
 import XMLParser from 'react-xml-parser';
 
@@ -22,38 +22,6 @@ import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';
 import 'codemirror/addon/fold/comment-fold';
 import 'codemirror/addon/fold/foldgutter.css';
-
-const code = `<fable>
-
-  <scene background="bg.png">
-
-    <agent img="box.png" x="300" y="300" width="50" height="50" intial-state="fechada">
-
-      <state id="fechada" on-touch="aberta" />
-
-      <state id="aberta" on-transition="fade-out" on-change="img:box_open.png"/>
-
-    </agent>
-
-    <agent img="box.png" x="310" y="350" width="50" height="50" />
-
-    <agent img="box.png" x="250" y="350" width="50" height="50" />
-
-    <agent img="block.png" x="0" y="400" width="100" height="100" />
-
-    <agent img="block.png" x="100" y="400" width="100" height="100" />
-
-    <agent img="block.png" x="200" y="400" width="100" height="100" />
-
-    <agent img="block.png" x="300" y="400" width="100" height="100" />
-
-    <agent img="block.png" x="400" y="400" width="100" height="100" />
-
-    <agent sprite="idle.png" x="0" y="290" width="64" height="44" />
-
-  </scene>
-
-</fable>`;
 
 const tags = {
   '!top': ['add-item', 'query-items', 'print-item', 'remove-item'],
@@ -99,15 +67,26 @@ const Editor: React.FC = () => {
   const inputRef = useRef<ReactCodemirror>(null);
   const { createFable } = useEngine();
 
+  const [code, setCode] = useState<string>(() => {
+    const codeStorage = localStorage.getItem('@code');
+
+    if (codeStorage) {
+      return codeStorage;
+    }
+
+    return '';
+  });
+
   const parseXmlCode = () => {
-    const smilDom = new XMLParser().parseFromString(
-      inputRef.current?.editor?.getValue(),
-    );
+    const currCode = inputRef.current?.editor?.getValue();
+    const smilDom = new XMLParser().parseFromString(currCode);
 
     // const scenes = smilDom.getElementsByTagName('scene');
     // console.log('scenes + ', scenes);
+    // console.log(smilDom);
 
     createFable(smilDom);
+    localStorage.setItem('@code', currCode);
   };
 
   return (
@@ -133,6 +112,7 @@ const Editor: React.FC = () => {
             autoCloseTags: true,
             extraKeys: {
               'Ctrl-Space': 'autocomplete',
+              'Ctrl-S': () => parseXmlCode(),
             },
             hintOptions: {
               schemaInfo: tags,

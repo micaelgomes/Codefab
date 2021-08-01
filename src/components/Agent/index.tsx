@@ -1,49 +1,37 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useEffect } from 'react';
-import { Image, Sprite } from 'react-konva';
+import { Image, Sprite, Text } from 'react-konva';
 import { renderHTMLImageElement } from '../../utils/renderElement';
 
-// import { Container } from './styles';
-
 export interface AgentProps {
+  id: number;
   height: number;
   img: string;
   sprite: string;
-  intialState: string;
+  text: string;
+  newState: string;
   name: string;
   width: number;
   x: number;
   y: number;
-  states: any;
+  states: Array<any>;
+  actionAgent(id: number, newState: string): void;
 }
 
 const Agent: React.FC<AgentProps> = ({
+  id,
   img,
   sprite,
+  text,
   name,
-  intialState,
+  newState,
   height,
   width,
   x,
   y,
   states,
+  actionAgent,
 }) => {
-  const [agent] = useState({
-    img,
-    sprite,
-    name,
-    intialState,
-    height,
-    width,
-    x,
-    y,
-    states,
-    onTouch: () => {},
-  });
-
-  // console.log(agent.states);
-  // console.log(agent.intialState);
-
   const spriteRef = useRef<any>(null);
   const animations = {
     run: [
@@ -54,38 +42,57 @@ const Agent: React.FC<AgentProps> = ({
 
   useEffect(() => {
     spriteRef.current?.start();
-  }, [agent.sprite]);
+  }, []);
 
-  useEffect(() => {
-    if (!!agent.intialState) {
-      agent.onTouch = () => alert('onClick');
-      console.log(agent);
+  const actions = () => {
+    if (states.length > 0) {
+      actionAgent(id, newState);
+    } else {
+      console.log('NO STATES TO DISPATCH ACTIONS');
     }
-  }, [agent]);
+  };
 
   return (
     <>
-      {img ? (
+      {img && (
         <Image
-          image={renderHTMLImageElement(agent.img)}
-          height={agent.height}
-          width={agent.width}
-          x={agent.x}
-          y={agent.y}
-          onClick={agent.onTouch}
+          image={renderHTMLImageElement(img)}
+          height={height}
+          width={width}
+          x={x}
+          y={y}
+          onClick={actions}
         />
-      ) : (
+      )}
+
+      {sprite && (
         <Sprite
           ref={spriteRef}
-          height={agent.height}
-          width={agent.width}
-          x={agent.x}
-          y={agent.y}
-          image={renderHTMLImageElement(agent.sprite) as HTMLImageElement}
+          height={height}
+          width={width}
+          x={x}
+          y={y}
+          image={renderHTMLImageElement(sprite) as HTMLImageElement}
           animation="run"
           animations={animations}
           frameRate={7}
           frameIndex={0}
+          onClick={actions}
+        />
+      )}
+
+      {text && (
+        <Text
+          fontSize={16}
+          align={'left'}
+          fontFamily="Press Start 2P"
+          text={text}
+          x={x}
+          y={y}
+          wrap="word"
+          width={width}
+          onDblClick={() => {}}
+          onClick={actions}
         />
       )}
     </>

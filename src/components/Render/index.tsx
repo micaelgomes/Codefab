@@ -6,9 +6,8 @@ import { renderHTMLImageElement } from '../../utils/renderElement';
 import Agent from '../Agent';
 
 const Render = () => {
-  const { scenes, agents, sceneIndex } = useEngine();
+  const { scenes, agents, sceneIndex, actionAgent } = useEngine();
   const [render, setRender] = useState({} as any);
-  const [start, setStart] = useState<boolean>(false);
 
   const [propsScreen] = useState({
     with: 500,
@@ -24,28 +23,12 @@ const Render = () => {
     };
 
     setRender(renderScene);
-    setStart(true);
   }, [agents, sceneIndex, scenes]);
 
   return (
     <>
-      <audio controls={false}>
-        <source src="horse.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-
       <Stage width={propsScreen.with} height={propsScreen.height}>
         <Layer>
-          {start && (
-            <Text
-              x={180}
-              y={230}
-              fontStyle="bold"
-              fontFamily="Helvetica, sans-serif"
-              fontSize={24}
-              text={'Run Preview!'}
-            />
-          )}
           {render.background && (
             <Image width={500} height={500} image={render.background} />
           )}
@@ -61,15 +44,18 @@ const Render = () => {
           {render?.agents?.map((agent: any, i: number) => (
             <Agent
               key={i}
+              id={agent.id}
               img={agent.attributes.img}
               sprite={agent.attributes.sprite}
+              text={agent.attributes.text}
               name={agent.attributes.name}
-              intialState={agent.attributes['intial-state']}
+              newState={agent.attributes['on-touch']}
               height={Number(agent.attributes.height)}
               width={Number(agent.attributes.width)}
               x={Number(agent.attributes.x)}
               y={Number(agent.attributes.y)}
               states={agent.states}
+              actionAgent={actionAgent}
             />
           ))}
         </Layer>
