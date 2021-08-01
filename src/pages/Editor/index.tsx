@@ -7,13 +7,13 @@ import Navbar from '../../components/Navbar';
 import Sidenav from '../../components/Sidenav';
 
 import { useEngine } from '../../hooks/engine';
+import { tags } from '../../utils/tags';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/xml-hint';
-import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/keymap/sublime';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/edit/closetag';
@@ -23,51 +23,11 @@ import 'codemirror/addon/fold/brace-fold';
 import 'codemirror/addon/fold/comment-fold';
 import 'codemirror/addon/fold/foldgutter.css';
 
-const tags = {
-  '!top': ['add-item', 'query-items', 'print-item', 'remove-item'],
-  '!attrs': {},
-  toto: {},
-  'add-item': {
-    attrs: {
-      id: null,
-      'item-descriptor': null,
-    },
-    children: ['set-property'],
-  },
-  'print-item': {
-    attrs: {
-      id: null,
-      'item-descriptor': null,
-    },
-    children: [],
-  },
-  'remove-item': {
-    attrs: {
-      id: null,
-      'item-descriptor': null,
-    },
-    children: ['set-property'],
-  },
-  'query-items': {
-    attrs: {
-      'item-descriptor': null,
-      'id-only': ['true', 'false'],
-    },
-    children: [],
-  },
-  'set-property': {
-    attrs: {
-      name: null,
-    },
-    children: [],
-  },
-};
-
 const Editor: React.FC = () => {
   const inputRef = useRef<ReactCodemirror>(null);
   const { createFable } = useEngine();
 
-  const [code, setCode] = useState<string>(() => {
+  const [code] = useState<string>(() => {
     const codeStorage = localStorage.getItem('@code');
 
     if (codeStorage) {
@@ -80,10 +40,6 @@ const Editor: React.FC = () => {
   const parseXmlCode = () => {
     const currCode = inputRef.current?.editor?.getValue();
     const smilDom = new XMLParser().parseFromString(currCode);
-
-    // const scenes = smilDom.getElementsByTagName('scene');
-    // console.log('scenes + ', scenes);
-    // console.log(smilDom);
 
     createFable(smilDom);
     localStorage.setItem('@code', currCode);

@@ -91,8 +91,6 @@ const EngineProvider: React.FC = ({ children }) => {
               .indexOf(keyPressed);
 
             if (posKeyPressed >= 0) {
-              console.log('Has key pressed ' + keyPressed);
-
               const cx = Number(agent.attributes?.x);
               const cy = Number(agent.attributes?.y);
               const dx = Number(agent.states[posKeyPressed].attributes?.x);
@@ -109,7 +107,10 @@ const EngineProvider: React.FC = ({ children }) => {
                 newAgent.attributes.x = String(cx + dx);
               }
 
-              console.log(newAgent);
+              if (dy) {
+                newAgent.attributes.x = String(cy + dy);
+              }
+
               return newAgent;
             }
           }
