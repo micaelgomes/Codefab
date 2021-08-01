@@ -48,12 +48,15 @@ const Render = () => {
               img={agent.attributes.img}
               sprite={agent.attributes.sprite}
               text={agent.attributes.text}
-              name={agent.attributes.name}
               newState={agent.attributes['on-touch']}
               height={Number(agent.attributes.height)}
               width={Number(agent.attributes.width)}
               x={Number(agent.attributes.x)}
               y={Number(agent.attributes.y)}
+              repeat={[
+                Number(agent.attributes['repeat-x']),
+                Number(agent.attributes['repeat-y']),
+              ]}
               states={agent.states}
               actionAgent={actionAgent}
             />

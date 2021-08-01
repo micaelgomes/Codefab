@@ -25,6 +25,7 @@ export default createGlobalStyle`
   .CodeMirror {
     border-radius: 0;
     font-weight: 800;
+    font-size: 18px;
   }
 
   .CodeMirror-hints {

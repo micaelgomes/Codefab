@@ -41,6 +41,10 @@ const Editor: React.FC = () => {
     const currCode = inputRef.current?.editor?.getValue();
     const smilDom = new XMLParser().parseFromString(currCode);
 
+    // const scenes = smilDom.getElementsByTagName('scene');
+    // console.log('scenes + ', scenes);
+    // console.log(smilDom);
+
     createFable(smilDom);
     localStorage.setItem('@code', currCode);
   };
