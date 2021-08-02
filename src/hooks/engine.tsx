@@ -33,6 +33,12 @@ const EngineProvider: React.FC = ({ children }) => {
   const [sceneIndex, setSceneIndex] = useState<number>(0);
 
   const createFable = useCallback((smilDom: any) => {
+    console.clear();
+    console.log(
+      '%cStart Process Fable 🚀',
+      'color: brown; background: orange; padding: 2%;',
+    );
+
     const newScenes = smilDom?.children.map((scene: any) => scene?.attributes);
     const agentsScenes = smilDom?.children.map((scene: any) =>
       scene?.children?.map((agent: any) => ({

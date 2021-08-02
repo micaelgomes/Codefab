@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
-import { useEffect } from 'react';
-import { Image, Label, Sprite, Text } from 'react-konva';
+import { Image as ImageKonva } from 'konva/types/shapes/Image';
+import React, { useRef, useEffect, useState } from 'react';
+import { Image, Sprite, Text } from 'react-konva';
 import { renderHTMLImageElement } from '../../utils/renderElement';
 
 export interface AgentProps {
@@ -9,13 +9,13 @@ export interface AgentProps {
   img: string;
   sprite: string;
   text: string;
-  newState: string;
+  nextState: string;
   width: number;
   x: number;
   y: number;
   repeat: number[];
   states: Array<any>;
-  actionAgent(id: number, newState: string): void;
+  actionAgent(id: number, nextState: string): void;
 }
 
 const Agent: React.FC<AgentProps> = ({
@@ -23,7 +23,7 @@ const Agent: React.FC<AgentProps> = ({
   img,
   sprite,
   text,
-  newState,
+  nextState,
   height,
   width,
   x,
@@ -34,7 +34,7 @@ const Agent: React.FC<AgentProps> = ({
 }) => {
   const spriteRef = useRef<any>(null);
   const textRef = useRef<any>(null);
-  const imgRef = useRef<any>(null);
+  const imgRef = useRef<ImageKonva>(null);
 
   const animations = {
     run: [
@@ -43,9 +43,26 @@ const Agent: React.FC<AgentProps> = ({
     ],
   };
 
+  const [state, setState] = useState(nextState);
+
   const actions = () => {
     if (states.length > 0) {
-      actionAgent(id, newState);
+      // actionAgent(id, nextState);
+      const posNewAttr = states.map((state: any) => state.name).indexOf(state);
+
+      if (posNewAttr >= 0) {
+        // console.log('ACTIONS IN AGENT HAS AGENT');
+        console.log(states?.[posNewAttr]?.attributes?.img);
+        console.log(states?.[posNewAttr]?.attributes?.['on-touch']);
+        // console.log(imgRef.current);
+        setState(states?.[posNewAttr]?.attributes?.['on-touch']);
+
+        const srcImage = states?.[posNewAttr]?.attributes?.img;
+
+        if (imgRef.current) {
+          imgRef.current.attrs.image.src = srcImage;
+        }
+      }
     } else {
       console.log('NO STATES TO DISPATCH ACTIONS');
     }

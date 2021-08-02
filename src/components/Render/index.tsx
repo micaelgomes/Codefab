@@ -23,6 +23,7 @@ const Render = () => {
     };
 
     setRender(renderScene);
+    console.log('Render Scene 💻');
   }, [agents, sceneIndex, scenes]);
 
   return (
@@ -48,7 +49,7 @@ const Render = () => {
               img={agent.attributes.img}
               sprite={agent.attributes.sprite}
               text={agent.attributes.text}
-              newState={agent.attributes['on-touch']}
+              nextState={agent.attributes['on-touch']}
               height={Number(agent.attributes.height)}
               width={Number(agent.attributes.width)}
               x={Number(agent.attributes.x)}
