@@ -1,6 +1,7 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Stage, Layer, Text, Image } from 'react-konva';
+import { Stage as StageType } from 'konva/types/Stage';
 import { useEngine } from '../../hooks/engine';
 import { renderHTMLImageElement } from '../../utils/renderElement';
 import Agent from '../Agent';
@@ -8,6 +9,8 @@ import Agent from '../Agent';
 const Render = () => {
   const { scenes, agents, sceneIndex, actionAgent } = useEngine();
   const [render, setRender] = useState({} as any);
+  const stageRef = useRef<StageType>(null);
+  const [key, setKey] = useState('');
 
   const [propsScreen] = useState({
     with: 500,
@@ -26,9 +29,22 @@ const Render = () => {
     console.log('Render Scene 💻');
   }, [agents, sceneIndex, scenes]);
 
+  useEffect(() => {
+    const container = stageRef.current?.container();
+
+    container?.addEventListener('keydown', (e: any) => {
+      setKey(e.code);
+    });
+  }, []);
+
   return (
     <>
-      <Stage width={propsScreen.with} height={propsScreen.height}>
+      <Stage
+        ref={stageRef}
+        tabIndex={1}
+        width={propsScreen.with}
+        height={propsScreen.height}
+      >
         <Layer>
           {render.background && (
             <Image width={500} height={500} image={render.background} />
@@ -60,6 +76,8 @@ const Render = () => {
               ]}
               states={agent.states}
               actionAgent={actionAgent}
+              hasKeyboard={agent.attributes['on-press']}
+              keyPressed={key}
             />
           ))}
         </Layer>

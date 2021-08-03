@@ -1,4 +1,5 @@
 import { Image as ImageKonva } from 'konva/types/shapes/Image';
+import { Sprite as SpriteKonva } from 'konva/types/shapes/Sprite';
 import React, { useRef, useEffect, useState } from 'react';
 import { Image, Sprite, Text } from 'react-konva';
 import { renderHTMLImageElement } from '../../utils/renderElement';
@@ -15,6 +16,8 @@ export interface AgentProps {
   y: number;
   repeat: number[];
   states: Array<any>;
+  hasKeyboard: boolean;
+  keyPressed: string;
   actionAgent(id: number, nextState: string): void;
 }
 
@@ -30,16 +33,22 @@ const Agent: React.FC<AgentProps> = ({
   y,
   repeat,
   states,
+  hasKeyboard,
+  keyPressed,
   actionAgent,
 }) => {
-  const spriteRef = useRef<any>(null);
+  const spriteRef = useRef<SpriteKonva>(null);
   const textRef = useRef<any>(null);
   const imgRef = useRef<ImageKonva>(null);
 
   const animations = {
-    run: [
+    idle: [
       0, 0, 164, 113, 164, 0, 164, 113, 328, 0, 164, 113, 492, 0, 164, 113, 656,
       0, 164, 113, 820, 0, 164, 113,
+    ],
+    run: [
+      0, 0, 164, 113, 164, 0, 164, 113, 328, 0, 164, 113, 492, 0, 164, 113, 656,
+      0, 164, 113, 820, 0, 164, 113, 984, 0, 164, 113, 1148, 0, 164, 113,
     ],
   };
 
@@ -60,17 +69,29 @@ const Agent: React.FC<AgentProps> = ({
     }
   };
 
-  const actionSprite = () => {
-    if (spriteRef.current) {
-      console.log(spriteRef.current);
-
-      spriteRef.current.attrs.image.src = 'run.png';
-    }
-  };
-
   useEffect(() => {
     spriteRef.current?.start();
   }, []);
+
+  useEffect(() => {
+    if (hasKeyboard) {
+      if (keyPressed === 'KeyD') {
+        console.log(id + ' - ' + keyPressed);
+
+        if (spriteRef.current) {
+          spriteRef.current.attrs.image.src = 'run.png';
+        }
+
+        spriteRef.current?.animation('run');
+      } else {
+        if (spriteRef.current) {
+          spriteRef.current.attrs.image.src = 'idle.png';
+        }
+
+        spriteRef.current?.animation('idle');
+      }
+    }
+  }, [hasKeyboard, id, keyPressed]);
 
   return (
     <>
@@ -94,11 +115,10 @@ const Agent: React.FC<AgentProps> = ({
           x={x}
           y={y}
           image={renderHTMLImageElement(sprite)}
-          animation="run"
+          animation="idle"
           animations={animations}
           frameRate={7}
           frameIndex={0}
-          onClick={actionSprite}
         />
       )}
 
