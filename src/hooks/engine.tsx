@@ -25,6 +25,10 @@ interface EngineDataContext {
   setSceneIndex: Dispatch<SetStateAction<number>>;
 }
 
+interface SmilDomProps extends XMLDocument {
+  children: any;
+}
+
 const EngineContext = createContext<EngineDataContext>({} as EngineDataContext);
 
 const EngineProvider: React.FC = ({ children }) => {
@@ -32,7 +36,7 @@ const EngineProvider: React.FC = ({ children }) => {
   const [agents, setAgents] = useState<any[]>();
   const [sceneIndex, setSceneIndex] = useState<number>(0);
 
-  const createFable = useCallback((smilDom: any) => {
+  const createFable = useCallback((smilDom: SmilDomProps) => {
     console.clear();
     console.log(
       '%cStart Process Fable 🚀',

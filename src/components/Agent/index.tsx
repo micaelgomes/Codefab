@@ -45,26 +45,26 @@ const Agent: React.FC<AgentProps> = ({
 
   const [state, setState] = useState(nextState);
 
-  const actions = () => {
+  const actionImage = () => {
     if (states.length > 0) {
-      // actionAgent(id, nextState);
       const posNewAttr = states.map((state: any) => state.name).indexOf(state);
 
       if (posNewAttr >= 0) {
-        // console.log('ACTIONS IN AGENT HAS AGENT');
-        console.log(states?.[posNewAttr]?.attributes?.img);
-        console.log(states?.[posNewAttr]?.attributes?.['on-touch']);
-        // console.log(imgRef.current);
         setState(states?.[posNewAttr]?.attributes?.['on-touch']);
 
-        const srcImage = states?.[posNewAttr]?.attributes?.img;
-
         if (imgRef.current) {
-          imgRef.current.attrs.image.src = srcImage;
+          imgRef.current.attrs.image.src =
+            states?.[posNewAttr]?.attributes?.img;
         }
       }
-    } else {
-      console.log('NO STATES TO DISPATCH ACTIONS');
+    }
+  };
+
+  const actionSprite = () => {
+    if (spriteRef.current) {
+      console.log(spriteRef.current);
+
+      spriteRef.current.attrs.image.src = 'run.png';
     }
   };
 
@@ -82,7 +82,7 @@ const Agent: React.FC<AgentProps> = ({
           width={width}
           x={x}
           y={y}
-          onClick={actions}
+          onClick={actionImage}
         />
       )}
 
@@ -93,12 +93,12 @@ const Agent: React.FC<AgentProps> = ({
           width={width}
           x={x}
           y={y}
-          image={renderHTMLImageElement(sprite) as HTMLImageElement}
+          image={renderHTMLImageElement(sprite)}
           animation="run"
           animations={animations}
           frameRate={7}
           frameIndex={0}
-          onClick={actions}
+          onClick={actionSprite}
         />
       )}
 
@@ -113,8 +113,7 @@ const Agent: React.FC<AgentProps> = ({
           y={y}
           wrap="word"
           width={width}
-          onDblClick={() => {}}
-          onClick={actions}
+          onClick={() => {}}
         />
       )}
     </>
