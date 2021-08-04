@@ -10,7 +10,6 @@ const Render = () => {
   const { scenes, agents, sceneIndex, actionAgent } = useEngine();
   const [render, setRender] = useState({} as any);
   const stageRef = useRef<StageType>(null);
-  const [key, setKey] = useState('');
 
   const [propsScreen] = useState({
     with: 500,
@@ -28,14 +27,6 @@ const Render = () => {
     setRender(renderScene);
     console.log('Render Scene 💻');
   }, [agents, sceneIndex, scenes]);
-
-  useEffect(() => {
-    const container = stageRef.current?.container();
-
-    container?.addEventListener('keydown', (e: any) => {
-      setKey(e.code);
-    });
-  }, []);
 
   return (
     <>
@@ -77,7 +68,7 @@ const Render = () => {
               states={agent.states}
               actionAgent={actionAgent}
               hasKeyboard={agent.attributes['on-press']}
-              keyPressed={key}
+              stageRef={stageRef}
             />
           ))}
         </Layer>

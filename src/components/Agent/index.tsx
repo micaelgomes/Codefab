@@ -1,7 +1,14 @@
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  RefObject,
+  useCallback,
+} from 'react';
+import { Image, Sprite, Text } from 'react-konva';
 import { Image as ImageKonva } from 'konva/types/shapes/Image';
 import { Sprite as SpriteKonva } from 'konva/types/shapes/Sprite';
-import React, { useRef, useEffect, useState } from 'react';
-import { Image, Sprite, Text } from 'react-konva';
+import { Stage } from 'konva/types/Stage';
 import { renderHTMLImageElement } from '../../utils/renderElement';
 
 export interface AgentProps {
@@ -17,7 +24,7 @@ export interface AgentProps {
   repeat: number[];
   states: Array<any>;
   hasKeyboard: boolean;
-  keyPressed: string;
+  stageRef: RefObject<Stage>;
   actionAgent(id: number, nextState: string): void;
 }
 
@@ -34,12 +41,13 @@ const Agent: React.FC<AgentProps> = ({
   repeat,
   states,
   hasKeyboard,
-  keyPressed,
+  stageRef,
   actionAgent,
 }) => {
   const spriteRef = useRef<SpriteKonva>(null);
   const textRef = useRef<any>(null);
   const imgRef = useRef<ImageKonva>(null);
+  const container = stageRef.current?.container();
 
   const animations = {
     idle: [
@@ -50,6 +58,7 @@ const Agent: React.FC<AgentProps> = ({
       0, 0, 164, 113, 164, 0, 164, 113, 328, 0, 164, 113, 492, 0, 164, 113, 656,
       0, 164, 113, 820, 0, 164, 113, 984, 0, 164, 113, 1148, 0, 164, 113,
     ],
+    back: [0, 0, 164, 113, 164, 0, 164, 113],
   };
 
   const [state, setState] = useState(nextState);
@@ -61,6 +70,8 @@ const Agent: React.FC<AgentProps> = ({
       if (posNewAttr >= 0) {
         setState(states?.[posNewAttr]?.attributes?.['on-touch']);
 
+        // console.log(imgRef.current);
+
         if (imgRef.current) {
           imgRef.current.attrs.image.src =
             states?.[posNewAttr]?.attributes?.img;
@@ -69,29 +80,53 @@ const Agent: React.FC<AgentProps> = ({
     }
   };
 
+  const actionFromKeyboard = useCallback(
+    (e: KeyboardEvent) => {
+      if (hasKeyboard) {
+        const key = e.code;
+
+        if (spriteRef.current) {
+          console.log(id + ' - ' + key);
+
+          switch (key) {
+            case 'KeyD':
+              spriteRef.current.attrs.image.src = 'run.png';
+              spriteRef.current?.animation('run');
+              spriteRef.current?.x(spriteRef.current.x() + 4);
+              break;
+            case 'KeyA':
+              spriteRef.current.attrs.image.src = 'back.png';
+              spriteRef.current?.animation('back');
+              spriteRef.current?.x(spriteRef.current.x() - 4);
+              break;
+            case 'KeyS':
+            case 'KeyW':
+            default:
+              spriteRef.current.attrs.image.src = 'idle.png';
+              spriteRef.current?.animation('idle');
+              break;
+          }
+
+          setTimeout(() => {
+            console.log('desfaz -> idle');
+
+            spriteRef.current &&
+              (spriteRef.current.attrs.image.src = 'idle.png');
+
+            spriteRef.current?.animation('idle');
+            // spriteRef.current.off('.button');
+          }, 5000 / spriteRef.current?.frameRate());
+        }
+      }
+    },
+    [hasKeyboard, id],
+  );
+
   useEffect(() => {
     spriteRef.current?.start();
-  }, []);
 
-  useEffect(() => {
-    if (hasKeyboard) {
-      if (keyPressed === 'KeyD') {
-        console.log(id + ' - ' + keyPressed);
-
-        if (spriteRef.current) {
-          spriteRef.current.attrs.image.src = 'run.png';
-        }
-
-        spriteRef.current?.animation('run');
-      } else {
-        if (spriteRef.current) {
-          spriteRef.current.attrs.image.src = 'idle.png';
-        }
-
-        spriteRef.current?.animation('idle');
-      }
-    }
-  }, [hasKeyboard, id, keyPressed]);
+    container?.addEventListener('keypress', actionFromKeyboard);
+  }, [actionFromKeyboard, container]);
 
   return (
     <>
