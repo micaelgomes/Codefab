@@ -35,30 +35,34 @@ export default createGlobalStyle`
     list-style: none;
 
     margin: 0;
-    padding: 2px;
 
     -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
     -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
     box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-    border: 1px solid white;
+    border: 1px solid transparent;
 
-    background: #f8f8f2;
+    background: #3e3d32;
+
     font-size: 90%;
     font-family: monospace;
 
     max-height: 20em;
+    min-width: 200px;
     overflow-y: auto;
+    font-size: 18px;
   }
 
   .CodeMirror-hint {
     margin: 0;
     white-space: pre;
-    color: black;
+    color: #f8f8f2;
+    font-weight: 800;
     cursor: pointer;
+    padding: 4px;
   }
 
   li.CodeMirror-hint-active {
-    background: #08f;
+    background: #75715E;
     color: white;
   }
 `;

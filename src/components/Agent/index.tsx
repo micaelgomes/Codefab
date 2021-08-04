@@ -86,13 +86,14 @@ const Agent: React.FC<AgentProps> = ({
         const key = e.code;
 
         if (spriteRef.current) {
-          console.log(id + ' - ' + key);
+          console.log(spriteRef.current);
 
           switch (key) {
             case 'KeyD':
               spriteRef.current.attrs.image.src = 'run.png';
               spriteRef.current?.animation('run');
               spriteRef.current?.x(spriteRef.current.x() + 4);
+
               break;
             case 'KeyA':
               spriteRef.current.attrs.image.src = 'back.png';
@@ -107,15 +108,31 @@ const Agent: React.FC<AgentProps> = ({
               break;
           }
 
-          setTimeout(() => {
-            console.log('desfaz -> idle');
+          spriteRef.current.on('frameIndexChange', () => {
+            console.log('apply listner');
 
-            spriteRef.current &&
-              (spriteRef.current.attrs.image.src = 'idle.png');
+            if (spriteRef.current?.frameIndex() === 2) {
+              setTimeout(() => {
+                console.log('desfaz -> idle');
 
-            spriteRef.current?.animation('idle');
-            // spriteRef.current.off('.button');
-          }, 5000 / spriteRef.current?.frameRate());
+                spriteRef.current &&
+                  (spriteRef.current.attrs.image.src = 'idle.png');
+
+                spriteRef.current?.animation('idle');
+                spriteRef.current?.off('frameIndexChange');
+              }, 1000 / spriteRef.current?.frameRate());
+            }
+          });
+
+          // setTimeout(() => {
+          //   console.log('desfaz -> idle');
+
+          //   spriteRef.current &&
+          //     (spriteRef.current.attrs.image.src = 'idle.png');
+
+          //   spriteRef.current?.animation('idle');
+          //   // spriteRef.current.off('.button');
+          // }, 5000 / spriteRef.current?.frameRate());
         }
       }
     },
@@ -125,7 +142,7 @@ const Agent: React.FC<AgentProps> = ({
   useEffect(() => {
     spriteRef.current?.start();
 
-    container?.addEventListener('keypress', actionFromKeyboard);
+    container?.addEventListener('keydown', actionFromKeyboard);
   }, [actionFromKeyboard, container]);
 
   return (

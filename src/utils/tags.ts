@@ -1,7 +1,6 @@
 export const tags = {
   '!top': ['fable', 'scene', 'agent'],
   '!attrs': {},
-  toto: {},
   fable: {
     attrs: {
       width: null,
@@ -20,8 +19,6 @@ export const tags = {
   },
   agent: {
     attrs: {
-      id: null,
-      'item-descriptor': null,
       img: ['path', 'src'],
       x: null,
       y: null,
