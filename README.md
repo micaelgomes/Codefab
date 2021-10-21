@@ -15,6 +15,7 @@ run: [
 ## To Do
 
 - [X] Parse xml-code to preview
+- [ ] Error Boundry
 - [ ] Promisse to process code
 - [ ] @mentions, #refs, [links](), **formatting**, and <del>tags</del> supported
 

@@ -24,7 +24,7 @@ import 'codemirror/addon/fold/comment-fold';
 import 'codemirror/addon/fold/foldgutter.css';
 
 const Editor: React.FC = () => {
-  const inputRef = useRef<ReactCodemirror>(null);
+  const inputRef = useRef(null as any);
   const { createFable } = useEngine();
 
   const [code] = useState<string>(() => {
@@ -40,10 +40,6 @@ const Editor: React.FC = () => {
   const parseXmlCode = () => {
     const currCode = inputRef.current?.editor?.getValue();
     const smilDom = new XMLParser().parseFromString(currCode);
-
-    // const scenes = smilDom.getElementsByTagName('scene');
-    // console.log('scenes + ', scenes);
-    // console.log(smilDom);
 
     createFable(smilDom);
     localStorage.setItem('@code', currCode);

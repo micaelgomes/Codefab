@@ -7,7 +7,7 @@ import { renderHTMLImageElement } from '../../utils/renderElement';
 import Agent from '../Agent';
 
 const Render = () => {
-  const { scenes, agents, sceneIndex, actionAgent } = useEngine();
+  const { scenes, agents, sceneIndex } = useEngine();
   const [render, setRender] = useState({} as any);
   const stageRef = useRef<StageType>(null);
 
@@ -66,7 +66,9 @@ const Render = () => {
                 Number(agent.attributes['repeat-y']),
               ]}
               states={agent.states}
-              actionAgent={actionAgent}
+              animationName={agent.attributes['animation-name']}
+              frameCount={Number(agent.attributes['frame-count'])}
+              animation={agent.attributes['animation']}
               hasKeyboard={agent.attributes['on-press']}
               stageRef={stageRef}
             />

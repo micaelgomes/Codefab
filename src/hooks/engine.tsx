@@ -7,18 +7,17 @@ import React, {
   useState,
 } from 'react';
 
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 
 export interface SceneDTO {
   background: any;
-  sound?: any;
-  title?: any;
+  sound?: string;
+  title?: string;
 }
 
 interface EngineDataContext {
   createFable(smilDom: unknown): void;
-  actionAgent(id: number, newState: string): void;
-  moveAgent(keyPressed: string): void;
+  resetFable(): void;
   scenes: SceneDTO[] | undefined;
   agents: any;
   sceneIndex: number;
@@ -59,91 +58,22 @@ const EngineProvider: React.FC = ({ children }) => {
     setAgents(agentsScenes);
   }, []);
 
-  // Problem: processar todos os agentes
-  const actionAgent = useCallback(
-    (id: number, newState: string) => {
-      const newAgents = agents?.map((agentsByIndex: any[]) =>
-        agentsByIndex.map(agent => {
-          if (agent.id === id) {
-            const posNewAttr = agent.states
-              .map((state: any) => state.name)
-              .indexOf(newState);
+  const resetFable = useCallback(() => {
+    console.log('Clear 🉐');
 
-            if (posNewAttr >= 0) {
-              const newAgent = {
-                ...agent,
-                attributes: {
-                  ...agent.attributes,
-                  ...agent.states?.[posNewAttr]?.attributes,
-                },
-              };
-
-              return newAgent;
-            }
-          }
-
-          return agent;
-        }),
-      );
-
-      setAgents(newAgents);
-    },
-    [agents],
-  );
-
-  const moveAgent = useCallback(
-    (keyPressed: string) => {
-      const newAgents = agents?.map((agentsByIndex: any[]) =>
-        agentsByIndex.map(agent => {
-          if (agent.states.length > 0) {
-            const posKeyPressed = agent.states
-              .map((state: any) => state.name)
-              .indexOf(keyPressed);
-
-            if (posKeyPressed >= 0) {
-              const cx = Number(agent.attributes?.x);
-              const cy = Number(agent.attributes?.y);
-              const dx = Number(agent.states[posKeyPressed].attributes?.x);
-              const dy = Number(agent.states[posKeyPressed].attributes?.y);
-
-              const newAgent = {
-                ...agent,
-                attributes: {
-                  ...agent.attributes,
-                },
-              };
-
-              if (dx) {
-                newAgent.attributes.x = String(cx + dx);
-              }
-
-              if (dy) {
-                newAgent.attributes.x = String(cy + dy);
-              }
-
-              return newAgent;
-            }
-          }
-
-          return agent;
-        }),
-      );
-
-      setAgents(newAgents);
-    },
-    [agents],
-  );
+    setScenes([]);
+    setAgents([]);
+  }, []);
 
   return (
     <EngineContext.Provider
       value={{
         createFable,
-        actionAgent,
+        resetFable,
         scenes,
         agents,
         sceneIndex,
         setSceneIndex,
-        moveAgent,
       }}
     >
       {children}
@@ -154,7 +84,9 @@ const EngineProvider: React.FC = ({ children }) => {
 const useEngine = (): EngineDataContext => {
   const context = useContext(EngineContext);
 
-  if (!context) throw new Error('useEngine must be used in your context');
+  if (!context) {
+    throw new Error('useEngine must be used in your context');
+  }
 
   return context;
 };
