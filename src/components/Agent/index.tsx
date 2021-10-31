@@ -1,7 +1,9 @@
-import React, { useRef } from 'react';
-import { useEffect } from 'react';
-import { Image, Label, Sprite, Text } from 'react-konva';
-import { renderHTMLImageElement } from '../../utils/renderElement';
+import React, { RefObject } from 'react';
+import { Stage } from 'konva/types/Stage';
+
+import Image from './Image';
+import Sprite from './Sprite';
+import Text from './Text';
 
 export interface AgentProps {
   id: number;
@@ -9,13 +11,18 @@ export interface AgentProps {
   img: string;
   sprite: string;
   text: string;
-  newState: string;
+  nextState: string;
   width: number;
   x: number;
   y: number;
   repeat: number[];
   states: Array<any>;
-  actionAgent(id: number, newState: string): void;
+  animationName: string;
+  frameCount: number;
+  animation: string;
+  hasKeyboard: boolean;
+  draggable: boolean;
+  stageRef: RefObject<Stage>;
 }
 
 const Agent: React.FC<AgentProps> = ({
@@ -23,81 +30,81 @@ const Agent: React.FC<AgentProps> = ({
   img,
   sprite,
   text,
-  newState,
+  nextState,
   height,
   width,
   x,
   y,
   repeat,
   states,
-  actionAgent,
+  animationName,
+  frameCount,
+  animation,
+  hasKeyboard,
+  stageRef,
+  draggable,
 }) => {
-  const spriteRef = useRef<any>(null);
-  const textRef = useRef<any>(null);
-  const imgRef = useRef<any>(null);
+  const container = stageRef.current?.container();
 
-  const animations = {
-    run: [
-      0, 0, 164, 113, 164, 0, 164, 113, 328, 0, 164, 113, 492, 0, 164, 113, 656,
-      0, 164, 113, 820, 0, 164, 113,
-    ],
-  };
-
-  const actions = () => {
-    if (states.length > 0) {
-      actionAgent(id, newState);
-    } else {
-      console.log('NO STATES TO DISPATCH ACTIONS');
+  try {
+    if (!img && !sprite && !text) {
+      throw new Error('img || sprite || text - required!');
     }
-  };
 
-  useEffect(() => {
-    spriteRef.current?.start();
-  }, []);
+    if (sprite && !animation && !animationName && !frameCount) {
+      throw new Error('Sprite require animation && animationName!');
+    }
+  } catch (err) {
+    console.log(err);
+  }
 
   return (
     <>
       {img && (
         <Image
-          ref={imgRef}
-          image={renderHTMLImageElement(img)}
+          id={id}
+          imageSrc={img}
           height={height}
           width={width}
           x={x}
           y={y}
-          onClick={actions}
+          repeat={repeat}
+          states={states}
+          nextState={nextState}
+          hasKeyboard={hasKeyboard}
+          container={container}
+          draggable={draggable}
         />
       )}
 
       {sprite && (
         <Sprite
-          ref={spriteRef}
+          id={id}
           height={height}
           width={width}
           x={x}
           y={y}
-          image={renderHTMLImageElement(sprite) as HTMLImageElement}
-          animation="run"
-          animations={animations}
-          frameRate={7}
-          frameIndex={0}
-          onClick={actions}
+          states={states}
+          spriteSrc={sprite}
+          hasKeyboard={hasKeyboard}
+          container={container}
+          animationName={animationName}
+          frameCount={frameCount}
+          animation={animation}
         />
       )}
 
       {text && (
         <Text
-          ref={textRef}
-          fontSize={16}
-          align={'left'}
-          fontFamily="Press Start 2P"
+          id={id}
           text={text}
           x={x}
           y={y}
-          wrap="word"
           width={width}
-          onDblClick={() => {}}
-          onClick={actions}
+          height={height}
+          nextState={nextState}
+          states={states}
+          container={container}
         />
       )}
     </>

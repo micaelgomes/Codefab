@@ -1,7 +1,6 @@
 export const tags = {
   '!top': ['fable', 'scene', 'agent'],
   '!attrs': {},
-  toto: {},
   fable: {
     attrs: {
       width: null,
@@ -20,8 +19,6 @@ export const tags = {
   },
   agent: {
     attrs: {
-      id: null,
-      'item-descriptor': null,
       img: ['path', 'src'],
       x: null,
       y: null,
@@ -29,6 +26,10 @@ export const tags = {
       height: null,
       sprite: null,
       text: null,
+      'animation-name': null,
+      animation: null,
+      'frame-count': null,
+      draggable: null,
     },
     children: [],
   },

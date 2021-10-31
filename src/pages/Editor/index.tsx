@@ -1,31 +1,28 @@
 import React, { useRef, useState } from 'react';
-import ReactCodemirror from '@uiw/react-codemirror';
 import XMLParser from 'react-xml-parser';
 
 import * as S from './styled';
 import Navbar from '../../components/Navbar';
 import Sidenav from '../../components/Sidenav';
+import Preview from '../../components/Preview';
 
 import { useEngine } from '../../hooks/engine';
 import { tags } from '../../utils/tags';
 
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/addon/hint/show-hint';
-import 'codemirror/addon/hint/xml-hint';
-import 'codemirror/keymap/sublime';
-import 'codemirror/addon/edit/closebrackets';
-import 'codemirror/addon/edit/closetag';
-import 'codemirror/addon/fold/foldcode';
-import 'codemirror/addon/fold/foldgutter';
-import 'codemirror/addon/fold/brace-fold';
-import 'codemirror/addon/fold/comment-fold';
-import 'codemirror/addon/fold/foldgutter.css';
+import './addons';
 
 const Editor: React.FC = () => {
-  const inputRef = useRef<ReactCodemirror>(null);
-  const { createFable } = useEngine();
+  const inputRef = useRef(null as any);
+  const { createFable, previewOpen, setpreviewOpen } = useEngine();
+  const [open, setOpen] = useState(() => {
+    const storage = localStorage.getItem('sidenav-status');
+
+    if (storage) {
+      return Boolean(storage);
+    }
+
+    return true;
+  });
 
   const [code] = useState<string>(() => {
     const codeStorage = localStorage.getItem('@code');
@@ -41,20 +38,25 @@ const Editor: React.FC = () => {
     const currCode = inputRef.current?.editor?.getValue();
     const smilDom = new XMLParser().parseFromString(currCode);
 
-    // const scenes = smilDom.getElementsByTagName('scene');
-    // console.log('scenes + ', scenes);
-    // console.log(smilDom);
-
-    createFable(smilDom);
     localStorage.setItem('@code', currCode);
+    createFable(smilDom);
+
+    if (!previewOpen) {
+      setpreviewOpen(true);
+    }
+  };
+
+  const toogleSidenav = () => {
+    setOpen(!open);
+    localStorage.setItem('sidenav-status', JSON.stringify(open));
   };
 
   return (
     <S.Container>
-      <Navbar runPreview={parseXmlCode} />
+      <Navbar runPreview={parseXmlCode} toogleSidenav={toogleSidenav} />
 
       <S.Content>
-        <Sidenav />
+        <Sidenav open={open} />
 
         <S.Playground
           value={code}
@@ -80,6 +82,8 @@ const Editor: React.FC = () => {
           }}
         />
       </S.Content>
+
+      <Preview />
     </S.Container>
   );
 };
