@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import logoSrc from '../../assets/logo.svg'
+import styled from 'styled-components';
+import logoSrc from '../../assets/logo.svg';
 
 export const Container = styled.div`
   display: flex;
@@ -15,6 +15,22 @@ export const Container = styled.div`
     display: block;
     background-size: contain;
     background-repeat: no-repeat;
+  }
+`;
+
+export const ContainerLogo = styled.div`
+  display: flex;
+  align-items: center;
+
+  button {
+    background: transparent;
+    border: none;
+    margin-right: 8px;
+    color: #cfcfc2;
+
+    svg {
+      margin-top: 6px;
+    }
   }
 `;
 
@@ -44,9 +60,9 @@ export const UserAction = styled.div`
     }
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
-      background: #A6E22E;
+      background: #a6e22e;
       border-radius: 50%;
       width: 32px;
       height: 32px;
@@ -57,8 +73,8 @@ export const UserAction = styled.div`
   }
 
   img {
-    background: #F8F8F2;
-    border: 2px solid #AE81FF;
+    background: #f8f8f2;
+    border: 2px solid #ae81ff;
     border-radius: 50%;
     width: 50px;
     height: 50px;

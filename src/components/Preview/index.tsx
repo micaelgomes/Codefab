@@ -1,11 +1,17 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Draggable from 'react-draggable';
+import { FiLock, FiMinus, FiUnlock, FiX } from 'react-icons/fi';
+import { useEngine } from '../../hooks/engine';
 import Render from '../Render';
 
 import * as S from './styled';
 
 const Preview: React.FC = () => {
+  const { previewOpen, setpreviewOpen } = useEngine();
+
   const [focus, setFocus] = useState(false);
+  const [minimize, setMinimize] = useState(false);
+  const [lock, setLock] = useState(false);
 
   const handleFocus = useCallback(() => {
     setFocus(true);
@@ -15,22 +21,47 @@ const Preview: React.FC = () => {
     setFocus(false);
   }, []);
 
-  return (
-    <Draggable allowAnyClick={true}>
-      <S.Container
-        hasFocus={focus}
-        tabIndex={0}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      >
-        <S.HeaderBar>
-          <button id="close"></button>
-          <button id="warn"></button>
-        </S.HeaderBar>
+  const handleClose = useCallback(() => {
+    setpreviewOpen(false);
+  }, [setpreviewOpen]);
 
-        <Render />
-      </S.Container>
-    </Draggable>
+  const toogleMin = useCallback(() => {
+    setMinimize(!minimize);
+    alert('Ainda não implementado');
+  }, [minimize]);
+
+  const toogleLock = useCallback(() => {
+    setLock(!lock);
+  }, [lock]);
+
+  return (
+    <>
+      {previewOpen && (
+        <Draggable allowAnyClick={true} disabled={lock}>
+          <S.Container
+            hasFocus={focus}
+            tabIndex={0}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          >
+            <S.HeaderBar>
+              <button id="close" onClick={handleClose}>
+                <FiX size={13} />
+              </button>
+              <button id="min" onClick={toogleMin}>
+                <FiMinus size={13} />
+              </button>
+              <button id="pin" onClick={toogleLock}>
+                <small>{lock ? 'travado' : 'flutuante'}</small>
+                {lock ? <FiLock size={13} /> : <FiUnlock size={13} />}
+              </button>
+            </S.HeaderBar>
+
+            <Render />
+          </S.Container>
+        </Draggable>
+      )}
+    </>
   );
 };
 

@@ -1,16 +1,18 @@
-import React from "react";
-import Preview from "./components/Preview";
-import Editor from "./pages/Editor";
-import GlobalStyle from "./styles/global";
-import AppProvider from "./hooks/index";
+import React from 'react';
+import GlobalStyle from './styles/global';
+import AppProvider from './hooks/index';
+import Routes from './routes';
+
+import { BrowserRouter as Router } from 'react-router-dom';
 
 const App = () => {
   return (
-    <AppProvider>
+    <Router>
       <GlobalStyle />
-      <Editor />
-      <Preview />
-    </AppProvider>
+      <AppProvider>
+        <Routes />
+      </AppProvider>
+    </Router>
   );
 };
 

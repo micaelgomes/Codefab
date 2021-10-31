@@ -21,6 +21,7 @@ export interface AgentProps {
   frameCount: number;
   animation: string;
   hasKeyboard: boolean;
+  draggable: boolean;
   stageRef: RefObject<Stage>;
 }
 
@@ -41,8 +42,21 @@ const Agent: React.FC<AgentProps> = ({
   animation,
   hasKeyboard,
   stageRef,
+  draggable,
 }) => {
   const container = stageRef.current?.container();
+
+  try {
+    if (!img && !sprite && !text) {
+      throw new Error('img || sprite || text - required!');
+    }
+
+    if (sprite && !animation && !animationName && !frameCount) {
+      throw new Error('Sprite require animation && animationName!');
+    }
+  } catch (err) {
+    console.log(err);
+  }
 
   return (
     <>
@@ -59,6 +73,7 @@ const Agent: React.FC<AgentProps> = ({
           nextState={nextState}
           hasKeyboard={hasKeyboard}
           container={container}
+          draggable={draggable}
         />
       )}
 

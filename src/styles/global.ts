@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import 'typeface-press-start-2p';
+import 'typeface-poppins';
 
 export default createGlobalStyle`
   * {
@@ -64,5 +65,27 @@ export default createGlobalStyle`
   li.CodeMirror-hint-active {
     background: #75715E;
     color: white;
+  }
+
+  .CodeMirror-vscrollbar {
+
+    &::-webkit-scrollbar {
+      width: 10px;
+      background-color: #3e3d32;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: #cfcfc2;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #75715E;
+    }
   }
 `;

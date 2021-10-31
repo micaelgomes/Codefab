@@ -134,3 +134,36 @@ run: [
 
 </fable>
 ```
+
+### Animation Sprite
+```xml
+<fable>
+
+  <scene background="bg.png">
+
+    <agent img="1.png" x="0" y="400" width="100" height="100" />
+    <agent img="2.png" x="100" y="400" width="100" height="100" />
+    <agent img="2.png" x="200" y="400" width="100" height="100" />
+    <agent img="2.png" x="300" y="400" width="100" height="100" />
+    <agent img="2.png" x="400" y="400" width="100" height="100" />
+
+    <agent img="block.png" x="350" y="200" draggable="true" width="200" height="200" />
+    <agent img="door_1.png" x="400" y="275" width="75" height="125" on-touch="destrancada">
+
+      <trancada img="door_1.png" on-touch="destrancada" />
+      <destrancada img="door_2.png" on-touch="aberta" />
+      <aberta img="door_3.png" on-touch="trancada" />
+
+    </agent>
+
+    <agent
+      sprite="idle.png"
+      x="0" y="290" width="64" height="44"
+      animation-name="run"
+      frame-count="6"
+      animation="0, 0, 164, 113, 164, 0, 164, 113, 328, 0, 164, 113, 492, 0, 164, 113, 656, 0, 164, 113, 820, 0, 164, 113" />
+
+  </scene>
+
+</fable>
+```

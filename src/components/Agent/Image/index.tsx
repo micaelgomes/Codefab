@@ -3,7 +3,7 @@ import { Image } from 'react-konva';
 import { Image as ImageKonva } from 'konva/types/shapes/Image';
 import { renderHTMLImageElement } from '../../../utils/renderElement';
 
-interface ImageProps {
+type ImageProps = {
   id: number;
   height: number;
   imageSrc: string;
@@ -13,9 +13,10 @@ interface ImageProps {
   y: number;
   repeat: number[];
   states: Array<any>;
+  draggable: boolean;
   hasKeyboard: boolean;
   container: HTMLDivElement | undefined;
-}
+};
 
 const ImageAgent: React.FC<ImageProps> = ({
   id,
@@ -29,6 +30,7 @@ const ImageAgent: React.FC<ImageProps> = ({
   states,
   hasKeyboard,
   container,
+  draggable,
 }) => {
   const imgRef = useRef<ImageKonva>(null);
   const [imageState, setImageState] = useState({
@@ -76,6 +78,7 @@ const ImageAgent: React.FC<ImageProps> = ({
       x={x}
       y={y}
       onClick={action}
+      draggable={draggable}
     />
   );
 };

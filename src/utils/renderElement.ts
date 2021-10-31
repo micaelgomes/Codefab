@@ -1,6 +1,6 @@
 export const renderHTMLImageElement = (imageSrc: string) => {
   const image = new window.Image();
-  image.src = `/${imageSrc}`;
+  image.src = imageSrc;
 
   return image;
 };

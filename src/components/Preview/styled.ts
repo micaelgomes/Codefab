@@ -48,38 +48,65 @@ export const Container = styled.div<ContainerProps>`
 `;
 
 export const HeaderBar = styled.div`
-  cursor: move;
   height: 25px;
   padding: 0 1rem;
   background: #f8f8f2;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  display: flex;
 
   button {
     position: relative;
     height: auto;
     border: none;
     background: transparent;
+    color: #3e3d32;
+    z-index: 0;
+
+    & + button {
+      margin-left: 8px;
+    }
+
+    &:last-child {
+      small {
+        margin-right: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        position: absolute;
+        right: 10px;
+        top: 6px;
+      }
+
+      margin-left: auto;
+    }
 
     &::before {
       content: '';
       position: absolute;
-      width: 15px;
-      height: 15px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      top: -8px;
+      z-index: -1;
+      bottom: 5px;
+      left: -3px;
     }
 
     &#close {
       &::before {
-        background: red;
+        background: #f92672;
       }
     }
 
-    &#warn {
+    &#min {
       &::before {
-        background: orange;
-        left: 25px;
+        background: #fd971f;
+        left: -3px;
+      }
+    }
+
+    &#pin {
+      &::before {
+        content: none;
       }
     }
   }

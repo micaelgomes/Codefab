@@ -22,6 +22,8 @@ interface EngineDataContext {
   agents: any;
   sceneIndex: number;
   setSceneIndex: Dispatch<SetStateAction<number>>;
+  previewOpen: boolean;
+  setpreviewOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 interface SmilDomProps extends XMLDocument {
@@ -34,6 +36,8 @@ const EngineProvider: React.FC = ({ children }) => {
   const [scenes, setScenes] = useState<SceneDTO[]>();
   const [agents, setAgents] = useState<any[]>();
   const [sceneIndex, setSceneIndex] = useState<number>(0);
+
+  const [previewOpen, setpreviewOpen] = useState<boolean>(false);
 
   const createFable = useCallback((smilDom: SmilDomProps) => {
     console.clear();
@@ -74,6 +78,8 @@ const EngineProvider: React.FC = ({ children }) => {
         agents,
         sceneIndex,
         setSceneIndex,
+        previewOpen,
+        setpreviewOpen,
       }}
     >
       {children}
