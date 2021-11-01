@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import Draggable from 'react-draggable';
 import { FiLock, FiMinus, FiUnlock, FiX } from 'react-icons/fi';
 import { useEngine } from '../../hooks/engine';

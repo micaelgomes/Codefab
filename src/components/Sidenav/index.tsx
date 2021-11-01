@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FiLayers, FiUploadCloud, FiXCircle } from 'react-icons/fi';
 import { useDropzone } from 'react-dropzone';
 

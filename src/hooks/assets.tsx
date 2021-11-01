@@ -31,6 +31,7 @@ const AssetsProvider: React.FC = ({ children }) => {
   };
 
   const deleteFile = (name: string) => {
+    // eslint-disable-next-line array-callback-return
     const newFiles = files.filter((file: any) => {
       if (file.path !== name) {
         return file;
