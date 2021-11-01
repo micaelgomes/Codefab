@@ -80,7 +80,7 @@ const SpriteAgent: React.FC<SpriteProps> = ({
           if (spriteRef.current) {
             console.log(spriteState);
 
-            const newSprite = renderHTMLImageElement(spriteState.spriteSrc);
+            // const newSprite = renderHTMLImageElement(spriteState.spriteSrc);
 
             // spriteRef.current.image(newSprite);
             spriteRef.current.x(spriteRef.current.x() + Number(spriteState.x));

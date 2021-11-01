@@ -32,6 +32,7 @@ export const Title = styled.h3`
 export const ContainerDragNDrop = styled.section`
   cursor: pointer;
   margin: 1rem;
+  margin-top: 0;
   border: 2px dashed #cfcfc2;
   border-radius: 4px;
   padding: 1rem;
@@ -40,6 +41,11 @@ export const ContainerDragNDrop = styled.section`
   display: flex;
   flex-direction: column;
   height: calc(100% - 100px);
+`;
+
+export const ContainerEmpty = styled.div`
+  display: flex;
+  height: calc(100% - 25px);
 `;
 
 export const isEmpty = styled.div`
@@ -72,7 +78,7 @@ export const Thumb = styled.div`
     background: transparent;
     border: none;
     z-index: 0;
-    color: #cfcfc2;
+    color: #3e3d32;
     right: 18px;
     top: 8px;
     transition: all 0.2s ease-in-out;
@@ -84,13 +90,13 @@ export const Thumb = styled.div`
     &::before {
       content: '';
       position: absolute;
-      width: 25px;
-      height: 25px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      background: red;
+      background: #cfcfc2;
       z-index: -1;
-      top: -1px;
-      left: -1px;
+      top: -2px;
+      left: -2px;
     }
   }
 `;
@@ -100,10 +106,10 @@ export const InputFileBefore = styled.div`
   border: 1px solid #cfcfc2;
   margin: 0.3rem;
   margin-right: 0.75rem;
-  margin-top: 3rem;
+  margin-top: 1rem;
   border-radius: 4px;
   text-align: center;
-  height: 90px;
+  height: 85px;
 `;
 
 export const ThumbInner = styled.div`
@@ -124,10 +130,8 @@ export const ThumbImage = styled.img`
 `;
 
 export const ListFiles = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   overflow: auto;
+  flex-basis: 100%;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -150,6 +154,5 @@ export const ListFiles = styled.div`
 `;
 
 export const ContentFiles = styled.div`
-  height: calc(100% - 100px);
   display: flex;
 `;

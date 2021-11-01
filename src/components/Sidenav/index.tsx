@@ -38,13 +38,6 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
     </S.Thumb>
   ));
 
-  useEffect(
-    () => () => {
-      files.forEach((file: any) => URL.revokeObjectURL(file.preview));
-    },
-    [files],
-  );
-
   return (
     <S.Container open={open}>
       <S.Title>
@@ -54,13 +47,13 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
 
       <S.ContainerDragNDrop>
         {!files.length && (
-          <div {...getRootProps({ className: 'dropzone' })}>
+          <S.ContainerEmpty {...getRootProps({ className: 'dropzone' })}>
             <input {...getInputProps()} />
             <S.isEmpty>
               <FiUploadCloud size={32} />
               Clique aqui ou arraste os arquivos que deseja utilizar
             </S.isEmpty>
-          </div>
+          </S.ContainerEmpty>
         )}
         {!!files.length && (
           <>

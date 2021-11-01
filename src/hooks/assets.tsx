@@ -5,7 +5,6 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { string } from 'yup';
 
 interface EngineDataContext {
   files: any[];
@@ -32,11 +31,15 @@ const AssetsProvider: React.FC = ({ children }) => {
   };
 
   const deleteFile = (name: string) => {
-    const newFiles = files.filter((file: any) => file.path !== name);
+    const newFiles = files.filter((file: any) => {
+      if (file.path !== name) {
+        return file;
+      }
 
-    if (newFiles.length > 0) {
-      setFiles(newFiles);
-    }
+      URL.revokeObjectURL(file.preview);
+    });
+
+    setFiles(newFiles || []);
   };
 
   return (

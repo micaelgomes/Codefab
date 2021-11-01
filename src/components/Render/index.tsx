@@ -22,9 +22,6 @@ const Render = () => {
   });
 
   useEffect(() => {
-    console.log('Clear Stage 🖌️');
-    stageRef.current?.clear();
-
     const renderScene = {
       background: renderHTMLImageElement(bgScene),
       sound: scenes?.[sceneIndex].sound,
@@ -32,7 +29,12 @@ const Render = () => {
       agents: agents?.[sceneIndex],
     };
 
+    console.log('Clear Stage 🖌️');
+    stageRef.current?.clear();
+
     setRender(renderScene);
+    console.log(stageRef.current);
+
     console.log('Render Scene 💻');
   }, [agents, bgScene, sceneIndex, scenes]);
 
