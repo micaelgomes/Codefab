@@ -23,6 +23,26 @@ export default createGlobalStyle`
       cursor: pointer;
   }
 
+  a {
+    font-weight: 700;
+
+    &:link {
+      color: #FF5678;
+    }
+
+    &:visited {
+      color: #FF5678;
+    }
+
+    &:hover {
+      color: #FF5678;
+    }
+
+    &:active {
+      color: #FF5678;
+    }
+  }
+
   .CodeMirror {
     border-radius: 0;
     font-weight: 800;

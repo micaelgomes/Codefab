@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiMenu, FiPlayCircle } from 'react-icons/fi';
-import userSrc from '../../assets/user.png';
+import { useAuth } from '../../hooks/auth';
 
 import * as S from './styled';
 
@@ -10,6 +10,8 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
+  const { user } = useAuth();
+
   return (
     <S.Container>
       <S.Wrapper>
@@ -25,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
             <FiPlayCircle size={22} />
           </button>
 
-          <img src={userSrc} alt="Logo from user" />
+          <img src={user.avatar_url} alt="Logo from user" />
         </S.UserAction>
       </S.Wrapper>
     </S.Container>

@@ -2,33 +2,16 @@ import React, { createContext, useCallback, useContext, useState } from 'react';
 import { api } from '../services/api';
 
 interface AuthState {
-  token: string;
-  user: UserModel;
+  user: any;
 }
 
 interface SignInCredentials {
-  email: string;
-  password: string;
-}
-
-interface SignUpData {
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface UserModel {
-  id: string;
-  email: string;
-  name: string;
-  createAt: string;
-  updateAt: string;
+  githubCode: string;
 }
 
 interface AuthContextData {
-  user: UserModel;
+  user: any;
   signIn(credentials: SignInCredentials): Promise<void>;
-  signUp(user: SignUpData): Promise<void>;
   signOut(): void;
 }
 
@@ -36,49 +19,38 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>(() => {
-    const token = localStorage.getItem('@codefab:t0k3n');
     const userInCache = localStorage.getItem('@codefab:user');
 
-    if (token && userInCache) {
+    if (userInCache) {
       const user = JSON.parse(userInCache);
 
-      return { token, user };
+      return { user };
     }
 
     return {} as AuthState;
   });
 
-  const signIn = useCallback(async ({ email, password }: SignInCredentials) => {
-    const response = await api.post<AuthState>('/sessions', {
-      email,
-      password,
-    });
+  const signIn = useCallback(async ({ githubCode }: SignInCredentials) => {
+    const requestData = {
+      code: githubCode,
+    };
 
-    const { token, user } = response.data;
+    const response = await api.post<AuthState>('/auth', requestData);
+    const user = response.data;
 
-    localStorage.setItem('@codefab:t0k3n', token);
     localStorage.setItem('@codefab:user', JSON.stringify(user));
 
-    setData({ token, user });
-  }, []);
-
-  const signUp = useCallback(async ({ name, email, password }: SignUpData) => {
-    await api.post<AuthState>('/users', {
-      name,
-      email,
-      password,
-    });
+    setData({ user: user });
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@codefab:t0k3n');
     localStorage.removeItem('@codefab:user');
 
     setData({} as AuthState);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ signIn, signUp, signOut, user: data.user }}>
+    <AuthContext.Provider value={{ signIn, signOut, user: data.user }}>
       {children}
     </AuthContext.Provider>
   );

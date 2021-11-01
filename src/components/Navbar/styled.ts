@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import logoSrc from '../../assets/logo.svg';
 
 export const Container = styled.div`
   display: flex;
@@ -9,7 +8,7 @@ export const Container = styled.div`
   color: white;
 
   #logo {
-    background: url(${logoSrc});
+    background: url('./logo-border.svg');
     width: 100px;
     height: 35px;
     display: block;

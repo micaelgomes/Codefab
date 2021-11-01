@@ -1,24 +1,66 @@
-import React from 'react';
-import { FiGithub } from 'react-icons/fi';
+import React, { useEffect } from 'react';
+import { GoMarkGithub } from 'react-icons/go';
+import { useAuth } from '../../hooks/auth';
+
+import * as S from './styled';
 
 const Login: React.FC = () => {
-  const client_id = process.env.REACT_APP_CLIENT_ID as string;
+  const client_id = process.env.REACT_APP_CLIENT_ID;
   const redirect_uri = process.env.REACT_APP_REDIRECT_URI;
-  // const client_secret = process.env.REACT_APP_CLIENT_SECRET;
-  const state = process.env.REACT_APP_STATE;
+
+  const { signIn } = useAuth();
+
+  useEffect(() => {
+    const url = window.location.href;
+    const hasCode = url.includes('?code=');
+
+    if (hasCode) {
+      const newUrl = url.split('?code=');
+      window.history.pushState({}, '', newUrl[0]);
+
+      signIn({ githubCode: newUrl[1] });
+    }
+  }, [signIn]);
 
   return (
-    <div>
-      <h1>login</h1>
-      <input type="email" />
-      <input type="password" />
-      <a
-        href={`https://github.com/login/oauth/authorize?scope=user&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}&allow_signup=true`}
-      >
-        <FiGithub />
-        <span>Login com GitHub</span>
-      </a>
-    </div>
+    <S.Wrapper>
+      <S.Container>
+        <S.Branding>
+          <h1>
+            A fábrica de <b>Fábulas</b>
+          </h1>
+          <img src="/peeps.svg" alt="" />
+          <h3>
+            Aprenda a programar escrevendo fábulas com FableJS. Aqui todos são
+            aceitos, inclusive elfos e fadas
+          </h3>
+        </S.Branding>
+
+        <S.ContainerCard>
+          <S.Card>
+            <header>
+              <S.LogoContainer>
+                <img src="/logo.svg" alt="" />
+                <h4>
+                  <code>Alpha 0.9</code>
+                </h4>
+              </S.LogoContainer>
+            </header>
+            <S.CardContainer>
+              <S.ButtonGithub
+                href={`https://github.com/login/oauth/authorize?scope=user&client_id=${client_id}&redirect_uri=${redirect_uri}`}
+              >
+                <GoMarkGithub size={18} />
+                <span>Login com GitHub</span>
+              </S.ButtonGithub>
+            </S.CardContainer>
+            <S.SupportLink>
+              <a href="/">Criar atividade para moodle com H5P</a>
+            </S.SupportLink>
+          </S.Card>
+        </S.ContainerCard>
+      </S.Container>
+    </S.Wrapper>
   );
 };
 
