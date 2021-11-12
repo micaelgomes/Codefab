@@ -107,6 +107,22 @@ export const ButtonGithub = styled.a`
   }
 `;
 
+export const ButtonGithubLoading = styled.div`
+  background: #333 url('/load.svg') center center no-repeat;
+  color: #f5f5f5 !important;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 50%;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+`;
+
 export const SupportLink = styled.div`
   display: flex;
   padding: 1rem;

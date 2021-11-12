@@ -41,7 +41,6 @@ app.post('/api/auth', (req, res) => {
     body: formData,
   })
     .then(response => {
-      console.log('1', response);
       return response.text();
     })
     .then(paramsString => {

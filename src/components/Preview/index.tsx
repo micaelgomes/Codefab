@@ -7,7 +7,7 @@ import Render from '../Render';
 import * as S from './styled';
 
 const Preview: React.FC = () => {
-  const { previewOpen, setpreviewOpen } = useEngine();
+  const { previewOpen, setpreviewOpen, resetFable } = useEngine();
 
   const [focus, setFocus] = useState(false);
   const [minimize, setMinimize] = useState(false);
@@ -23,7 +23,8 @@ const Preview: React.FC = () => {
 
   const handleClose = useCallback(() => {
     setpreviewOpen(false);
-  }, [setpreviewOpen]);
+    resetFable();
+  }, [resetFable, setpreviewOpen]);
 
   const toogleMin = useCallback(() => {
     setMinimize(!minimize);

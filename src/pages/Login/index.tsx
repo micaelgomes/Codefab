@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoMarkGithub } from 'react-icons/go';
 import { useAuth } from '../../hooks/auth';
 
@@ -8,6 +8,7 @@ const Login: React.FC = () => {
   const client_id = process.env.REACT_APP_CLIENT_ID;
   const redirect_uri = process.env.REACT_APP_REDIRECT_URI;
 
+  const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
 
   useEffect(() => {
@@ -15,6 +16,7 @@ const Login: React.FC = () => {
     const hasCode = url.includes('?code=');
 
     if (hasCode) {
+      setLoading(true);
       const newUrl = url.split('?code=');
       window.history.pushState({}, '', newUrl[0]);
 
@@ -47,12 +49,16 @@ const Login: React.FC = () => {
               </S.LogoContainer>
             </header>
             <S.CardContainer>
-              <S.ButtonGithub
-                href={`https://github.com/login/oauth/authorize?scope=user&client_id=${client_id}&redirect_uri=${redirect_uri}`}
-              >
-                <GoMarkGithub size={18} />
-                <span>Login com GitHub</span>
-              </S.ButtonGithub>
+              {loading ? (
+                <S.ButtonGithubLoading />
+              ) : (
+                <S.ButtonGithub
+                  href={`https://github.com/login/oauth/authorize?scope=user&client_id=${client_id}&redirect_uri=${redirect_uri}`}
+                >
+                  <GoMarkGithub size={18} />
+                  <span>Login com GitHub</span>
+                </S.ButtonGithub>
+              )}
             </S.CardContainer>
             <S.SupportLink>
               <a href="/">Criar atividade para moodle com H5P</a>

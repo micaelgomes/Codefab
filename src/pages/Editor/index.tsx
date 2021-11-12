@@ -61,6 +61,9 @@ const Editor: React.FC = () => {
         <S.Playground
           value={code}
           ref={inputRef}
+          onDrop={e => {
+            console.log(e);
+          }}
           options={{
             theme: 'monokai',
             lineWrapping: true,

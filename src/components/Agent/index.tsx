@@ -13,6 +13,8 @@ export interface AgentProps {
   text: string;
   nextState: string;
   width: number;
+  color: string;
+  fontSize: number;
   x: number;
   y: number;
   repeat: number[];
@@ -23,6 +25,9 @@ export interface AgentProps {
   hasKeyboard: boolean;
   draggable: boolean;
   stageRef: RefObject<Stage>;
+  emit(name: string, data: any): any;
+  sub(trigger: string, id: unknown): any;
+  trigger: string;
 }
 
 const Agent: React.FC<AgentProps> = ({
@@ -43,6 +48,11 @@ const Agent: React.FC<AgentProps> = ({
   hasKeyboard,
   stageRef,
   draggable,
+  color,
+  fontSize,
+  emit,
+  sub,
+  trigger,
 }) => {
   const container = stageRef.current?.container();
 
@@ -70,6 +80,9 @@ const Agent: React.FC<AgentProps> = ({
           hasKeyboard={hasKeyboard}
           container={container}
           draggable={draggable}
+          emit={emit}
+          sub={sub}
+          trigger={trigger}
         />
       )}
 
@@ -97,6 +110,8 @@ const Agent: React.FC<AgentProps> = ({
           x={x}
           y={y}
           width={width}
+          color={color}
+          fontSize={fontSize}
           height={height}
           nextState={nextState}
           states={states}

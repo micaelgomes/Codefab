@@ -1,16 +1,20 @@
 export const tags = {
-  '!top': ['fable', 'scene', 'agent'],
+  '!top': ['fable', 'page', 'agent'],
   '!attrs': {},
   fable: {
     attrs: {
       width: null,
       height: null,
+      title: null,
+      thumb: null,
+      'start-in': null,
     },
-    children: ['scene'],
+    children: ['page'],
   },
-  scene: {
+  page: {
     attrs: {
       background: ['bg.png', 'noite.png'],
+      soundtrack: null,
       sound: null,
       title: null,
       'id-only': ['true', 'false'],
@@ -26,10 +30,20 @@ export const tags = {
       height: null,
       sprite: null,
       text: null,
+      color: null,
+      'font-size': null,
       'animation-name': null,
       animation: null,
       'frame-count': null,
       draggable: null,
+      'on-touch': [
+        'THE_END',
+        '_NEXT_PAGE',
+        '_BEFORE_PAGE',
+        '{{NUM_PAG}}',
+        'STOP_SOUNDTRACK',
+        'PLAY_SOUNDTRACK',
+      ],
     },
     children: [],
   },

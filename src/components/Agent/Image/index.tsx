@@ -2,6 +2,8 @@ import React, { useRef, useState, useCallback } from 'react';
 import { Image } from 'react-konva';
 import { Image as ImageKonva } from 'konva/types/shapes/Image';
 import { renderHTMLImageElement } from '../../../utils/renderElement';
+import { useCustomEventListener } from 'react-custom-events';
+import { useAssets } from '../../../hooks/assets';
 
 type ImageProps = {
   id: number;
@@ -16,6 +18,9 @@ type ImageProps = {
   draggable: boolean;
   hasKeyboard: boolean;
   container: HTMLDivElement | undefined;
+  emit(name: string, data: any): any;
+  sub(trigger: string, id: unknown): any;
+  trigger: string;
 };
 
 const ImageAgent: React.FC<ImageProps> = ({
@@ -31,8 +36,13 @@ const ImageAgent: React.FC<ImageProps> = ({
   hasKeyboard,
   container,
   draggable,
+  emit,
+  sub,
+  trigger,
 }) => {
   const imgRef = useRef<ImageKonva>(null);
+  const { getFilePath } = useAssets();
+
   const [imageState, setImageState] = useState({
     imageSrc,
     x,
@@ -42,32 +52,43 @@ const ImageAgent: React.FC<ImageProps> = ({
     nextState,
   });
 
-  const action = useCallback(() => {
-    if (states.length > 0) {
-      const posNewAttr = states
-        .map((state: any) => state.name)
-        .indexOf(imageState.nextState);
+  const action = useCallback(
+    trigger => {
+      if (states.length > 0) {
+        const posNewAttr = states
+          .map((state: any) => state.name)
+          .indexOf(trigger);
 
-      if (posNewAttr >= 0) {
-        setImageState({
-          ...imageState,
-          ...states?.[posNewAttr]?.attributes,
-          nextState: states?.[posNewAttr]?.attributes?.['on-touch'],
-          imageSrc: states?.[posNewAttr]?.attributes?.['img'],
-        });
+        if (posNewAttr >= 0) {
+          setImageState({
+            ...imageState,
+            ...states?.[posNewAttr]?.attributes,
+            nextState: states?.[posNewAttr]?.attributes?.['on-touch'],
+            imageSrc: states?.[posNewAttr]?.attributes?.['img'],
+          });
 
-        if (imgRef.current) {
-          const newImage = renderHTMLImageElement(imageState.imageSrc);
+          if (imgRef.current) {
+            // const filePath = getFilePath(imageState.imageSrc);
+            // const newImage = renderHTMLImageElement(imageState.imageSrc);
 
-          imgRef.current.image(newImage);
-          imgRef.current.x(Number(imageState.x));
-          imgRef.current.y(Number(imageState.y));
-          imgRef.current.width(Number(imageState.width));
-          imgRef.current.height(Number(imageState.height));
+            const newImage = new window.Image();
+            newImage.src = imageState.imageSrc;
+
+            imgRef.current.image(newImage);
+            imgRef.current.x(Number(imageState.x));
+            imgRef.current.y(Number(imageState.y));
+            imgRef.current.width(Number(imageState.width));
+            imgRef.current.height(Number(imageState.height));
+          }
         }
       }
-    }
-  }, [imageState, states]);
+    },
+    [getFilePath, imageState, states],
+  );
+
+  useCustomEventListener(trigger, data => {
+    action(trigger);
+  });
 
   return (
     <Image
@@ -77,7 +98,12 @@ const ImageAgent: React.FC<ImageProps> = ({
       width={width}
       x={x}
       y={y}
-      onClick={action}
+      onClick={() => {
+        emit(nextState, {
+          from: id,
+          trigger: nextState,
+        });
+      }}
       draggable={draggable}
     />
   );

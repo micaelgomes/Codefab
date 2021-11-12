@@ -9,12 +9,12 @@ import ErrorBoundary from '../../hocs/ErrorBoundary';
 import { useAssets } from '../../hooks/assets';
 
 const Render = () => {
-  const { scenes, agents, sceneIndex, previewOpen } = useEngine();
+  const { pages, agents, sceneIndex, previewOpen, emit, sub } = useEngine();
   const { getFilePath } = useAssets();
 
   const [render, setRender] = useState({} as any);
+  const [rendered, setRendered] = useState<number>();
   const stageRef = useRef<StageType>(null);
-  const bgScene = getFilePath(scenes?.[sceneIndex].background);
 
   const [propsScreen] = useState({
     with: 500,
@@ -22,21 +22,24 @@ const Render = () => {
   });
 
   useEffect(() => {
-    const renderScene = {
-      background: renderHTMLImageElement(bgScene),
-      sound: scenes?.[sceneIndex].sound,
-      title: scenes?.[sceneIndex].title,
-      agents: agents?.[sceneIndex],
-    };
+    if (sceneIndex !== rendered) {
+      const renderScene = {
+        background: renderHTMLImageElement(
+          getFilePath(pages?.[sceneIndex].background),
+        ),
+        sound: pages?.[sceneIndex].sound,
+        title: pages?.[sceneIndex].title,
+        agents: agents?.[sceneIndex],
+      };
 
-    console.log('Clear Stage 🖌️');
-    stageRef.current?.clear();
+      console.log('Clear Stage 🖌️');
+      stageRef.current?.clear();
 
-    setRender(renderScene);
-    console.log(stageRef.current);
-
-    console.log('Render Scene 💻');
-  }, [agents, bgScene, sceneIndex, scenes]);
+      setRender(renderScene);
+      setRendered(sceneIndex);
+      console.log('Render Scene 💻');
+    }
+  }, [agents, sceneIndex, pages, getFilePath, rendered]);
 
   useEffect(() => {
     if (!previewOpen) {
@@ -74,8 +77,11 @@ const Render = () => {
                 sprite={getFilePath(agent.attributes.sprite)}
                 text={agent.attributes.text}
                 nextState={agent.attributes['on-touch']}
+                trigger={agent.attributes['on-trigger']}
                 height={Number(agent.attributes.height)}
                 width={Number(agent.attributes.width)}
+                color={agent.attributes.color}
+                fontSize={Number(agent.attributes['font-size'])}
                 x={Number(agent.attributes.x)}
                 y={Number(agent.attributes.y)}
                 repeat={[
@@ -89,6 +95,8 @@ const Render = () => {
                 hasKeyboard={agent.attributes['on-press']}
                 draggable={Boolean(agent.attributes['draggable'])}
                 stageRef={stageRef}
+                emit={emit}
+                sub={sub}
               />
             ))}
           </ErrorBoundary>

@@ -9,7 +9,9 @@ import React, {
 
 import { v4 as uuid } from 'uuid';
 
-export interface SceneDTO {
+import { emitCustomEvent } from 'react-custom-events';
+
+export interface PageDTO {
   background: any;
   sound?: string;
   title?: string;
@@ -18,12 +20,14 @@ export interface SceneDTO {
 interface EngineDataContext {
   createFable(smilDom: unknown): void;
   resetFable(): void;
-  scenes: SceneDTO[] | undefined;
+  pages: PageDTO[] | undefined;
   agents: any;
   sceneIndex: number;
   setSceneIndex: Dispatch<SetStateAction<number>>;
   previewOpen: boolean;
   setpreviewOpen: Dispatch<SetStateAction<boolean>>;
+  emit(name: string, data: any): any;
+  sub(trigger: string, id: unknown): any;
 }
 
 interface SmilDomProps extends XMLDocument {
@@ -33,11 +37,12 @@ interface SmilDomProps extends XMLDocument {
 const EngineContext = createContext<EngineDataContext>({} as EngineDataContext);
 
 const EngineProvider: React.FC = ({ children }) => {
-  const [scenes, setScenes] = useState<SceneDTO[]>();
+  const [pages, setPages] = useState<PageDTO[]>();
   const [agents, setAgents] = useState<any[]>();
   const [sceneIndex, setSceneIndex] = useState<number>(0);
 
   const [previewOpen, setpreviewOpen] = useState<boolean>(false);
+  const [enrolled, setEnrolled] = useState<Event[]>([]);
 
   const createFable = useCallback((smilDom: SmilDomProps) => {
     console.clear();
@@ -46,9 +51,9 @@ const EngineProvider: React.FC = ({ children }) => {
       'color: brown; background: orange; padding: 2%;',
     );
 
-    const newScenes = smilDom?.children.map((scene: any) => scene?.attributes);
-    const agentsScenes = smilDom?.children.map((scene: any) =>
-      scene?.children?.map((agent: any) => ({
+    const newPages = smilDom?.children.map((page: any) => page?.attributes);
+    const agentsPages = smilDom?.children.map((page: any) =>
+      page?.children?.map((agent: any) => ({
         id: uuid(),
         attributes: agent?.attributes,
         states: agent?.children.map((state: any) => ({
@@ -58,28 +63,53 @@ const EngineProvider: React.FC = ({ children }) => {
       })),
     );
 
-    setScenes(newScenes);
-    setAgents(agentsScenes);
+    setPages(newPages);
+    setAgents(agentsPages);
   }, []);
 
   const resetFable = useCallback(() => {
     console.log('Clear 🉐');
 
-    setScenes([]);
+    setPages([]);
     setAgents([]);
+    setSceneIndex(0);
   }, []);
+
+  const emit = useCallback((nameEvent: string, data: any) => {
+    emitCustomEvent(nameEvent, data);
+  }, []);
+
+  const sub = useCallback(
+    (trigger: string, id: unknown) => {
+      const event = enrolled.filter(event => event.type === trigger);
+
+      if (event.length > 0) {
+        return event[0];
+      }
+
+      // if (enrolled.map(el => el.type).includes(trigger)) {
+      //   enrolled.push({
+      //     trigger,
+      //     id,
+      //   });
+      // }
+    },
+    [enrolled],
+  );
 
   return (
     <EngineContext.Provider
       value={{
         createFable,
         resetFable,
-        scenes,
+        pages,
         agents,
         sceneIndex,
         setSceneIndex,
         previewOpen,
         setpreviewOpen,
+        emit,
+        sub,
       }}
     >
       {children}

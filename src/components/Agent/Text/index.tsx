@@ -6,6 +6,8 @@ interface TextProps {
   id: number;
   height: number;
   text: string;
+  color: string;
+  fontSize: number;
   nextState: string;
   width: number;
   x: number;
@@ -24,6 +26,8 @@ const TextAgent: React.FC<TextProps> = ({
   y,
   states,
   container,
+  color,
+  fontSize,
 }) => {
   const textRef = useRef<TextKonva>(null);
 
@@ -61,7 +65,8 @@ const TextAgent: React.FC<TextProps> = ({
   return (
     <Text
       ref={textRef}
-      fontSize={16}
+      fontSize={fontSize || 16}
+      fill={color}
       align={'left'}
       fontFamily="Press Start 2P"
       text={text}

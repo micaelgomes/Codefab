@@ -19,11 +19,15 @@ const AssetsProvider: React.FC = ({ children }) => {
   const [files, setFiles] = useState<any>([]);
 
   const getFilePath = (name: string) => {
-    if (files.length > 0) {
-      const resul = files.filter((file: any) => file.path === name);
+    if (name) {
+      if (files.length > 0) {
+        const resul = files.filter((file: any) => file.path === name);
 
-      if (resul.length > 0) {
-        return resul[0].preview;
+        if (resul.length > 0) {
+          return resul[0].preview;
+        }
+      } else {
+        return `${window.location.href}assets/florest/${name}`;
       }
     }
 
