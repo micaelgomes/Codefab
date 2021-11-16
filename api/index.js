@@ -27,7 +27,7 @@ app.get('/api', (req, res) => {
   res.end(`Hello! Go to item: <a href="${path}">${path}</a>`);
 });
 
-app.post('/api/auth', (req, res) => {
+app.post('/api/auth', async (req, res) => {
   const { code } = req.body;
 
   const formData = new FormData();
@@ -36,10 +36,13 @@ app.post('/api/auth', (req, res) => {
   formData.append('code', code);
   formData.append('redirect_uri', redirect_uri);
 
-  fetch(`https://github.com/login/oauth/access_token`, {
-    method: 'POST',
-    body: formData,
-  })
+  const access_token = await fetch(
+    `https://github.com/login/oauth/access_token`,
+    {
+      method: 'POST',
+      body: formData,
+    },
+  )
     .then(response => {
       return response.text();
     })
@@ -47,15 +50,53 @@ app.post('/api/auth', (req, res) => {
       let params = new URLSearchParams(paramsString);
       const access_token = params.get('access_token');
 
-      return fetch(`https://api.github.com/user`, {
-        headers: {
-          Authorization: `token ${access_token}`,
-        },
-      });
+      return access_token;
     })
+    .catch(error => {
+      return res.status(400).json(error);
+    });
+
+  // GET /user
+  const user = await fetch(`https://api.github.com/user`, {
+    headers: {
+      Authorization: `token ${access_token}`,
+    },
+  })
     .then(response => response.json())
     .then(response => {
-      return res.status(200).json(response);
+      return response;
+    })
+    .catch(error => {
+      return res.status(400).json(error);
+    });
+
+  if (access_token && user) {
+    return res.status(200).json({
+      access_token,
+      ...user,
+    });
+  }
+
+  return res.status(400).json('error in object mouting');
+});
+
+app.post('/api/create', (req, res) => {
+  const access_token = req.headers.authorization;
+
+  fetch(`https://api.github.com/user/repos`, {
+    method: 'POST',
+    headers: {
+      Authorization: `token ${access_token}`,
+      Accept: 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+    },
+    body: {
+      name: 'testantoPOSTcodefab',
+    },
+  })
+    .then(response => {
+      console.log('responsePOST: ', response);
+      return res.status(201).json(response);
     })
     .catch(error => {
       return res.status(400).json(error);

@@ -3,7 +3,6 @@ import { Image } from 'react-konva';
 import { Image as ImageKonva } from 'konva/types/shapes/Image';
 import { renderHTMLImageElement } from '../../../utils/renderElement';
 import { useCustomEventListener } from 'react-custom-events';
-import { useAssets } from '../../../hooks/assets';
 
 type ImageProps = {
   id: number;
@@ -41,7 +40,6 @@ const ImageAgent: React.FC<ImageProps> = ({
   trigger,
 }) => {
   const imgRef = useRef<ImageKonva>(null);
-  const { getFilePath } = useAssets();
 
   const [imageState, setImageState] = useState({
     imageSrc,
@@ -83,7 +81,7 @@ const ImageAgent: React.FC<ImageProps> = ({
         }
       }
     },
-    [getFilePath, imageState, states],
+    [imageState, states],
   );
 
   useCustomEventListener(trigger, data => {

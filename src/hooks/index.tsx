@@ -3,7 +3,11 @@ import { AuthProvider } from './auth';
 import { EngineProvider } from './engine';
 import { AssetsProvider } from './assets';
 
-const AppProvider: React.FC = ({ children }) => {
+interface AppProps {
+  children?: any;
+}
+
+const AppProvider: React.FC<AppProps> = ({ children }) => {
   return (
     <AuthProvider>
       <EngineProvider>

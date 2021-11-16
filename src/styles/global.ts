@@ -12,6 +12,7 @@ export default createGlobalStyle`
 
   body {
       background: #F0F2F5 ;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased
   }
 
@@ -88,7 +89,6 @@ export default createGlobalStyle`
   }
 
   .CodeMirror-vscrollbar {
-
     &::-webkit-scrollbar {
       width: 10px;
       background-color: #3e3d32;

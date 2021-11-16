@@ -46,36 +46,87 @@ export const UserAction = styled.div`
   display: flex;
   align-items: center;
 
-  button {
-    position: relative;
-    background: none;
-    border: none;
-    filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
-    z-index: 0;
-    margin: 0 16px -8px;
-
-    svg {
-      color: #272822;
-    }
-
-    &::before {
-      content: '';
-      position: absolute;
-      background: #a6e22e;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      top: -5px;
-      left: -5px;
-      z-index: -1;
-    }
-  }
-
   img {
     background: #f8f8f2;
     border: 2px solid #ae81ff;
     border-radius: 50%;
     width: 50px;
     height: 50px;
+    margin-left: 8px;
+  }
+`;
+
+export const ButtonPlay = styled.button`
+  position: relative;
+  background: none;
+  border: none;
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
+  z-index: 0;
+  margin: 0 10px -8px;
+
+  svg {
+    color: #272822;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    background: #a6e22e;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    top: -5px;
+    left: -5px;
+    z-index: -1;
+  }
+`;
+
+export const ButtonPublish = styled.button`
+  position: relative;
+  background: none;
+  border: none;
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
+  z-index: 0;
+  margin: 0 10px -8px;
+
+  svg {
+    color: #272822;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    background: #fd971f;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    top: -5px;
+    left: -5px;
+    z-index: -1;
+  }
+`;
+
+export const ButtonHelp = styled.button`
+  position: relative;
+  background: none;
+  border: none;
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
+  z-index: 0;
+  margin: 0 10px -8px;
+
+  svg {
+    color: #272822;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    background: #cfcfc2;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    top: -5px;
+    left: -5px;
+    z-index: -1;
   }
 `;
