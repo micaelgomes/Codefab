@@ -1,10 +1,16 @@
 const express = require('express');
+const fs = require('fs');
+const util = require('util');
+
 const fetch = require('node-fetch');
 const FormData = require('form-data');
+const { Base64 } = require('js-base64');
 
 const { v4 } = require('uuid');
 
 require('dotenv').config();
+
+const readFilePromise = util.promisify(fs.readFile);
 
 const client_id = process.env.REACT_APP_CLIENT_ID;
 const redirect_uri = process.env.REACT_APP_REDIRECT_URI;
@@ -44,6 +50,7 @@ app.post('/api/auth', async (req, res) => {
     },
   )
     .then(response => {
+      console.log('HEADERS: ', response.headers);
       return response.text();
     })
     .then(paramsString => {
@@ -80,27 +87,68 @@ app.post('/api/auth', async (req, res) => {
   return res.status(400).json('error in object mouting');
 });
 
-app.post('/api/create', (req, res) => {
+app.post('/api/create', async (req, res) => {
   const access_token = req.headers.authorization;
+  const { body } = req;
 
-  fetch(`https://api.github.com/user/repos`, {
+  const bodyCreateRepo = {
+    name: body.name,
+    description: body.description,
+  };
+
+  const fable = Base64.btoa(body.code);
+
+  console.log(body.files);
+
+  const files = body.files?.map(async file => {
+    const bytes = await readFilePromise(file.preview, 'binary');
+    const buffer = Buffer.from(bytes, 'binary');
+    const content = buffer.toString('base64');
+
+    return content;
+  });
+
+  console.log('files64 ', files);
+
+  return;
+
+  const response = await fetch(`https://api.github.com/user/repos`, {
     method: 'POST',
     headers: {
-      Authorization: `token ${access_token}`,
+      Authorization: access_token,
       Accept: 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json',
     },
-    body: {
-      name: 'testantoPOSTcodefab',
-    },
-  })
-    .then(response => {
-      console.log('responsePOST: ', response);
-      return res.status(201).json(response);
-    })
-    .catch(error => {
-      return res.status(400).json(error);
+    body: JSON.stringify(bodyCreateRepo),
+  });
+
+  const url = response.headers.get('Location');
+
+  if (url) {
+    const response = await fetch(
+      `https://api.github.com/repos/${body.username}/${body.name}/contents/fable.xml`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: access_token,
+          Accept: 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify({
+          message: 'Commit do playground',
+          content: fable,
+        }),
+      },
+    );
+
+    console.log(response);
+
+    return res.status(201).json({
+      url,
     });
+  }
+
+  return res.status(400).json({
+    message: "repo don't created",
+  });
 });
 
 export default app;

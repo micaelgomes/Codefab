@@ -42,7 +42,7 @@ const EngineProvider: React.FC = ({ children }) => {
   const [sceneIndex, setSceneIndex] = useState<number>(0);
 
   const [previewOpen, setpreviewOpen] = useState<boolean>(false);
-  const [enrolled, setEnrolled] = useState<Event[]>([]);
+  const [enrolled] = useState<Event[]>([]);
 
   const createFable = useCallback((smilDom: SmilDomProps) => {
     console.clear();
