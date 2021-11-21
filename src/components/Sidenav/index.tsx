@@ -4,6 +4,8 @@ import { useDropzone } from 'react-dropzone';
 
 import * as S from './styled';
 import { useAssets } from '../../hooks/assets';
+import { api } from '../../services/api';
+import { useAuth } from '../../hooks/auth';
 
 interface SidenavProps {
   open: boolean;
@@ -11,16 +13,38 @@ interface SidenavProps {
 
 const Sidenav: React.FC<SidenavProps> = ({ open }) => {
   const { files, setFiles, deleteFile } = useAssets();
+  const { user } = useAuth();
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/jpeg, image/png, audio/*, video/mp4',
     onDrop: acceptedFiles => {
+      const filesData = new FormData();
+
       const newFiles = acceptedFiles.map(file =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
           nameFile: file.name,
         }),
       );
+
+      newFiles.forEach(file => {
+        filesData.append('assets', file);
+      });
+
+      api
+        .post('/file', filesData, {
+          headers: {
+            Authorization: `token ${user.access_token}`,
+            'Content-Type': 'multipart/form-data',
+            'Content-Transfer-Encoding': 'base64',
+          },
+        })
+        .then(res => console.log(res))
+        .catch(err => {
+          console.error(err);
+          // localStorage.removeItem('@codefab:user');
+          // window.location.reload();
+        });
 
       setFiles([...files, ...newFiles]);
     },
@@ -48,7 +72,7 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
       <S.ContainerDragNDrop>
         {!files.length && (
           <S.ContainerEmpty {...getRootProps({ className: 'dropzone' })}>
-            <input {...getInputProps()} />
+            <input name="assets" {...getInputProps()} />
             <S.isEmpty>
               <FiUploadCloud size={32} />
               Clique aqui ou arraste os arquivos que deseja utilizar

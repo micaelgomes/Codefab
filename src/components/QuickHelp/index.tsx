@@ -25,7 +25,7 @@ const QuickHelp: React.FC<QuickHelpProps> = ({ open, toogle }) => {
       <S.Container
         open={open}
         right={true}
-        width={1000}
+        width={700}
         noTouchOpen={true}
         noTouchClose={true}
         overlayColor="transparent"

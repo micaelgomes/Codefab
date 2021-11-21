@@ -6,7 +6,6 @@ import {
   FiUploadCloud,
   FiX,
 } from 'react-icons/fi';
-import { useAssets } from '../../hooks/assets';
 import { useAuth } from '../../hooks/auth';
 import { api } from '../../services/api';
 import QuickHelp from '../QuickHelp';
@@ -26,7 +25,6 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const { user } = useAuth();
-  const { files } = useAssets();
 
   const toogle = () => setOpenQuickView(!openQuickView);
 
@@ -46,7 +44,6 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
           description,
           username,
           code,
-          files,
         },
         {
           headers: { Authorization: `token ${user.access_token}` },
@@ -94,13 +91,13 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
           </S.ContainerLogo>
 
           <S.UserAction>
-            <S.ButtonHelp onClick={toogle}>
-              <FiHelpCircle size={22} />
-            </S.ButtonHelp>
-
             <S.ButtonPublish onClick={toogleModal}>
               <FiUploadCloud size={22} />
             </S.ButtonPublish>
+
+            <S.ButtonHelp onClick={toogle}>
+              <FiHelpCircle size={22} />
+            </S.ButtonHelp>
 
             <S.ButtonPlay onClick={runPreview}>
               <FiPlayCircle size={22} />

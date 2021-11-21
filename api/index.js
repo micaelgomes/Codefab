@@ -1,16 +1,14 @@
 const express = require('express');
-const fs = require('fs');
-const util = require('util');
-
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 const { Base64 } = require('js-base64');
 
+const multer = require('multer');
+const upload = multer();
+
 const { v4 } = require('uuid');
 
 require('dotenv').config();
-
-const readFilePromise = util.promisify(fs.readFile);
 
 const client_id = process.env.REACT_APP_CLIENT_ID;
 const redirect_uri = process.env.REACT_APP_REDIRECT_URI;
@@ -98,20 +96,6 @@ app.post('/api/create', async (req, res) => {
 
   const fable = Base64.btoa(body.code);
 
-  console.log(body.files);
-
-  const files = body.files?.map(async file => {
-    const bytes = await readFilePromise(file.preview, 'binary');
-    const buffer = Buffer.from(bytes, 'binary');
-    const content = buffer.toString('base64');
-
-    return content;
-  });
-
-  console.log('files64 ', files);
-
-  return;
-
   const response = await fetch(`https://api.github.com/user/repos`, {
     method: 'POST',
     headers: {
@@ -139,8 +123,6 @@ app.post('/api/create', async (req, res) => {
       },
     );
 
-    console.log(response);
-
     return res.status(201).json({
       url,
     });
@@ -148,6 +130,35 @@ app.post('/api/create', async (req, res) => {
 
   return res.status(400).json({
     message: "repo don't created",
+  });
+});
+
+app.post('/api/file', upload.array('assets'), async (req, res) => {
+  const access_token = req.headers.authorization;
+
+  const { files } = req;
+
+  files.forEach((file, i) => {
+    console.log('enviando a Nº ', i + 1);
+    const buffer = Buffer.from(file.buffer, 'binary');
+    const content = buffer.toString('base64');
+
+    fetch(
+      `https://api.github.com/repos/micaelteste/test-16/contents/${file.originalname}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: access_token,
+          Accept: 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify({
+          message: 'Commit do playground',
+          content,
+        }),
+      },
+    )
+      .then(res => console.log(i + 1, ' foi enviada.'))
+      .catch(err => console.log(i + 1, ' deu errado.'));
   });
 });
 
