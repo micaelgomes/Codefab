@@ -6,16 +6,24 @@ import * as S from './styled';
 import { useAssets } from '../../hooks/assets';
 import { api } from '../../services/api';
 import { useAuth } from '../../hooks/auth';
+import { useParams } from 'react-router';
 
 interface SidenavProps {
   open: boolean;
 }
 
+interface PathType {
+  repo: string;
+}
+
 const Sidenav: React.FC<SidenavProps> = ({ open }) => {
   const { files, setFiles, deleteFile } = useAssets();
+  const { repo } = useParams<PathType>();
   const { user } = useAuth();
 
   const { getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    maxFiles: 1,
     accept: 'image/jpeg, image/png, audio/*, video/mp4',
     onDrop: acceptedFiles => {
       const filesData = new FormData();
@@ -32,32 +40,28 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
       });
 
       api
-        .post('/file', filesData, {
-          headers: {
-            Authorization: `token ${user.access_token}`,
-            'Content-Type': 'multipart/form-data',
-            'Content-Transfer-Encoding': 'base64',
-          },
+        .post(`/file?user=${user.login}&repo=${repo}`, filesData)
+        .then(res => {
+          setFiles([...files, res.data.content]);
         })
-        .then(res => console.log(res))
         .catch(err => {
           console.error(err);
-          // localStorage.removeItem('@codefab:user');
-          // window.location.reload();
+          localStorage.removeItem('@codefab:user');
+          window.location.reload();
         });
 
-      setFiles([...files, ...newFiles]);
+      // setFiles([...files, ...newFiles]);
     },
   });
 
   const thumbs = files.map((file: any) => (
     <S.Thumb key={file.name}>
-      <button onClick={() => deleteFile(file.name)}>
+      <button onClick={() => deleteFile(file.name, repo, file.sha)}>
         <FiXCircle size={22} />
       </button>
       <S.ThumbInner>
-        <S.ThumbImage src={file.preview} alt="" />
-        <small>{file.nameFile}</small>
+        <S.ThumbImage src={file.download_url} alt={file.name} />
+        <small>{file.name}</small>
       </S.ThumbInner>
     </S.Thumb>
   ));

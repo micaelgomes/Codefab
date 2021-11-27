@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FiHelpCircle,
   FiMenu,
   FiPlayCircle,
   FiUploadCloud,
-  FiX,
 } from 'react-icons/fi';
+import { useParams } from 'react-router';
 import { useAuth } from '../../hooks/auth';
 import { api } from '../../services/api';
 import QuickHelp from '../QuickHelp';
@@ -17,39 +17,28 @@ interface NavbarProps {
   toogleSidenav: any;
 }
 
+interface PathType {
+  repo: string;
+}
+
 const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
-  const [openQuickView, setOpenQuickView] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-
-  const inputRef = useRef<HTMLInputElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
+  const { repo } = useParams<PathType>();
   const { user } = useAuth();
+  const [openQuickView, setOpenQuickView] = useState(false);
 
   const toogle = () => setOpenQuickView(!openQuickView);
 
-  const toogleModal = () => setOpenModal(!openModal);
-
-  const publishRepo = () => {
-    const name = inputRef.current?.value;
-    const description = textareaRef.current?.value;
-    const username = user.login;
-    const code = localStorage.getItem('@code');
+  const updateFable = () => {
+    const fable = localStorage.getItem('@code');
+    const sha = JSON.parse(localStorage.getItem('@sha-fable') as string);
 
     api
-      .post(
-        '/create',
-        {
-          name,
-          description,
-          username,
-          code,
-        },
-        {
-          headers: { Authorization: `token ${user.access_token}` },
-        },
-      )
-      .then(res => console.log(res))
+      .put(`/file/fable?user=${user.login}&repo=${repo}&sha=${sha}`, {
+        fable,
+      })
+      .then(res => {
+        console.log(res);
+      })
       .catch(err => {
         console.error(err);
         // localStorage.removeItem('@codefab:user');
@@ -58,58 +47,42 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
   };
 
   return (
-    <>
-      {openModal && (
-        <S.Overlay>
-          <S.ContainerModal>
-            <S.buttonClose onClick={toogleModal}>
-              <FiX size={24} />
-            </S.buttonClose>
-            <label>
-              Nome do projeto:
-              <input ref={inputRef} type="text" />
-            </label>
-
-            <label>
-              Descrição:
-              <textarea ref={textareaRef} />
-            </label>
-
-            <S.buttonPublish onClick={publishRepo}>
-              Publicar no Github
-            </S.buttonPublish>
-          </S.ContainerModal>
-        </S.Overlay>
-      )}
-      <S.Container>
-        <S.Wrapper>
-          <S.ContainerLogo>
+    <S.Container>
+      <S.Wrapper>
+        <S.ContainerLogo>
+          {repo && (
             <button onClick={toogleSidenav}>
               <FiMenu size={24} />
             </button>
+          )}
+          <a href="/">
             <span id="logo" />
-          </S.ContainerLogo>
+          </a>
+        </S.ContainerLogo>
 
-          <S.UserAction>
-            <S.ButtonPublish onClick={toogleModal}>
-              <FiUploadCloud size={22} />
-            </S.ButtonPublish>
+        <S.UserAction>
+          {repo && (
+            <>
+              <S.ButtonPublish onClick={updateFable}>
+                <FiUploadCloud size={22} />
+              </S.ButtonPublish>
 
-            <S.ButtonHelp onClick={toogle}>
-              <FiHelpCircle size={22} />
-            </S.ButtonHelp>
+              <S.ButtonHelp onClick={toogle}>
+                <FiHelpCircle size={22} />
+              </S.ButtonHelp>
 
-            <S.ButtonPlay onClick={runPreview}>
-              <FiPlayCircle size={22} />
-            </S.ButtonPlay>
+              <S.ButtonPlay onClick={runPreview}>
+                <FiPlayCircle size={22} />
+              </S.ButtonPlay>
+            </>
+          )}
 
-            <img src={user.avatar_url} alt="Logo from user" />
-          </S.UserAction>
-        </S.Wrapper>
+          <img src={user.avatar_url} alt="Logo from user" />
+        </S.UserAction>
+      </S.Wrapper>
 
-        <QuickHelp open={openQuickView} toogle={toogle}></QuickHelp>
-      </S.Container>
-    </>
+      <QuickHelp open={openQuickView} toogle={toogle}></QuickHelp>
+    </S.Container>
   );
 };
 

@@ -1,12 +1,8 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
-const { Base64 } = require('js-base64');
-
 const multer = require('multer');
 const upload = multer();
-
-const { v4 } = require('uuid');
 
 require('dotenv').config();
 
@@ -22,13 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   next();
-});
-
-app.get('/api', (req, res) => {
-  const path = `/api/item/${v4()}`;
-  res.setHeader('Content-Type', 'text/html');
-  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
-  res.end(`Hello! Go to item: <a href="${path}">${path}</a>`);
 });
 
 app.post('/api/auth', async (req, res) => {
@@ -48,7 +37,6 @@ app.post('/api/auth', async (req, res) => {
     },
   )
     .then(response => {
-      console.log('HEADERS: ', response.headers);
       return response.text();
     })
     .then(paramsString => {
@@ -85,66 +73,17 @@ app.post('/api/auth', async (req, res) => {
   return res.status(400).json('error in object mouting');
 });
 
-app.post('/api/create', async (req, res) => {
-  const access_token = req.headers.authorization;
-  const { body } = req;
-
-  const bodyCreateRepo = {
-    name: body.name,
-    description: body.description,
-  };
-
-  const fable = Base64.btoa(body.code);
-
-  const response = await fetch(`https://api.github.com/user/repos`, {
-    method: 'POST',
-    headers: {
-      Authorization: access_token,
-      Accept: 'application/vnd.github.v3+json',
-    },
-    body: JSON.stringify(bodyCreateRepo),
-  });
-
-  const url = response.headers.get('Location');
-
-  if (url) {
-    const response = await fetch(
-      `https://api.github.com/repos/${body.username}/${body.name}/contents/fable.xml`,
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: access_token,
-          Accept: 'application/vnd.github.v3+json',
-        },
-        body: JSON.stringify({
-          message: 'Commit do playground',
-          content: fable,
-        }),
-      },
-    );
-
-    return res.status(201).json({
-      url,
-    });
-  }
-
-  return res.status(400).json({
-    message: "repo don't created",
-  });
-});
-
 app.post('/api/file', upload.array('assets'), async (req, res) => {
   const access_token = req.headers.authorization;
-
   const { files } = req;
+  const { user, repo } = req.query;
 
-  files.forEach((file, i) => {
-    console.log('enviando a Nº ', i + 1);
+  files.forEach(async file => {
     const buffer = Buffer.from(file.buffer, 'binary');
     const content = buffer.toString('base64');
 
     fetch(
-      `https://api.github.com/repos/micaelteste/test-16/contents/${file.originalname}`,
+      `https://api.github.com/repos/${user}/${repo}/contents/${file.originalname}`,
       {
         method: 'PUT',
         headers: {
@@ -157,9 +96,189 @@ app.post('/api/file', upload.array('assets'), async (req, res) => {
         }),
       },
     )
-      .then(res => console.log(i + 1, ' foi enviada.'))
-      .catch(err => console.log(i + 1, ' deu errado.'));
+      .then(response =>
+        response
+          .json()
+          .then(responseJson => res.status(200).json(responseJson)),
+      )
+      .catch(err => res.json(400).json(err));
   });
+});
+
+app.put('/api/file/fable', async (req, res) => {
+  const access_token = req.headers.authorization;
+  const { fable } = req.body;
+  const { user, repo, sha } = req.query;
+
+  const buffer = Buffer.from(fable);
+  const content = buffer.toString('base64');
+
+  console.log(user, repo, sha);
+
+  fetch(`https://api.github.com/repos/${user}/${repo}/contents/fable.xml`, {
+    method: 'PUT',
+    headers: {
+      Authorization: access_token,
+      Accept: 'application/vnd.github.v3+json',
+    },
+    body: JSON.stringify({
+      message: 'Commit atualizando fable do playground',
+      sha,
+      content,
+    }),
+  })
+    .then(response =>
+      response.json().then(responseJson => res.status(200).json(responseJson)),
+    )
+    .catch(err => res.json(400).json(err));
+});
+
+app.delete('/api/file', async (req, res) => {
+  const access_token = req.headers.authorization;
+  const { user, repo, nameFile, sha } = req.query;
+
+  fetch(`https://api.github.com/repos/${user}/${repo}/contents/${nameFile}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: access_token,
+      Accept: 'application/vnd.github.v3+json',
+    },
+    body: JSON.stringify({
+      message: 'Deletando arquivo do playground',
+      sha,
+    }),
+  })
+    .then(response => response.json())
+    .then(responseJson => res.status(200).json(responseJson))
+    .catch(err => res.status(404).json(err));
+});
+
+app.get('/api/projects', async (req, res) => {
+  const access_token = req.headers.authorization;
+
+  fetch(`https://api.github.com/user/repos`, {
+    method: 'GET',
+    headers: {
+      Authorization: access_token,
+      Accept: 'application/vnd.github.v3+json',
+    },
+  })
+    .then(response => response.json())
+    .then(
+      responseJson =>
+        res
+          .status(200)
+          .json(responseJson.filter(repo => repo?.topics.includes('codefab'))),
+      // .json(responseJson),
+    )
+    .catch(error =>
+      res
+        .status(400)
+        .json({ message: 'Erro na busca de respositórios', error }),
+    );
+});
+
+app.post('/api/project', async (req, res) => {
+  const access_token = req.headers.authorization;
+  const { body } = req;
+
+  const bodyCreateRepo = {
+    name: body.name,
+    description: body.description,
+  };
+
+  const response = await fetch(`https://api.github.com/user/repos`, {
+    method: 'POST',
+    headers: {
+      Authorization: access_token,
+      Accept: 'application/vnd.github.v3+json',
+    },
+    body: JSON.stringify(bodyCreateRepo),
+  })
+    .then(responseGitHub => responseGitHub.json())
+    .catch(error => res.status(400).json(error));
+
+  if (response.name) {
+    fetch(
+      `https://api.github.com/repos/${response.owner.login}/${response.name}/topics`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: access_token,
+          Accept: 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify({
+          names: [
+            'fablejs',
+            'codefab',
+            'codefab-community',
+            'codefab-discovery',
+          ],
+        }),
+      },
+    )
+      .then(() => res.status(201).json(response))
+      .catch(errorTopics => res.status(404).json(errorTopics));
+  }
+});
+
+app.delete('/api/project', async (req, res) => {
+  const access_token = req.headers.authorization;
+  const { user, repo } = req.query;
+
+  fetch(`https://api.github.com/repos/${user}/${repo}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: access_token,
+      Accept: 'application/vnd.github.v3+json',
+    },
+  })
+    .then(responseGitHub =>
+      responseGitHub.json().then(responseJson => responseJson),
+    )
+    .catch(error => res.status(400).json(error));
+});
+
+app.get('/api/project', async (req, res) => {
+  const access_token = req.headers.authorization;
+  const { user, repo } = req.query;
+
+  const responseRepo = await fetch(
+    `https://api.github.com/repos/${user}/${repo}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: access_token,
+        Accept: 'application/vnd.github.v3+json',
+      },
+    },
+  )
+    .then(response => response.json())
+    .catch(error =>
+      res.status(400).json({ message: 'Erro na busca do respositório', error }),
+    );
+
+  const responseContent = await fetch(
+    `https://api.github.com/repos/${user}/${repo}/contents`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: access_token,
+        Accept: 'application/vnd.github.v3+json',
+      },
+    },
+  )
+    .then(response => response.json())
+    .catch(error =>
+      res.status(400).json({ message: 'Erro na busca do respositório', error }),
+    );
+
+  if (responseRepo && responseContent) {
+    return res.status(200).json({
+      project: responseRepo,
+      content: responseContent,
+    });
+  }
 });
 
 export default app;

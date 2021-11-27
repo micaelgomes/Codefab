@@ -5,6 +5,8 @@ import React, {
   useContext,
   useState,
 } from 'react';
+import { api } from '../services/api';
+import { useAuth } from './auth';
 
 interface EngineDataContext {
   files: any[];
@@ -18,23 +20,23 @@ const AssetsContext = createContext<EngineDataContext>({} as EngineDataContext);
 const AssetsProvider: React.FC = ({ children }) => {
   const [files, setFiles] = useState<any>([]);
 
+  const { user } = useAuth();
+
   const getFilePath = (name: string) => {
     if (name) {
       if (files.length > 0) {
         const resul = files.filter((file: any) => file.path === name);
 
         if (resul.length > 0) {
-          return resul[0].preview;
+          return resul[0].download_url;
         }
-      } else {
-        return `${window.location.href}assets/florest/${name}`;
       }
     }
 
     return undefined;
   };
 
-  const deleteFile = (name: string) => {
+  const deleteFile = (name: string, repo: string, sha: string) => {
     // eslint-disable-next-line array-callback-return
     const newFiles = files.filter((file: any) => {
       if (file.path !== name) {
@@ -43,6 +45,15 @@ const AssetsProvider: React.FC = ({ children }) => {
 
       URL.revokeObjectURL(file.preview);
     });
+
+    api
+      .delete(
+        `/file?user=${user.login}&repo=${repo}&nameFile=${name}&sha=${sha}`,
+      )
+      .then(res => console.log(res))
+      .catch(err => {
+        console.error(err);
+      });
 
     setFiles(newFiles || []);
   };
