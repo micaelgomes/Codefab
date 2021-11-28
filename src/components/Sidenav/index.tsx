@@ -46,8 +46,8 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
         })
         .catch(err => {
           console.error(err);
-          localStorage.removeItem('@codefab:user');
-          window.location.reload();
+          // localStorage.removeItem('@codefab:user');
+          // window.location.reload();
         });
 
       // setFiles([...files, ...newFiles]);

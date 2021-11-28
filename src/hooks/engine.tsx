@@ -9,7 +9,7 @@ import React, {
 
 import { v4 as uuid } from 'uuid';
 
-import { emitCustomEvent } from 'react-custom-events';
+import { emitCustomEvent, useCustomEventListener } from 'react-custom-events';
 
 export interface PageDTO {
   background: any;
@@ -27,7 +27,6 @@ interface EngineDataContext {
   previewOpen: boolean;
   setpreviewOpen: Dispatch<SetStateAction<boolean>>;
   emit(name: string, data: any): any;
-  sub(trigger: string, id: unknown): any;
 }
 
 interface SmilDomProps extends XMLDocument {
@@ -42,7 +41,6 @@ const EngineProvider: React.FC = ({ children }) => {
   const [sceneIndex, setSceneIndex] = useState<number>(0);
 
   const [previewOpen, setpreviewOpen] = useState<boolean>(false);
-  const [enrolled] = useState<Event[]>([]);
 
   const createFable = useCallback((smilDom: SmilDomProps) => {
     console.clear();
@@ -79,23 +77,25 @@ const EngineProvider: React.FC = ({ children }) => {
     emitCustomEvent(nameEvent, data);
   }, []);
 
-  const sub = useCallback(
-    (trigger: string, id: unknown) => {
-      const event = enrolled.filter(event => event.type === trigger);
+  useCustomEventListener('_NEXT_PAGE', () => {
+    if (pages && sceneIndex + 1 < pages.length) {
+      setSceneIndex(sceneIndex + 1);
+    }
+  });
 
-      if (event.length > 0) {
-        return event[0];
-      }
+  useCustomEventListener('_PREV_PAGE', () => {
+    if (pages && sceneIndex - 1 >= 0) {
+      setSceneIndex(sceneIndex - 1);
+    }
+  });
 
-      // if (enrolled.map(el => el.type).includes(trigger)) {
-      //   enrolled.push({
-      //     trigger,
-      //     id,
-      //   });
-      // }
-    },
-    [enrolled],
-  );
+  useCustomEventListener('_GOTO_PAGE', (data: any) => {
+    const numPage = Number(data.page) - 1;
+
+    if (pages && numPage < pages.length) {
+      setSceneIndex(numPage);
+    }
+  });
 
   return (
     <EngineContext.Provider
@@ -109,7 +109,6 @@ const EngineProvider: React.FC = ({ children }) => {
         previewOpen,
         setpreviewOpen,
         emit,
-        sub,
       }}
     >
       {children}

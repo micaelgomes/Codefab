@@ -164,12 +164,10 @@ app.get('/api/projects', async (req, res) => {
     },
   })
     .then(response => response.json())
-    .then(
-      responseJson =>
-        res
-          .status(200)
-          .json(responseJson.filter(repo => repo?.topics.includes('codefab'))),
-      // .json(responseJson),
+    .then(responseJson =>
+      res
+        .status(200)
+        .json(responseJson.filter(repo => repo?.topics.includes('codefab'))),
     )
     .catch(error =>
       res
@@ -243,42 +241,19 @@ app.get('/api/project', async (req, res) => {
   const access_token = req.headers.authorization;
   const { user, repo } = req.query;
 
-  const responseRepo = await fetch(
-    `https://api.github.com/repos/${user}/${repo}`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: access_token,
-        Accept: 'application/vnd.github.v3+json',
-      },
+  fetch(`https://api.github.com/repos/${user}/${repo}/contents`, {
+    method: 'GET',
+    headers: {
+      Authorization: access_token,
+      Accept: 'application/vnd.github.v3+json',
     },
-  )
-    .then(response => response.json())
+  })
+    .then(response =>
+      response.json().then(responseJson => res.status(200).json(responseJson)),
+    )
     .catch(error =>
       res.status(400).json({ message: 'Erro na busca do respositório', error }),
     );
-
-  const responseContent = await fetch(
-    `https://api.github.com/repos/${user}/${repo}/contents`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: access_token,
-        Accept: 'application/vnd.github.v3+json',
-      },
-    },
-  )
-    .then(response => response.json())
-    .catch(error =>
-      res.status(400).json({ message: 'Erro na busca do respositório', error }),
-    );
-
-  if (responseRepo && responseContent) {
-    return res.status(200).json({
-      project: responseRepo,
-      content: responseContent,
-    });
-  }
 });
 
 export default app;

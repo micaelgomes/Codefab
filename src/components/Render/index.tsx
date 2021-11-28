@@ -9,11 +9,10 @@ import ErrorBoundary from '../../hocs/ErrorBoundary';
 import { useAssets } from '../../hooks/assets';
 
 const Render = () => {
-  const { pages, agents, sceneIndex, previewOpen, emit, sub } = useEngine();
-  const { getFilePath } = useAssets();
+  const { pages, agents, sceneIndex, previewOpen, emit } = useEngine();
+  const { files, getFilePath } = useAssets();
 
   const [render, setRender] = useState({} as any);
-  const [rendered, setRendered] = useState<number>();
   const stageRef = useRef<StageType>(null);
 
   const [propsScreen] = useState({
@@ -22,24 +21,21 @@ const Render = () => {
   });
 
   useEffect(() => {
-    if (sceneIndex !== rendered) {
-      const renderScene = {
-        background: renderHTMLImageElement(
-          getFilePath(pages?.[sceneIndex].background),
-        ),
-        sound: pages?.[sceneIndex].sound,
-        title: pages?.[sceneIndex].title,
-        agents: agents?.[sceneIndex],
-      };
+    const renderScene = {
+      background: renderHTMLImageElement(
+        getFilePath(pages?.[sceneIndex].background),
+      ),
+      sound: pages?.[sceneIndex].sound,
+      title: pages?.[sceneIndex].title,
+      agents: agents?.[sceneIndex],
+    };
 
-      console.log('Clear Stage 🖌️');
-      stageRef.current?.clear();
+    console.log('Clear Stage 🖌️');
+    stageRef.current?.clear();
 
-      setRender(renderScene);
-      setRendered(sceneIndex);
-      console.log('Render Scene 💻');
-    }
-  }, [agents, sceneIndex, pages, getFilePath, rendered]);
+    setRender(renderScene);
+    console.log('Render Scene 💻');
+  }, [agents, sceneIndex, pages, getFilePath]);
 
   useEffect(() => {
     if (!previewOpen) {
@@ -83,7 +79,11 @@ const Render = () => {
                 color={agent.attributes.color}
                 fontSize={Number(agent.attributes['font-size'])}
                 x={Number(agent.attributes.x)}
-                y={Number(agent.attributes.y)}
+                y={
+                  propsScreen.with -
+                  Number(agent.attributes.y) -
+                  Number(agent.attributes.height)
+                }
                 repeat={[
                   Number(agent.attributes['repeat-x']),
                   Number(agent.attributes['repeat-y']),
@@ -96,7 +96,7 @@ const Render = () => {
                 draggable={Boolean(agent.attributes['draggable'])}
                 stageRef={stageRef}
                 emit={emit}
-                sub={sub}
+                files={files}
               />
             ))}
           </ErrorBoundary>

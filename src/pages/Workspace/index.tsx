@@ -53,8 +53,8 @@ const Workspace: React.FC = () => {
         setCreatingProject(false);
         console.error(err);
         alert('Algum problema aconteceu');
-        localStorage.removeItem('@codefab:user');
-        window.location.reload();
+        // localStorage.removeItem('@codefab:user');
+        // window.location.reload();
       });
   };
 

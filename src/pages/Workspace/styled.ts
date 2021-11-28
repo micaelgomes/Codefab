@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { animated } from 'react-spring';
-import { FiX } from 'react-icons/fi';
 
 const colors = [
   '#E6DB74',

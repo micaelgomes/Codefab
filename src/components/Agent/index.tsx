@@ -26,8 +26,8 @@ export interface AgentProps {
   draggable: boolean;
   stageRef: RefObject<Stage>;
   emit(name: string, data: any): any;
-  sub(trigger: string, id: unknown): any;
   trigger: string;
+  files: any;
 }
 
 const Agent: React.FC<AgentProps> = ({
@@ -51,8 +51,8 @@ const Agent: React.FC<AgentProps> = ({
   color,
   fontSize,
   emit,
-  sub,
   trigger,
+  files,
 }) => {
   const container = stageRef.current?.container();
 
@@ -81,8 +81,8 @@ const Agent: React.FC<AgentProps> = ({
           container={container}
           draggable={draggable}
           emit={emit}
-          sub={sub}
           trigger={trigger}
+          files={files}
         />
       )}
 

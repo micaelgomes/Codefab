@@ -71,14 +71,14 @@ const Editor: React.FC = () => {
         `/project?user=${user.login}&repo=${repo}`,
       );
 
-      if (response.data.content?.length > 0) {
+      if (response.data?.length > 0) {
         console.log(response.data);
 
-        const filterFable = response.data.content.filter(
+        const filterFable = response.data.filter(
           (file: any) => file.path === 'fable.xml',
         );
 
-        const filterAssets = response.data.content.filter(
+        const filterAssets = response.data.filter(
           (file: any) => file.path !== 'fable.xml',
         );
 

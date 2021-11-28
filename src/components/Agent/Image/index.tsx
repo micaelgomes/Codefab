@@ -18,8 +18,8 @@ type ImageProps = {
   hasKeyboard: boolean;
   container: HTMLDivElement | undefined;
   emit(name: string, data: any): any;
-  sub(trigger: string, id: unknown): any;
   trigger: string;
+  files: any;
 };
 
 const ImageAgent: React.FC<ImageProps> = ({
@@ -36,8 +36,8 @@ const ImageAgent: React.FC<ImageProps> = ({
   container,
   draggable,
   emit,
-  sub,
   trigger,
+  files,
 }) => {
   const imgRef = useRef<ImageKonva>(null);
 
@@ -57,6 +57,8 @@ const ImageAgent: React.FC<ImageProps> = ({
           .map((state: any) => state.name)
           .indexOf(trigger);
 
+        console.log(posNewAttr);
+
         if (posNewAttr >= 0) {
           setImageState({
             ...imageState,
@@ -66,11 +68,13 @@ const ImageAgent: React.FC<ImageProps> = ({
           });
 
           if (imgRef.current) {
-            // const filePath = getFilePath(imageState.imageSrc);
-            // const newImage = renderHTMLImageElement(imageState.imageSrc);
-
             const newImage = new window.Image();
-            newImage.src = imageState.imageSrc;
+
+            files.forEach((file: any) => {
+              if (file.name === states?.[posNewAttr]?.attributes?.['img']) {
+                newImage.src = file.download_url;
+              }
+            });
 
             imgRef.current.image(newImage);
             imgRef.current.x(Number(imageState.x));
@@ -81,7 +85,7 @@ const ImageAgent: React.FC<ImageProps> = ({
         }
       }
     },
-    [imageState, states],
+    [files, imageState, states],
   );
 
   useCustomEventListener(trigger, data => {
@@ -97,10 +101,23 @@ const ImageAgent: React.FC<ImageProps> = ({
       x={x}
       y={y}
       onClick={() => {
-        emit(nextState, {
-          from: id,
-          trigger: nextState,
-        });
+        const hasMacros = nextState.search(':');
+
+        if (hasMacros >= 0) {
+          const macros = nextState.split(':');
+
+          emit(macros[0], {
+            from: id,
+            trigger: macros[0],
+            page: macros[1],
+          });
+        } else {
+          emit(nextState, {
+            from: id,
+            trigger: nextState,
+            page: 0,
+          });
+        }
       }}
       draggable={draggable}
     />
