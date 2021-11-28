@@ -18,6 +18,26 @@ export const Container = styled.div`
   display: flex;
 `;
 
+export const NoResolution = styled.div`
+  background: #272727;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  z-index: 9999;
+
+  @media (min-width: 992px) {
+    display: none;
+  }
+
+  p {
+    margin: auto;
+    max-width: 460px;
+    width: 100%;
+    color: #fff;
+  }
+`;
+
 export const Branding = styled.div`
   flex: 1;
   color: #f7f9f2;
