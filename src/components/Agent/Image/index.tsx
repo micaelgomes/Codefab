@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Image } from 'react-konva';
 import { Image as ImageKonva } from 'konva/types/shapes/Image';
 import { renderHTMLImageElement } from '../../../utils/renderElement';
@@ -91,6 +91,20 @@ const ImageAgent: React.FC<ImageProps> = ({
   useCustomEventListener(trigger, data => {
     action(trigger);
   });
+
+  useEffect(() => {
+    try {
+      if (width <= 0 || height <= 0) {
+        throw new Error('Image require props (width, height)');
+      }
+
+      if (imageSrc.length <= 0) {
+        throw new Error('Image require source path');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [height, imageSrc, width, x, y]);
 
   return (
     <Image

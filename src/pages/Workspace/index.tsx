@@ -1,5 +1,5 @@
 import { useSpring } from 'react-spring';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { FormEvent, memo, useEffect, useRef, useState } from 'react';
 import { FiArrowRight, FiPlus, FiX } from 'react-icons/fi';
 import Navbar from '../../components/Navbar';
 import { api } from '../../services/api';
@@ -34,28 +34,51 @@ const Workspace: React.FC = () => {
 
   const toogle = () => setModalOpen(!modalOpen);
 
-  const publishRepo = () => {
-    setCreatingProject(true);
-
+  const publishRepo = (e: FormEvent) => {
+    e.preventDefault();
     const name = inputRef.current?.value;
     const description = textareaRef.current?.value;
 
-    api
-      .post('/project', {
-        name,
-        description,
-      })
-      .then(res => {
-        setCreatingProject(false);
-        history.push(`/fable/${res.data.id}`);
-      })
-      .catch(err => {
-        setCreatingProject(false);
-        console.error(err);
-        alert('Algum problema aconteceu');
-        // localStorage.removeItem('@codefab:user');
-        // window.location.reload();
-      });
+    const hasSpecialChar = name?.search(/[!@#$%^&*(),.?":{}|<>]/g);
+    const hasAccentChar = name?.search(/[ãàáäâèéëêìíïîõòóöôùúüûñç]/gi);
+
+    setCreatingProject(true);
+
+    if (
+      hasSpecialChar &&
+      hasAccentChar &&
+      hasSpecialChar < 0 &&
+      hasAccentChar < 0
+    ) {
+      api
+        .post('/project', {
+          name,
+          description,
+        })
+        .then(res => {
+          setCreatingProject(false);
+          history.push(`/fable/${res.data.id}`);
+        })
+        .catch(err => {
+          setCreatingProject(false);
+          console.error(err);
+          alert('Algum problema aconteceu');
+          // localStorage.removeItem('@codefab:user');
+          // window.location.reload();
+        });
+    } else {
+      setCreatingProject(false);
+
+      if (hasSpecialChar && hasSpecialChar >= 0) {
+        alert(
+          'O tílulo não pode conter:\n ! @ # $ % ^ & * ( ) , . ? " : { } | < >',
+        );
+      }
+
+      if (hasAccentChar && hasAccentChar >= 0) {
+        alert('O tílulo não pode conter acento');
+      }
+    }
   };
 
   useEffect(() => {
@@ -70,7 +93,7 @@ const Workspace: React.FC = () => {
 
   return (
     <S.Container>
-      <Navbar toogleSidenav={null} runPreview={() => undefined} />
+      <Navbar />
 
       <S.Wrapper>
         <S.Content>
@@ -120,11 +143,15 @@ const Workspace: React.FC = () => {
                 <p>Criando sua fábula</p>
               </S.ContainerLoading>
             ) : (
-              <>
+              <form onSubmit={publishRepo}>
                 <label>
                   Título
-                  <small>{'( não use acento ou caracteres especiais )'}</small>
                   <input ref={inputRef} type="text" />
+                  <small>
+                    {
+                      'não use acento ou caracteres especiais, use ( - ) para separar palavras.'
+                    }
+                  </small>
                 </label>
 
                 <label>
@@ -132,11 +159,11 @@ const Workspace: React.FC = () => {
                   <textarea ref={textareaRef} />
                 </label>
 
-                <S.buttonPublish onClick={publishRepo}>
+                <S.buttonPublish type="submit">
                   Criar fábula
                   <FiArrowRight size={18} />
                 </S.buttonPublish>
-              </>
+              </form>
             )}
           </S.ContainerModal>
         </S.Modal>

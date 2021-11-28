@@ -22,6 +22,7 @@ interface EngineDataContext {
   resetFable(): void;
   pages: PageDTO[] | undefined;
   agents: any;
+  errors: any;
   sceneIndex: number;
   setSceneIndex: Dispatch<SetStateAction<number>>;
   previewOpen: boolean;
@@ -38,38 +39,81 @@ const EngineContext = createContext<EngineDataContext>({} as EngineDataContext);
 const EngineProvider: React.FC = ({ children }) => {
   const [pages, setPages] = useState<PageDTO[]>();
   const [agents, setAgents] = useState<any[]>();
+  const [errors, setErrors] = useState<any[]>([]);
   const [sceneIndex, setSceneIndex] = useState<number>(0);
 
   const [previewOpen, setpreviewOpen] = useState<boolean>(false);
 
-  const createFable = useCallback((smilDom: SmilDomProps) => {
-    console.clear();
-    console.log(
-      '%cStart Process Fable 🚀',
-      'color: brown; background: orange; padding: 2%;',
-    );
+  const createFable = useCallback(
+    (smilDom: SmilDomProps) => {
+      console.clear();
+      console.log(
+        '%cStart Process Fable 🚀',
+        'color: brown; background: orange; padding: 2%;',
+      );
 
-    const newPages = smilDom?.children.map((page: any) => page?.attributes);
-    const agentsPages = smilDom?.children.map((page: any) =>
-      page?.children?.map((agent: any) => ({
-        id: uuid(),
-        attributes: agent?.attributes,
-        states: agent?.children.map((state: any) => ({
-          attributes: state?.attributes,
-          name: state?.name,
-        })),
-      })),
-    );
+      const newPages = smilDom?.children.map((page: any, i: number) => {
+        const { background } = page?.attributes;
 
-    setPages(newPages);
-    setAgents(agentsPages);
-  }, []);
+        if (!background) {
+          const tmpErrors = errors;
+          tmpErrors.push(`Page ${i + 1} está sem background`);
+
+          setErrors(tmpErrors);
+        }
+
+        return page?.attributes;
+      });
+
+      const agentsPages = smilDom?.children.map((page: any, numPage: number) =>
+        page?.children?.map((agent: any, i: number) => {
+          const { img, sprite, text, x, y, width, height } = agent?.attributes;
+
+          if (!x || !y || !width || !height) {
+            const tmpErrors = errors;
+            tmpErrors.push(
+              `Agent ${i + 1} - page ${
+                numPage + 1
+              } - está sem (x, y, width, height)`,
+            );
+
+            setErrors(tmpErrors);
+          }
+
+          if (!img && !sprite && !text) {
+            const tmpErrors = errors;
+            tmpErrors.push(
+              `Agent ${i + 1} - page ${
+                numPage + 1
+              } - sem conteúdo (img | sprite | text)`,
+            );
+
+            setErrors(tmpErrors);
+          }
+
+          return {
+            id: uuid(),
+            attributes: agent?.attributes,
+            states: agent?.children.map((state: any) => ({
+              attributes: state?.attributes,
+              name: state?.name,
+            })),
+          };
+        }),
+      );
+
+      setPages(newPages);
+      setAgents(agentsPages);
+    },
+    [errors],
+  );
 
   const resetFable = useCallback(() => {
     console.log('Clear 🉐');
 
     setPages([]);
     setAgents([]);
+    setErrors([]);
     setSceneIndex(0);
   }, []);
 
@@ -104,6 +148,7 @@ const EngineProvider: React.FC = ({ children }) => {
         resetFable,
         pages,
         agents,
+        errors,
         sceneIndex,
         setSceneIndex,
         previewOpen,

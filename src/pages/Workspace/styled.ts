@@ -197,6 +197,11 @@ export const Modal = styled(animated.div)`
       margin-top: 1.5rem;
     }
 
+    small {
+      margin-top: 0.3rem;
+      font-weight: 500;
+    }
+
     input,
     textarea {
       padding: 0.5rem;

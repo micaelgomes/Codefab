@@ -100,7 +100,32 @@ const SpriteAgent: React.FC<SpriteProps> = ({
     spriteRef.current?.start();
 
     container?.addEventListener('keydown', actionFromKeyboard);
-  }, [actionFromKeyboard, container]);
+
+    try {
+      if (spriteSrc && !animation && !animationName && !frameCount) {
+        throw new Error('Sprite require animation && animationName!');
+      }
+
+      if (width <= 0 || height <= 0) {
+        throw new Error('Sp require props (width, height)');
+      }
+
+      if (spriteSrc.length <= 0) {
+        throw new Error('Sprite require source path');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [
+    actionFromKeyboard,
+    animation,
+    animationName,
+    container,
+    frameCount,
+    height,
+    spriteSrc,
+    width,
+  ]);
 
   return (
     <Sprite

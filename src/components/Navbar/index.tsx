@@ -8,13 +8,13 @@ import {
 import { useParams } from 'react-router';
 import { useAuth } from '../../hooks/auth';
 import { api } from '../../services/api';
-import QuickHelp from '../QuickHelp';
+import QuickHelp from '../UserMenu';
 
 import * as S from './styled';
 
 interface NavbarProps {
-  runPreview(): void;
-  toogleSidenav: any;
+  runPreview?: () => void;
+  toogleSidenav?: any;
 }
 
 interface PathType {
@@ -67,7 +67,7 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
                 <FiUploadCloud size={22} />
               </S.ButtonPublish>
 
-              <S.ButtonHelp onClick={toogle}>
+              <S.ButtonHelp href="/help" target="_blank">
                 <FiHelpCircle size={22} />
               </S.ButtonHelp>
 

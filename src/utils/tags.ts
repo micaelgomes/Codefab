@@ -17,7 +17,6 @@ export const tags = {
       soundtrack: null,
       sound: null,
       title: null,
-      'id-only': ['true', 'false'],
     },
     children: ['agent'],
   },

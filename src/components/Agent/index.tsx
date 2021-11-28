@@ -57,8 +57,8 @@ const Agent: React.FC<AgentProps> = ({
   const container = stageRef.current?.container();
 
   try {
-    if (sprite && !animation && !animationName && !frameCount) {
-      throw new Error('Sprite require animation && animationName!');
+    if (!sprite && !img && !text) {
+      throw new Error(`${id} has missing -> !sprite || img || text`);
     }
   } catch (err) {
     console.log(err);

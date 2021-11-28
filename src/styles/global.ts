@@ -13,7 +13,26 @@ export default createGlobalStyle`
   body {
       background: #F0F2F5 ;
       overflow-x: hidden;
-      -webkit-font-smoothing: antialiased
+      -webkit-font-smoothing: antialiased;
+
+      &::-webkit-scrollbar {
+        width: 10px;
+        background-color: #3e3d32;
+      }
+
+      &::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: #cfcfc2;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background: #75715e;
+      }
   }
 
   body, input, button {

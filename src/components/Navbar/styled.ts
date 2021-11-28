@@ -106,7 +106,7 @@ export const ButtonPublish = styled.button`
   }
 `;
 
-export const ButtonHelp = styled.button`
+export const ButtonHelp = styled.a`
   position: relative;
   background: none;
   border: none;

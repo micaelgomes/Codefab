@@ -23,6 +23,7 @@ const Preview: React.FC = () => {
 
   const handleClose = useCallback(() => {
     setpreviewOpen(false);
+    setLock(false);
     resetFable();
   }, [resetFable, setpreviewOpen]);
 
