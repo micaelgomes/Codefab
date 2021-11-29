@@ -38,6 +38,7 @@ export const tags = {
       'on-touch': [
         '_NEXT_PAGE',
         '_PREV_PAGE',
+        '_GOTO_PAGE',
         'STOP_SOUNDTRACK',
         'PLAY_SOUNDTRACK',
       ],

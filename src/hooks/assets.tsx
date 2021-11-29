@@ -49,6 +49,11 @@ const AssetsProvider: React.FC = ({ children }) => {
     api
       .delete(
         `/file?user=${user.login}&repo=${repo}&nameFile=${name}&sha=${sha}`,
+        {
+          headers: {
+            Authorization: `token ${user.access_token}`,
+          },
+        },
       )
       .then(res => console.log(res))
       .catch(err => {

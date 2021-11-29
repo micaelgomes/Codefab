@@ -7,11 +7,13 @@ import { useAssets } from '../../hooks/assets';
 
 import * as S from './styled';
 import { useHistory } from 'react-router';
+import { useAuth } from '../../hooks/auth';
 
 const Workspace: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [creatingProject, setCreatingProject] = useState(false);
   const { setFiles } = useAssets();
+  const { user } = useAuth();
 
   const history = useHistory();
 
@@ -51,45 +53,59 @@ const Workspace: React.FC = () => {
       hasAccentChar < 0
     ) {
       api
-        .post('/project', {
-          name,
-          description,
-        })
+        .post(
+          '/project',
+          {
+            name,
+            description,
+          },
+          {
+            headers: {
+              Authorization: `token ${user.access_token}`,
+            },
+          },
+        )
         .then(res => {
           setCreatingProject(false);
-          history.push(`/fable/${res.data.id}`);
+          history.push(`/fable/${res.data.name}`);
         })
         .catch(err => {
           setCreatingProject(false);
           console.error(err);
           alert('Algum problema aconteceu');
-          // localStorage.removeItem('@codefab:user');
-          // window.location.reload();
+          localStorage.removeItem('@codefab:user');
+          window.location.reload();
         });
     } else {
       setCreatingProject(false);
 
-      if (hasSpecialChar && hasSpecialChar >= 0) {
+      console.log(hasSpecialChar, hasAccentChar);
+
+      if (typeof hasSpecialChar !== 'undefined' && hasSpecialChar >= 0) {
         alert(
           'O tílulo não pode conter:\n ! @ # $ % ^ & * ( ) , . ? " : { } | < >',
         );
       }
 
-      if (hasAccentChar && hasAccentChar >= 0) {
-        alert('O tílulo não pode conter acento');
+      if (typeof hasAccentChar !== 'undefined' && hasAccentChar >= 0) {
+        alert('O tílulo não pode letrar com acento.');
       }
     }
   };
 
   useEffect(() => {
     const getProjects = async () => {
-      const response = await api.get('/projects');
+      const response = await api.get('/projects', {
+        headers: {
+          Authorization: `token ${user.access_token}`,
+        },
+      });
       setProjects(response.data);
     };
 
     setFiles([]);
     getProjects();
-  }, [setFiles]);
+  }, [setFiles, user]);
 
   return (
     <S.Container>

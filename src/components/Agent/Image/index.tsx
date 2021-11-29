@@ -115,9 +115,9 @@ const ImageAgent: React.FC<ImageProps> = ({
       x={x}
       y={y}
       onClick={() => {
-        const hasMacros = nextState.search(':');
+        const hasMacros = nextState?.search(':');
 
-        if (hasMacros >= 0) {
+        if (typeof hasMacros !== 'undefined' && hasMacros >= 0) {
           const macros = nextState.split(':');
 
           emit(macros[0], {

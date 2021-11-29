@@ -106,6 +106,31 @@ export const ButtonPublish = styled.button`
   }
 `;
 
+export const ButtonDelete = styled.button`
+  position: relative;
+  background: none;
+  border: none;
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
+  z-index: 0;
+  margin: 0 10px -8px;
+
+  svg {
+    color: #272822;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    background: #f92672;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    top: -5px;
+    left: -5px;
+    z-index: -1;
+  }
+`;
+
 export const ButtonHelp = styled.a`
   position: relative;
   background: none;
@@ -128,5 +153,15 @@ export const ButtonHelp = styled.a`
     top: -5px;
     left: -5px;
     z-index: -1;
+  }
+`;
+
+export const ButtonUserMenu = styled.button`
+  position: relative;
+  background: none;
+  border: none;
+
+  img {
+    user-select: none;
   }
 `;

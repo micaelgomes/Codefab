@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import XMLParser from 'react-xml-parser';
+import { toast } from 'react-hot-toast';
 
 import * as S from './styled';
 import Navbar from '../../components/Navbar';
@@ -39,20 +40,26 @@ const Editor: React.FC = () => {
   });
 
   const [code, setCode] = useState<string>(() => {
-    const codeStorage = localStorage.getItem('@code');
+    const storage = localStorage.getItem(`@code:${repo}`);
 
-    if (codeStorage) {
-      return codeStorage;
+    if (storage) {
+      return storage;
     }
 
     return '';
   });
 
+  const saveInStorage = () => {
+    const currCode = inputRef.current?.editor?.getValue();
+
+    localStorage.setItem(`@code:${repo}`, currCode);
+    toast.success('Alterações salvas.');
+  };
+
   const parseXmlCode = () => {
     const currCode = inputRef.current?.editor?.getValue();
     const smilDom = new XMLParser().parseFromString(currCode);
 
-    localStorage.setItem('@code', currCode);
     createFable(smilDom);
 
     if (!previewOpen) {
@@ -67,44 +74,43 @@ const Editor: React.FC = () => {
 
   useEffect(() => {
     const getProjectContent = async () => {
-      const response = await api.get(
-        `/project?user=${user.login}&repo=${repo}`,
+      const responseFable = await api.get(
+        `/project/fable?user=${user.login}&repo=${repo}`,
+        {
+          headers: {
+            Authorization: `token ${user.access_token}`,
+          },
+        },
       );
 
-      if (response.data?.length > 0) {
-        console.log(response.data);
+      if (responseFable.data.fable) {
+        localStorage.setItem('@sha-fable', responseFable.data.sha);
 
-        const filterFable = response.data.filter(
-          (file: any) => file.path === 'fable.xml',
-        );
+        if (code.length === 0) {
+          setCode(responseFable.data.fable);
+        }
+      }
 
-        const filterAssets = response.data.filter(
+      const responseFiles = await api.get(
+        `/project?user=${user.login}&repo=${repo}`,
+        {
+          headers: {
+            Authorization: `token ${user.access_token}`,
+          },
+        },
+      );
+
+      if (responseFiles.data?.length > 0) {
+        const filterAssets = responseFiles.data.filter(
           (file: any) => file.path !== 'fable.xml',
         );
 
         setFiles(filterAssets);
-
-        if (filterFable.length > 0) {
-          fetch(filterFable[0].download_url)
-            .then(res =>
-              res.text().then(fable => {
-                if (code.length <= 0) {
-                  setCode(fable);
-                }
-              }),
-            )
-            .catch(err => console.error(err));
-
-          localStorage.setItem(
-            '@sha-fable',
-            JSON.stringify(filterFable[0].sha),
-          );
-        }
       }
     };
 
     getProjectContent();
-  }, [code.length, repo, setFiles, user.login]);
+  }, [code.length, repo, setFiles, user.access_token, user.login]);
 
   return (
     <S.Container>
@@ -132,7 +138,7 @@ const Editor: React.FC = () => {
             autoCloseTags: true,
             extraKeys: {
               'Ctrl-Space': 'autocomplete',
-              'Ctrl-S': () => parseXmlCode(),
+              'Ctrl-S': () => saveInStorage(),
             },
             hintOptions: {
               schemaInfo: tags,

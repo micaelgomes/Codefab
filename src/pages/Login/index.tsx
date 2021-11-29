@@ -57,7 +57,7 @@ const Login: React.FC = () => {
                     <S.ButtonGithubLoading />
                   ) : (
                     <S.ButtonGithub
-                      href={`https://github.com/login/oauth/authorize?scope=user%20repo&client_id=${client_id}&redirect_uri=${redirect_uri}&allow_signup=true`}
+                      href={`https://github.com/login/oauth/authorize?scope=user%20repo%20delete_repo&client_id=${client_id}&redirect_uri=${redirect_uri}&allow_signup=true`}
                     >
                       <GoMarkGithub size={18} />
                       <span>Login com GitHub</span>

@@ -40,14 +40,19 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
       });
 
       api
-        .post(`/file?user=${user.login}&repo=${repo}`, filesData)
+        .post(`/file?user=${user.login}&repo=${repo}`, filesData, {
+          headers: {
+            Authorization: `token ${user.access_token}`,
+          },
+        })
         .then(res => {
-          setFiles([...files, res.data.content]);
+          const filesRepo = res.data.content;
+          setFiles([...files, filesRepo]);
         })
         .catch(err => {
           console.error(err);
-          // localStorage.removeItem('@codefab:user');
-          // window.location.reload();
+          localStorage.removeItem('@codefab:user');
+          window.location.reload();
         });
 
       // setFiles([...files, ...newFiles]);

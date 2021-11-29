@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import Draggable from 'react-draggable';
-import { FiLock, FiMinus, FiUnlock, FiX } from 'react-icons/fi';
+import { FiLock, FiUnlock, FiX } from 'react-icons/fi';
 import { useEngine } from '../../hooks/engine';
 import Render from '../Render';
 
@@ -10,7 +10,6 @@ const Preview: React.FC = () => {
   const { previewOpen, setpreviewOpen, resetFable } = useEngine();
 
   const [focus, setFocus] = useState(false);
-  const [minimize, setMinimize] = useState(false);
   const [lock, setLock] = useState(false);
 
   const handleFocus = useCallback(() => {
@@ -26,11 +25,6 @@ const Preview: React.FC = () => {
     setLock(false);
     resetFable();
   }, [resetFable, setpreviewOpen]);
-
-  const toogleMin = useCallback(() => {
-    setMinimize(!minimize);
-    alert('Ainda não implementado');
-  }, [minimize]);
 
   const toogleLock = useCallback(() => {
     setLock(!lock);
@@ -49,9 +43,6 @@ const Preview: React.FC = () => {
             <S.HeaderBar>
               <button id="close" onClick={handleClose}>
                 <FiX size={13} />
-              </button>
-              <button id="min" onClick={toogleMin}>
-                <FiMinus size={13} />
               </button>
               <button id="pin" onClick={toogleLock}>
                 <small>{lock ? 'travado' : 'flutuante'}</small>

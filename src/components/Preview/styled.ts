@@ -13,7 +13,7 @@ export const Container = styled.div<ContainerProps>`
   padding: 0;
   border-radius: 11px;
 
-  z-index: 9999999;
+  z-index: 999;
   top: 100px;
   right: 16px;
   margin: auto;

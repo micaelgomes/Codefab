@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-
-import * as S from './styled';
+import React from 'react';
 import { FiInfo } from 'react-icons/fi';
 
-interface QuickHelpProps {
+import * as S from './styled';
+
+interface UserMenuProps {
   open: boolean;
   toogle: () => void;
 }
 
-const QuickHelp: React.FC<QuickHelpProps> = ({ open, toogle }) => {
-  const [help, setHelp] = useState('');
-
-  useEffect(() => {
-    fetch('/help.md').then(res => res.text().then(text => setHelp(text)));
-  }, []);
+const UserMenu: React.FC<UserMenuProps> = ({ open, toogle }) => {
+  const logout = () => {
+    localStorage.removeItem('@codefab:user');
+    window.location.reload();
+  };
 
   return (
     <>
@@ -25,41 +21,18 @@ const QuickHelp: React.FC<QuickHelpProps> = ({ open, toogle }) => {
       <S.Container
         open={open}
         right={true}
-        width={700}
-        noTouchOpen={true}
-        noTouchClose={true}
         overlayColor="transparent"
         overlayClassName="custom-overlay"
       >
         <h2 className="guide-title">
           <FiInfo />
-          Guia de ajuda
+          Menu
         </h2>
 
-        <ReactMarkdown
-          children={help}
-          components={{
-            code({ node, inline, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || '');
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  key={'123'}
-                  children={String(children).replace(/\n$/, '')}
-                  style={atomOneDark}
-                  language="xml"
-                  PreTag="div"
-                />
-              ) : (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              );
-            },
-          }}
-        />
+        <button onClick={logout}>sair</button>
       </S.Container>
     </>
   );
 };
 
-export default QuickHelp;
+export default UserMenu;

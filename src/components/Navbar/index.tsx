@@ -1,14 +1,17 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState } from 'react';
 import {
   FiHelpCircle,
   FiMenu,
   FiPlayCircle,
+  FiTrash2,
   FiUploadCloud,
 } from 'react-icons/fi';
-import { useParams } from 'react-router';
+import { toast } from 'react-hot-toast';
+import { useHistory, useParams } from 'react-router';
 import { useAuth } from '../../hooks/auth';
 import { api } from '../../services/api';
-import QuickHelp from '../UserMenu';
+import UserMenu from '../UserMenu';
 
 import * as S from './styled';
 
@@ -22,28 +25,63 @@ interface PathType {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
+  const [openUserMenu, setOpenUserMenu] = useState(false);
   const { repo } = useParams<PathType>();
   const { user } = useAuth();
-  const [openQuickView, setOpenQuickView] = useState(false);
+  const history = useHistory();
 
-  const toogle = () => setOpenQuickView(!openQuickView);
+  const toogleMenu = () => setOpenUserMenu(!openUserMenu);
+
+  const deleteFable = () => {
+    const answer = confirm(
+      `Você tem certeza que deseja excluir a fábula ${repo}?`,
+    );
+
+    if (!answer) {
+      return;
+    }
+
+    const answerConfirmation = confirm(
+      `Esta ação é irreversível. Deseja prosseguir?`,
+    );
+
+    if (answer && answerConfirmation) {
+      api
+        .delete(`/project?user=${user.login}&repo=${repo}`)
+        .then(res => {
+          history.push('/');
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Algum problema aconteceu');
+          localStorage.removeItem('@codefab:user');
+          window.location.reload();
+        });
+    }
+  };
 
   const updateFable = () => {
-    const fable = localStorage.getItem('@code');
-    const sha = JSON.parse(localStorage.getItem('@sha-fable') as string);
+    const fable = localStorage.getItem(`@code:${repo}`);
+    const sha = localStorage.getItem('@sha-fable');
 
-    api
-      .put(`/file/fable?user=${user.login}&repo=${repo}&sha=${sha}`, {
-        fable,
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.error(err);
-        // localStorage.removeItem('@codefab:user');
-        // window.location.reload();
-      });
+    toast.promise(
+      api.put(
+        `/file/fable?user=${user.login}&repo=${repo}&sha=${sha}`,
+        {
+          fable,
+        },
+        {
+          headers: {
+            Authorization: `token ${user.access_token}`,
+          },
+        },
+      ),
+      {
+        loading: 'Publicando...',
+        success: <b>Fábula publicada!</b>,
+        error: <b>Algum erro aconteceu...</b>,
+      },
+    );
   };
 
   return (
@@ -63,6 +101,10 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
         <S.UserAction>
           {repo && (
             <>
+              <S.ButtonDelete onClick={deleteFable}>
+                <FiTrash2 size={22} />
+              </S.ButtonDelete>
+
               <S.ButtonPublish onClick={updateFable}>
                 <FiUploadCloud size={22} />
               </S.ButtonPublish>
@@ -77,11 +119,13 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
             </>
           )}
 
-          <img src={user.avatar_url} alt="Logo from user" />
+          <S.ButtonUserMenu onClick={toogleMenu}>
+            <img src={user.avatar_url} alt="Logo from user" />
+          </S.ButtonUserMenu>
         </S.UserAction>
       </S.Wrapper>
 
-      <QuickHelp open={openQuickView} toogle={toogle}></QuickHelp>
+      <UserMenu open={openUserMenu} toogle={toogleMenu}></UserMenu>
     </S.Container>
   );
 };

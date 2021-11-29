@@ -113,8 +113,6 @@ app.put('/api/file/fable', async (req, res) => {
   const buffer = Buffer.from(fable);
   const content = buffer.toString('base64');
 
-  console.log(user, repo, sha);
-
   fetch(`https://api.github.com/repos/${user}/${repo}/contents/fable.xml`, {
     method: 'PUT',
     headers: {
@@ -164,11 +162,7 @@ app.get('/api/projects', async (req, res) => {
     },
   })
     .then(response => response.json())
-    .then(responseJson =>
-      res
-        .status(200)
-        .json(responseJson.filter(repo => repo?.topics.includes('codefab'))),
-    )
+    .then(responseJson => res.status(200).json(responseJson))
     .catch(error =>
       res
         .status(400)
@@ -231,8 +225,8 @@ app.delete('/api/project', async (req, res) => {
       Accept: 'application/vnd.github.v3+json',
     },
   })
-    .then(responseGitHub =>
-      responseGitHub.json().then(responseJson => responseJson),
+    .then(() =>
+      res.status(200).json({ message: 'repository successfully deleted' }),
     )
     .catch(error => res.status(400).json(error));
 });
@@ -253,6 +247,33 @@ app.get('/api/project', async (req, res) => {
     )
     .catch(error =>
       res.status(400).json({ message: 'Erro na busca do respositório', error }),
+    );
+});
+
+app.get('/api/project/fable', async (req, res) => {
+  const access_token = req.headers.authorization;
+  const { user, repo } = req.query;
+
+  fetch(`https://api.github.com/repos/${user}/${repo}/contents/fable.xml`, {
+    method: 'GET',
+    headers: {
+      Authorization: access_token,
+      Accept: 'application/vnd.github.v3+json',
+    },
+  })
+    .then(response =>
+      response.json().then(responseJson => {
+        const buffer = Buffer.from(responseJson.content, 'base64');
+        const content = buffer.toString('ascii');
+
+        return res.status(200).json({
+          ...responseJson,
+          fable: content,
+        });
+      }),
+    )
+    .catch(error =>
+      res.status(400).json({ message: 'Erro na busca da fable', error }),
     );
 });
 
