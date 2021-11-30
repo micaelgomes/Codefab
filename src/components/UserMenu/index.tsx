@@ -1,5 +1,13 @@
 import React from 'react';
-import { FiInfo } from 'react-icons/fi';
+import {
+  FiGithub,
+  FiHelpCircle,
+  FiInfo,
+  FiLayout,
+  FiLogOut,
+} from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/auth';
 
 import * as S from './styled';
 
@@ -9,6 +17,8 @@ interface UserMenuProps {
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ open, toogle }) => {
+  const { user } = useAuth();
+
   const logout = () => {
     localStorage.removeItem('@codefab:user');
     window.location.reload();
@@ -24,15 +34,35 @@ const UserMenu: React.FC<UserMenuProps> = ({ open, toogle }) => {
         overlayColor="transparent"
         overlayClassName="custom-overlay"
       >
-        <img />
+        <S.Content>
+          <img src={user.avatar_url} alt={`imagem de perfil de ${user.name}`} />
 
-        <small>@user</small>
+          <small>@{user.login}</small>
 
-        <p>bio</p>
-        <p>github</p>
-        <p>help</p>
+          <p className="bio">{user.bio}</p>
 
-        <button onClick={logout}>sair</button>
+          <S.Menu>
+            <Link to="/">
+              <FiLayout size={20} />
+              Livro de fábulas
+            </Link>
+
+            <Link to="/help">
+              <FiHelpCircle size={20} />
+              Guia de ajuda
+            </Link>
+
+            <a href={user.html_url} target="_blank" rel="noreferrer">
+              <FiGithub size={20} />
+              Github
+            </a>
+
+            <button onClick={logout}>
+              <FiLogOut size={20} />
+              Logout
+            </button>
+          </S.Menu>
+        </S.Content>
       </S.Container>
     </>
   );
