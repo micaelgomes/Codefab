@@ -132,6 +132,7 @@ export const ThumbImage = styled.img`
 export const ListFiles = styled.div`
   overflow: auto;
   flex-basis: 100%;
+  cursor: default;
 
   &::-webkit-scrollbar {
     width: 10px;

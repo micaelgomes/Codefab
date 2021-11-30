@@ -24,10 +24,13 @@ const UserMenu: React.FC<UserMenuProps> = ({ open, toogle }) => {
         overlayColor="transparent"
         overlayClassName="custom-overlay"
       >
-        <h2 className="guide-title">
-          <FiInfo />
-          Menu
-        </h2>
+        <img />
+
+        <small>@user</small>
+
+        <p>bio</p>
+        <p>github</p>
+        <p>help</p>
 
         <button onClick={logout}>sair</button>
       </S.Container>

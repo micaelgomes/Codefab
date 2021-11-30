@@ -30,6 +30,20 @@ export const Wrapper = styled.div`
   display: flex;
 `;
 
+export const ContainerImageError = styled.div`
+  width: 100%;
+  min-height: calc(100vh - 250px);
+  transition: all 0.2s ease-in-out;
+  display: flex;
+`;
+
+export const ImageError = styled.img`
+  width: 100%;
+  max-width: 150px;
+  object-fit: contain;
+  margin: auto;
+`;
+
 export const Content = styled.section`
   width: 100%;
   max-width: 1100px;
@@ -273,10 +287,10 @@ export const ContainerLoading = styled.div`
   &::after {
     content: '';
     background: transparent url('/load-max.svg') center center no-repeat;
-    height: calc(100% - 20px);
+    height: calc(100% - 100px);
     width: 100%;
     position: absolute;
-    top: 20px;
+    top: 100px;
   }
 `;
 

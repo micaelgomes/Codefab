@@ -30,7 +30,7 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
 
       const newFiles = acceptedFiles.map(file =>
         Object.assign(file, {
-          preview: URL.createObjectURL(file),
+          download_url: URL.createObjectURL(file),
           nameFile: file.name,
         }),
       );
@@ -55,7 +55,7 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
           window.location.reload();
         });
 
-      // setFiles([...files, ...newFiles]);
+      setFiles([...files, ...newFiles]);
     },
   });
 

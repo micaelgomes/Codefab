@@ -162,7 +162,11 @@ app.get('/api/projects', async (req, res) => {
     },
   })
     .then(response => response.json())
-    .then(responseJson => res.status(200).json(responseJson))
+    .then(responseJson =>
+      res
+        .status(200)
+        .json(responseJson.filter(repo => repo?.topics.includes('codefab'))),
+    )
     .catch(error =>
       res
         .status(400)
@@ -225,8 +229,13 @@ app.delete('/api/project', async (req, res) => {
       Accept: 'application/vnd.github.v3+json',
     },
   })
-    .then(() =>
-      res.status(200).json({ message: 'repository successfully deleted' }),
+    .then(response =>
+      response.json().then(responseJson =>
+        res.status(200).json({
+          message: 'repository successfully deleted',
+          response: responseJson,
+        }),
+      ),
     )
     .catch(error => res.status(400).json(error));
 });

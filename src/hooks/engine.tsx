@@ -41,6 +41,7 @@ const EngineProvider: React.FC = ({ children }) => {
   const [agents, setAgents] = useState<any[]>();
   const [errors, setErrors] = useState<any[]>([]);
   const [sceneIndex, setSceneIndex] = useState<number>(0);
+  const reservedWords = ['fable', 'page', 'agent'];
 
   const [previewOpen, setpreviewOpen] = useState<boolean>(false);
 
@@ -52,8 +53,29 @@ const EngineProvider: React.FC = ({ children }) => {
         'color: brown; background: orange; padding: 2%;',
       );
 
+      if (smilDom.children.length === 0) {
+        const tmpErrors = errors;
+        tmpErrors.push(`a Fable deve ter pelo menos uma <page>.`);
+
+        setErrors(tmpErrors);
+      }
+
       const newPages = smilDom?.children.map((page: any, i: number) => {
         const { background } = page?.attributes;
+
+        if (!reservedWords.includes(page.name)) {
+          const tmpErrors = errors;
+          tmpErrors.push(`${page.name} não é palavra reservada`);
+
+          setErrors(tmpErrors);
+        } else {
+          if (page.children.length === 0) {
+            const tmpErrors = errors;
+            tmpErrors.push(`a Page deve ter pelo menos um <agent>.`);
+
+            setErrors(tmpErrors);
+          }
+        }
 
         if (!background) {
           const tmpErrors = errors;
@@ -68,6 +90,13 @@ const EngineProvider: React.FC = ({ children }) => {
       const agentsPages = smilDom?.children.map((page: any, numPage: number) =>
         page?.children?.map((agent: any, i: number) => {
           const { img, sprite, text, x, y, width, height } = agent?.attributes;
+
+          if (!reservedWords.includes(agent.name)) {
+            const tmpErrors = errors;
+            tmpErrors.push(`${agent.name} não é palavra reservada`);
+
+            setErrors(tmpErrors);
+          }
 
           if (!x || !y || !width || !height) {
             const tmpErrors = errors;
