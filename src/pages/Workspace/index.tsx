@@ -32,6 +32,7 @@ const Workspace: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [projects, setProjects] = useState<any>([]);
+  const [loaded, setLoaded] = useState(false);
   const max = 8;
   const min = 0;
 
@@ -104,6 +105,7 @@ const Workspace: React.FC = () => {
         })
         .then(response => {
           setProjects(response.data);
+          setLoaded(true);
         })
         .catch(err => {
           setInfraError(
@@ -126,7 +128,7 @@ const Workspace: React.FC = () => {
           <S.Content>
             <h1>Suas Fábulas</h1>
 
-            {!!projects.length ? (
+            {loaded ? (
               <S.List>
                 <S.CardCreate onClick={toogle}>
                   <div>
