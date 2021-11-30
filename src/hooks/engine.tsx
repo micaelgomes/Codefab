@@ -41,12 +41,13 @@ const EngineProvider: React.FC = ({ children }) => {
   const [agents, setAgents] = useState<any[]>();
   const [errors, setErrors] = useState<any[]>([]);
   const [sceneIndex, setSceneIndex] = useState<number>(0);
-  const reservedWords = ['fable', 'page', 'agent'];
 
   const [previewOpen, setpreviewOpen] = useState<boolean>(false);
 
   const createFable = useCallback(
     (smilDom: SmilDomProps) => {
+      const reservedWords = ['fable', 'page', 'agent'] as const;
+
       console.clear();
       console.log(
         '%cStart Process Fable 🚀',

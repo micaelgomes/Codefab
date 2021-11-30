@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  FiGithub,
-  FiHelpCircle,
-  FiInfo,
-  FiLayout,
-  FiLogOut,
-} from 'react-icons/fi';
+import { FiGithub, FiHelpCircle, FiLayout, FiLogOut } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/auth';
 
@@ -44,7 +38,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ open, toogle }) => {
           <S.Menu>
             <Link to="/">
               <FiLayout size={20} />
-              Livro de fábulas
+              Home
             </Link>
 
             <Link to="/help">

@@ -45,9 +45,24 @@ export const Menu = styled.div`
     text-decoration: none;
     display: flex;
     align-items: center;
-    color: inherit;
+    color: #fff;
     margin-bottom: 1rem;
 
+    &:link {
+      color: #fff;
+    }
+
+    &:visited {
+      color: #fff;
+    }
+
+    &:hover {
+      color: #fff;
+    }
+
+    &:active {
+      color: #fff;
+    }
     svg {
       margin-right: 4px;
     }
@@ -60,7 +75,7 @@ export const Menu = styled.div`
     align-items: center;
     border: none;
     background: transparent;
-    color: #f92672;
+    color: #ff5678;
 
     svg {
       margin-right: 4px;
