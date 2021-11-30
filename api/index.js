@@ -162,11 +162,7 @@ app.get('/api/projects', async (req, res) => {
     },
   })
     .then(response => response.json())
-    .then(responseJson =>
-      res
-        .status(200)
-        .json(responseJson.filter(repo => repo?.topics.includes('codefab'))),
-    )
+    .then(responseJson => res.status(200).json(responseJson))
     .catch(error =>
       res
         .status(400)
