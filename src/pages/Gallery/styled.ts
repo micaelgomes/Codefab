@@ -31,4 +31,21 @@ export const Content = styled.div`
 export const WrapperTheme = styled.ul`
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 5rem;
+
+  li {
+    list-style: none;
+    margin: 0.5rem;
+  }
+`;
+
+export const AssetImg = styled.img`
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100px;
+`;
+
+export const ThemeTitle = styled.h1`
+  margin: 1rem;
+  margin-top: 1.5rem;
 `;
