@@ -8771,6 +8771,13 @@ node-notifier@^8.0.0:
     uuid "^8.3.0"
     which "^2.0.2"
 
+node-recursive-directory@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/node-recursive-directory/-/node-recursive-directory-1.2.0.tgz#76fe99cc0b6b3a4f9f6837b43cd2a7647ecddd96"
+  integrity sha512-bXNN7lgqqyGHERBSBhAe9sAhnAzrD3I/qX6aHHZTBet6fCPNow3xvUyAIRtQfzBZTc362wr9n89nq4i8wHBvLg==
+  dependencies:
+    glob "^7.1.6"
+
 node-releases@^1.1.61:
   version "1.1.77"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.77.tgz#50b0cfede855dd374e7585bf228ff34e57c1c32e"

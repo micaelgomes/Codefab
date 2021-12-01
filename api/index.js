@@ -1,11 +1,10 @@
 const express = require('express');
-const fs = require('fs');
+const path = require('path');
+const getFiles = require('node-recursive-directory');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 const multer = require('multer');
 const upload = multer();
-
-const fileAssetsFolder = '../public/assets/florest/';
 
 require('dotenv').config();
 
@@ -77,11 +76,19 @@ app.post('/api/auth', async (req, res) => {
 });
 
 app.get('/api/gallery', async (req, res) => {
-  fs.readdir(fileAssetsFolder, (err, files) => {
-    console.log(files);
-  });
+  const foldersAssets = path.join(__dirname, '..', '/public/assets/');
+  const files = await getFiles(foldersAssets, true);
 
-  return res.status(200).json({ message: 'ok' });
+  const result = files.reduce((acc, { dirname, filename }) => {
+    acc[dirname] ??= { theme: dirname, images: [] };
+    if (Array.isArray(filename))
+      acc[dirname].images = acc[dirname].images.concat(filename);
+    else acc[dirname].images.push(filename);
+
+    return acc;
+  }, {});
+
+  return res.status(200).json(Object.values(result));
 });
 
 app.post('/api/file', upload.array('assets'), async (req, res) => {

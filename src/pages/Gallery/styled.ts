@@ -26,37 +26,9 @@ export const Content = styled.div`
       margin-right: 0.5rem;
     }
   }
+`;
 
-  p {
-    margin: 1rem 0;
-  }
-
-  hr {
-    margin: 1rem 0;
-  }
-
-  pre {
-    margin: 1rem 0;
-
-    div {
-      &::-webkit-scrollbar {
-        width: 10px;
-        background-color: #3e3d32;
-      }
-
-      &::-webkit-scrollbar-track {
-        border-radius: 10px;
-        background: transparent;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: #cfcfc2;
-      }
-
-      &::-webkit-scrollbar-thumb:hover {
-        background: #75715e;
-      }
-    }
-  }
+export const WrapperTheme = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
 `;
