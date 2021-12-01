@@ -87,7 +87,7 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
   return (
     <S.Container>
       <S.Wrapper>
-        <S.ContainerLogo>
+        <S.ContainerLogo to="/">
           {repo && (
             <button onClick={toogleSidenav}>
               <FiMenu size={24} />

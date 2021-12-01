@@ -173,18 +173,18 @@ const Workspace: React.FC = () => {
         <S.Modal style={propsModal}>
           <S.ContainerModal>
             <S.buttonClose onClick={toogle}>
-              <FiX size={24} />
+              {!creatingProject && <FiX size={24} />}
             </S.buttonClose>
             <img src="/castle.png" alt="castelo de fadas" />
             {creatingProject ? (
-              <S.ContainerLoading>
+              <S.ContainerLoadingModal>
                 <p>Criando sua fábula</p>
-              </S.ContainerLoading>
+              </S.ContainerLoadingModal>
             ) : (
               <form onSubmit={publishRepo}>
                 <label>
                   Título
-                  <input ref={inputRef} type="text" />
+                  <input ref={inputRef} type="text" maxLength={30} />
                   <small>
                     {
                       'não use acento ou caracteres especiais, use ( - ) para separar palavras.'
@@ -194,7 +194,7 @@ const Workspace: React.FC = () => {
 
                 <label>
                   Resumo
-                  <textarea ref={textareaRef} />
+                  <textarea ref={textareaRef} maxLength={400} />
                 </label>
 
                 <S.buttonPublish type="submit">

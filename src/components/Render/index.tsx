@@ -12,6 +12,7 @@ const Render = () => {
   const { files, getFilePath } = useAssets();
 
   const [render, setRender] = useState({} as any);
+  const [currentScene, setCurrentScene] = useState(sceneIndex);
   const stageRef = useRef<StageType>(null);
 
   const [propsScreen] = useState({
@@ -20,7 +21,7 @@ const Render = () => {
   });
 
   useEffect(() => {
-    if (errors.length === 0) {
+    if (errors.length === 0 || sceneIndex !== currentScene) {
       const renderScene = {
         background: renderHTMLImageElement(
           getFilePath(pages?.[sceneIndex].background),
@@ -34,11 +35,12 @@ const Render = () => {
       stageRef.current?.clear();
 
       setRender(renderScene);
+      setCurrentScene(sceneIndex);
       console.log('Render Scene 💻');
     } else {
       console.log('Has Error 🚨');
     }
-  }, [agents, sceneIndex, pages, getFilePath, errors.length]);
+  }, [agents, sceneIndex, pages, getFilePath, errors.length, currentScene]);
 
   useEffect(() => {
     if (!previewOpen) {
