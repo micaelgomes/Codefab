@@ -79,14 +79,17 @@ app.get('/api/gallery', async (req, res) => {
   const foldersAssets = path.join(__dirname, '..', '/public/assets/');
   const files = await getFiles(foldersAssets, true);
 
-  const result = files.reduce((acc, { dirname, filename }) => {
-    acc[dirname] ??= { theme: dirname, images: [] };
-    if (Array.isArray(filename))
-      acc[dirname].images = acc[dirname].images.concat(filename);
-    else acc[dirname].images.push(filename);
+  const map = new Map(
+    files.map(({ dirname, filename }) => [
+      dirname,
+      { theme: dirname, images: [] },
+    ]),
+  );
 
-    return acc;
-  }, {});
+  for (let { dirname, filename } of files)
+    map.get(dirname).images.push(...[filename].flat());
+
+  const result = Array.from(map, ([name, value]) => value);
 
   return res.status(200).json(Object.values(result));
 });
