@@ -83,7 +83,10 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
       ),
       {
         loading: 'Publicando...',
-        success: <b>Fábula publicada!</b>,
+        success: res => {
+          localStorage.setItem('@sha-fable', res.data.content.sha);
+          return <b>Fábula publicada!</b>;
+        },
         error: <b>Algum erro aconteceu...</b>,
       },
     );
