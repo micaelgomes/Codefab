@@ -1,8 +1,11 @@
 const express = require('express');
+const fs = require('fs');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 const multer = require('multer');
 const upload = multer();
+
+const fileAssetsFolder = '../public/assets/florest/';
 
 require('dotenv').config();
 
@@ -71,6 +74,14 @@ app.post('/api/auth', async (req, res) => {
   }
 
   return res.status(400).json('error in object mouting');
+});
+
+app.get('/api/gallery', async (req, res) => {
+  fs.readdir(fileAssetsFolder, (err, files) => {
+    console.log(files);
+  });
+
+  return res.status(200).json({ message: 'ok' });
 });
 
 app.post('/api/file', upload.array('assets'), async (req, res) => {
@@ -153,8 +164,9 @@ app.delete('/api/file', async (req, res) => {
 
 app.get('/api/projects', async (req, res) => {
   const access_token = req.headers.authorization;
+  const { user } = req.query;
 
-  fetch(`https://api.github.com/user/repos`, {
+  fetch(`https://api.github.com/users/${user}/repos`, {
     method: 'GET',
     headers: {
       Authorization: access_token,
@@ -162,7 +174,11 @@ app.get('/api/projects', async (req, res) => {
     },
   })
     .then(response => response.json())
-    .then(responseJson => res.status(200).json(responseJson))
+    .then(responseJson =>
+      res
+        .status(200)
+        .json(responseJson.filter(repo => repo?.topics.includes('codefab'))),
+    )
     .catch(error =>
       res
         .status(400)
@@ -208,9 +224,25 @@ app.post('/api/project', async (req, res) => {
           ],
         }),
       },
+    ).catch(errorTopics => res.status(404).json(errorTopics));
+
+    fetch(
+      `https://api.github.com/repos/${response.owner.login}/${response.name}/contents/fable.xml`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: access_token,
+          Accept: 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify({
+          message: 'Criando a fable',
+          content:
+            'PGZhYmxlPg0KCTxwYWdlPg0KICANCgkJPCEtLSAgQ29tZWNlIHBvciBhcXVpICAgLS0+DQogIA0KICA8L3BhZ2U+DQo8L2ZhYmxlPg==',
+        }),
+      },
     )
       .then(() => res.status(201).json(response))
-      .catch(errorTopics => res.status(404).json(errorTopics));
+      .catch(err => res.json(400).json(err));
   }
 });
 
@@ -225,13 +257,10 @@ app.delete('/api/project', async (req, res) => {
       Accept: 'application/vnd.github.v3+json',
     },
   })
-    .then(response =>
-      response.json().then(responseJson =>
-        res.status(200).json({
-          message: 'repository successfully deleted',
-          response: responseJson,
-        }),
-      ),
+    .then(() =>
+      res.status(200).json({
+        message: 'repository successfully deleted',
+      }),
     )
     .catch(error => res.status(400).json(error));
 });

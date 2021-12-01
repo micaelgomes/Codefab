@@ -98,7 +98,7 @@ const Workspace: React.FC = () => {
   useEffect(() => {
     const getProjects = async () => {
       api
-        .get('/projects', {
+        .get(`/projects?user=${user.login}`, {
           headers: {
             Authorization: `token ${user.access_token}`,
           },

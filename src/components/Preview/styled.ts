@@ -55,6 +55,11 @@ export const HeaderBar = styled.div`
   border-top-right-radius: 10px;
   display: flex;
 
+  .notice {
+    margin: 5px 0 0 auto;
+    font-size: 0.8rem;
+  }
+
   button {
     position: relative;
     height: auto;

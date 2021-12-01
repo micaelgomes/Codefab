@@ -44,6 +44,7 @@ const Preview: React.FC = () => {
               <button id="close" onClick={handleClose}>
                 <FiX size={13} />
               </button>
+              <small className="notice">1º Quadrante - (500x500)</small>
               <button id="pin" onClick={toogleLock}>
                 <small>{lock ? 'travado' : 'flutuante'}</small>
                 {lock ? <FiLock size={13} /> : <FiUnlock size={13} />}

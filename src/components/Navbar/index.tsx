@@ -47,15 +47,20 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
 
     if (answer && answerConfirmation) {
       api
-        .delete(`/project?user=${user.login}&repo=${repo}`)
+        .delete(`/project?user=${user.login}&repo=${repo}`, {
+          headers: {
+            Authorization: `token ${user.access_token}`,
+          },
+        })
         .then(res => {
+          localStorage.removeItem(`@code:${repo}`);
           history.push('/');
         })
         .catch(err => {
           console.error(err);
           alert('Algum problema aconteceu');
-          localStorage.removeItem('@codefab:user');
-          window.location.reload();
+          // localStorage.removeItem('@codefab:user');
+          // window.location.reload();
         });
     }
   };
