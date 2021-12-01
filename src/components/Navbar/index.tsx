@@ -8,7 +8,7 @@ import {
   FiUploadCloud,
 } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
-import { useHistory, useParams } from 'react-router';
+import { useHistory, useLocation, useParams } from 'react-router';
 import { useAuth } from '../../hooks/auth';
 import { api } from '../../services/api';
 import UserMenu from '../UserMenu';
@@ -30,6 +30,10 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
   const { repo } = useParams<PathType>();
   const { user } = useAuth();
   const history = useHistory();
+  const location = useLocation();
+
+  const pathname = location.pathname.split('/');
+  const hasView = pathname[2] === 'view';
 
   const toogleMenu = () => setOpenUserMenu(!openUserMenu);
 
@@ -110,17 +114,21 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
         <S.UserAction>
           {repo && (
             <>
-              <S.ButtonDelete onClick={deleteFable}>
-                <FiTrash2 size={22} />
-              </S.ButtonDelete>
+              {!hasView && (
+                <>
+                  <S.ButtonDelete onClick={deleteFable}>
+                    <FiTrash2 size={22} />
+                  </S.ButtonDelete>
 
-              <S.ButtonPublish onClick={updateFable}>
-                <FiUploadCloud size={22} />
-              </S.ButtonPublish>
+                  <S.ButtonPublish onClick={updateFable}>
+                    <FiUploadCloud size={22} />
+                  </S.ButtonPublish>
 
-              <S.ButtonHelp href="/help" target="_blank">
-                <FiHelpCircle size={22} />
-              </S.ButtonHelp>
+                  <S.ButtonHelp href="/help" target="_blank">
+                    <FiHelpCircle size={22} />
+                  </S.ButtonHelp>
+                </>
+              )}
 
               <S.ButtonPlay onClick={runPreview}>
                 <FiPlayCircle size={22} />

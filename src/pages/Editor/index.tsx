@@ -12,7 +12,7 @@ import { tags } from '../../utils/tags';
 
 import './addons';
 import { api } from '../../services/api';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { useAuth } from '../../hooks/auth';
 import { useAssets } from '../../hooks/assets';
 
@@ -24,8 +24,14 @@ const Editor: React.FC = () => {
   const inputRef = useRef(null as any);
   const { createFable, previewOpen, setpreviewOpen } = useEngine();
   const { repo } = useParams<PathType>();
+  const location = useLocation();
   const { user } = useAuth();
   const { setFiles, files } = useAssets();
+
+  const pathname = location.pathname.split('/');
+  const hasView = pathname[2] === 'view';
+  const repoView = pathname[4];
+  const userView = pathname[3];
 
   const [open, setOpen] = useState(() => {
     const storage = JSON.parse(
@@ -109,8 +115,57 @@ const Editor: React.FC = () => {
       }
     };
 
-    getProjectContent();
-  }, [code.length, repo, setFiles, user.access_token, user.login]);
+    const getProjectViewContent = async () => {
+      const responseFable = await api.get(
+        `/project/fable?user=${userView}&repo=${repoView}`,
+        {
+          headers: {
+            Authorization: `token ${user.access_token}`,
+          },
+        },
+      );
+
+      if (responseFable.data.fable) {
+        localStorage.setItem('@sha-fable', responseFable.data.sha);
+
+        if (code.length === 0) {
+          setCode(responseFable.data.fable);
+        }
+      }
+
+      const responseFiles = await api.get(
+        `/project?user=${userView}&repo=${repoView}`,
+        {
+          headers: {
+            Authorization: `token ${user.access_token}`,
+          },
+        },
+      );
+
+      if (responseFiles.data?.length > 0) {
+        const filterAssets = responseFiles.data.filter(
+          (file: any) => file.path !== 'fable.xml',
+        );
+
+        setFiles(filterAssets);
+      }
+    };
+
+    if (hasView) {
+      getProjectViewContent();
+    } else {
+      getProjectContent();
+    }
+  }, [
+    code.length,
+    hasView,
+    repo,
+    repoView,
+    setFiles,
+    user.access_token,
+    user.login,
+    userView,
+  ]);
 
   return (
     <S.Container>

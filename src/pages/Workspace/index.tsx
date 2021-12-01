@@ -96,6 +96,8 @@ const Workspace: React.FC = () => {
   };
 
   useEffect(() => {
+    setFiles([]);
+
     const getProjects = async () => {
       api
         .get(`/projects?user=${user.login}`, {
@@ -115,7 +117,6 @@ const Workspace: React.FC = () => {
         });
     };
 
-    setFiles([]);
     getProjects();
   }, [setFiles, user]);
 
