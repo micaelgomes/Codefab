@@ -30,24 +30,28 @@ const Gallery: React.FC = () => {
             Galeria
           </h1>
 
-          <section>
-            {images.map((image: any) => (
-              <>
-                <S.ThemeTitle>{image.theme}</S.ThemeTitle>
-                <S.WrapperTheme>
-                  {image.images.map((path: string) => (
-                    <li>
-                      <S.AssetImg
-                        src={`/assets/${image.theme}/${path}`}
-                        alt={path}
-                        loading="lazy"
-                      />
-                    </li>
-                  ))}
-                </S.WrapperTheme>
-              </>
-            ))}
-          </section>
+          {images.length > 0 ? (
+            <section>
+              {images.map((image: any, i: number) => (
+                <div key={i}>
+                  <S.ThemeTitle>{image.theme}</S.ThemeTitle>
+                  <S.WrapperTheme>
+                    {image.images.map((path: string) => (
+                      <li key={`/assets/${image.theme}/${path}`}>
+                        <S.AssetImg
+                          src={`/assets/${image.theme}/${path}`}
+                          alt={path}
+                          loading="lazy"
+                        />
+                      </li>
+                    ))}
+                  </S.WrapperTheme>
+                </div>
+              ))}
+            </section>
+          ) : (
+            <S.ContainerLoading />
+          )}
         </S.Content>
       </S.Wrapper>
     </S.Container>

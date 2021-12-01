@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -18,7 +17,7 @@ export const Container = styled.div`
   }
 `;
 
-export const ContainerLogo = styled(Link)`
+export const ContainerLogo = styled.div`
   display: flex;
   align-items: center;
 

@@ -14,6 +14,7 @@ import { api } from '../../services/api';
 import UserMenu from '../UserMenu';
 
 import * as S from './styled';
+import { Link } from 'react-router-dom';
 
 interface NavbarProps {
   runPreview?: () => void;
@@ -95,15 +96,15 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
   return (
     <S.Container>
       <S.Wrapper>
-        <S.ContainerLogo to="/">
+        <S.ContainerLogo>
           {repo && (
             <button onClick={toogleSidenav}>
               <FiMenu size={24} />
             </button>
           )}
-          <a href="/">
+          <Link to="/">
             <span id="logo" />
-          </a>
+          </Link>
         </S.ContainerLogo>
 
         <S.UserAction>

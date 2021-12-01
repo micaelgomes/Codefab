@@ -25,7 +25,7 @@ const Editor: React.FC = () => {
   const { createFable, previewOpen, setpreviewOpen } = useEngine();
   const { repo } = useParams<PathType>();
   const { user } = useAuth();
-  const { setFiles } = useAssets();
+  const { setFiles, files } = useAssets();
 
   const [open, setOpen] = useState(() => {
     const storage = JSON.parse(
@@ -116,36 +116,39 @@ const Editor: React.FC = () => {
     <S.Container>
       <Navbar runPreview={parseXmlCode} toogleSidenav={toogleSidenav} />
 
-      <S.Content>
-        <Sidenav open={open} />
+      {files.length > 0 && code ? (
+        <S.Content>
+          <Sidenav open={open} />
 
-        <S.Playground
-          value={code}
-          ref={inputRef}
-          onDrop={e => {
-            console.log(e);
-          }}
-          options={{
-            theme: 'monokai',
-            lineWrapping: true,
-            smartIndent: true,
-            tabSize: 2,
-            foldGutter: true,
-            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-            keyMap: 'sublime',
-            mode: 'jsx',
-            renderLine: true,
-            autoCloseTags: true,
-            extraKeys: {
-              'Ctrl-Space': 'autocomplete',
-              'Ctrl-S': () => saveInStorage(),
-            },
-            hintOptions: {
-              schemaInfo: tags,
-            },
-          }}
-        />
-      </S.Content>
+          <S.Playground
+            value={code}
+            ref={inputRef}
+            options={{
+              theme: 'monokai',
+              lineWrapping: true,
+              smartIndent: true,
+              tabSize: 2,
+              foldGutter: true,
+              gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+              keyMap: 'sublime',
+              mode: 'jsx',
+              renderLine: true,
+              autoCloseTags: true,
+              extraKeys: {
+                'Ctrl-Space': 'autocomplete',
+                'Ctrl-S': () => saveInStorage(),
+              },
+              hintOptions: {
+                schemaInfo: tags,
+              },
+            }}
+          />
+        </S.Content>
+      ) : (
+        <S.ContainerLoading>
+          <S.Loading />
+        </S.ContainerLoading>
+      )}
 
       <Preview />
     </S.Container>

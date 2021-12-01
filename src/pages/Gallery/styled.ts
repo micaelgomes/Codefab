@@ -49,3 +49,24 @@ export const ThemeTitle = styled.h1`
   margin: 1rem;
   margin-top: 1.5rem;
 `;
+
+export const ContainerLoading = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+  min-height: 360px;
+  margin: auto;
+  color: #f8f8f2;
+  padding-top: 2rem;
+
+  &::after {
+    content: '';
+    background: transparent url('/load-max.svg') center center no-repeat;
+    height: calc(100% - 100px);
+    width: 100%;
+    position: absolute;
+    top: 100px;
+  }
+`;

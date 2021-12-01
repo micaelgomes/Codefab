@@ -57,9 +57,9 @@ const ImageAgent: React.FC<ImageProps> = ({
           .map((state: any) => state.name)
           .indexOf(trigger);
 
-        console.log(posNewAttr);
-
         if (posNewAttr >= 0) {
+          console.log(states?.[posNewAttr]?.attributes);
+
           setImageState({
             ...imageState,
             ...states?.[posNewAttr]?.attributes,

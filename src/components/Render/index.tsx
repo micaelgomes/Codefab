@@ -91,11 +91,7 @@ const Render = () => {
                   color={agent.attributes.color}
                   fontSize={Number(agent.attributes['font-size'])}
                   x={Number(agent.attributes.x)}
-                  y={
-                    propsScreen.with -
-                    Number(agent.attributes.y) -
-                    Number(agent.attributes.height)
-                  }
+                  y={Number(agent.attributes.y)}
                   repeat={[
                     Number(agent.attributes['repeat-x']),
                     Number(agent.attributes['repeat-y']),
