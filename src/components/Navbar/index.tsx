@@ -4,6 +4,7 @@ import {
   FiHelpCircle,
   FiMenu,
   FiPlayCircle,
+  FiShare2,
   FiTrash2,
   FiUploadCloud,
 } from 'react-icons/fi';
@@ -15,6 +16,7 @@ import UserMenu from '../UserMenu';
 
 import * as S from './styled';
 import { Link } from 'react-router-dom';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 interface NavbarProps {
   runPreview?: () => void;
@@ -116,6 +118,17 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
             <>
               {!hasView && (
                 <>
+                  <S.ButtonShare>
+                    <CopyToClipboard
+                      text={`${window.location.hostname}/fable/view/${user.login}/${repo}`}
+                      onCopy={() =>
+                        alert('Copiado para a área de transferência')
+                      }
+                    >
+                      <FiShare2 size={22} />
+                    </CopyToClipboard>
+                  </S.ButtonShare>
+
                   <S.ButtonDelete onClick={deleteFable}>
                     <FiTrash2 size={22} />
                   </S.ButtonDelete>
@@ -136,7 +149,7 @@ const Navbar: React.FC<NavbarProps> = ({ runPreview, toogleSidenav }) => {
             </>
           )}
 
-          <S.ButtonUserMenu onClick={toogleMenu}>
+          <S.ButtonUserMenu id="menu" onClick={toogleMenu}>
             <img src={user.avatar_url} alt="Logo from user" />
           </S.ButtonUserMenu>
         </S.UserAction>
