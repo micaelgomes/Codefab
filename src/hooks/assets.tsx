@@ -19,7 +19,6 @@ const AssetsContext = createContext<EngineDataContext>({} as EngineDataContext);
 
 const AssetsProvider: React.FC = ({ children }) => {
   const [files, setFiles] = useState<any>([]);
-
   const { user } = useAuth();
 
   const getFilePath = (name: string) => {

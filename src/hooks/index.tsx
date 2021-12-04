@@ -11,12 +11,12 @@ interface AppProps {
 const AppProvider: React.FC<AppProps> = ({ children }) => {
   return (
     <AuthProvider>
-      <EngineProvider>
-        <AssetsProvider>
+      <AssetsProvider>
+        <EngineProvider>
           <Toaster position="top-center" gutter={8} />
           {children}
-        </AssetsProvider>
-      </EngineProvider>
+        </EngineProvider>
+      </AssetsProvider>
     </AuthProvider>
   );
 };

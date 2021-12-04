@@ -40,11 +40,6 @@ export const Container = styled.div<ContainerProps>`
         border: 5px solid orange;
       }
     `}
-
-  canvas {
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
 `;
 
 export const HeaderBar = styled.div`

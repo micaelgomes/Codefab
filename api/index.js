@@ -246,8 +246,7 @@ app.post('/api/project', async (req, res) => {
         },
         body: JSON.stringify({
           message: 'Criando a fable',
-          content:
-            'PGZhYmxlPg0KCTxwYWdlPg0KICANCgkJPCEtLSAgQ29tZWNlIHBvciBhcXVpICAgLS0+DQogIA0KICA8L3BhZ2U+DQo8L2ZhYmxlPg==',
+          content: 'PGZhYmxlPgoJPHBhZ2U+CiAgCiAgICAKICA8L3BhZ2U+CjwvZmFibGU+',
         }),
       },
     )

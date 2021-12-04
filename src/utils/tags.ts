@@ -2,13 +2,7 @@ export const tags = {
   '!top': ['fable', 'page', 'agent'],
   '!attrs': {},
   fable: {
-    attrs: {
-      width: null,
-      height: null,
-      title: null,
-      thumb: null,
-      'start-in': null,
-    },
+    attrs: {},
     children: ['page'],
   },
   page: {
@@ -22,7 +16,7 @@ export const tags = {
   },
   agent: {
     attrs: {
-      img: ['path', 'src'],
+      img: ['name_image'],
       x: null,
       y: null,
       width: null,
@@ -31,17 +25,10 @@ export const tags = {
       text: null,
       color: null,
       'font-size': null,
-      'animation-name': null,
-      animation: null,
       'frame-count': null,
+      fps: null,
       draggable: null,
-      'on-touch': [
-        '_NEXT_PAGE',
-        '_PREV_PAGE',
-        '_GOTO_PAGE',
-        'STOP_SOUNDTRACK',
-        'PLAY_SOUNDTRACK',
-      ],
+      'on-touch': ['_NEXT_PAGE', '_PREV_PAGE', '_GOTO_PAGE:'],
       'on-trigger': null,
     },
     children: [],

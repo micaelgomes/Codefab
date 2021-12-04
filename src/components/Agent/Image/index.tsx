@@ -1,8 +1,8 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { Image } from 'react-konva';
-import { Image as ImageKonva } from 'konva/types/shapes/Image';
-import { renderHTMLImageElement } from '../../../utils/renderElement';
 import { useCustomEventListener } from 'react-custom-events';
+import Draggable from 'react-draggable';
+
+import * as S from './styled';
 
 type ImageProps = {
   id: number;
@@ -16,10 +16,8 @@ type ImageProps = {
   states: Array<any>;
   draggable: boolean;
   hasKeyboard: boolean;
-  container: HTMLDivElement | undefined;
   emit(name: string, data: any): any;
   trigger: string;
-  files: any;
 };
 
 const ImageAgent: React.FC<ImageProps> = ({
@@ -33,13 +31,11 @@ const ImageAgent: React.FC<ImageProps> = ({
   repeat,
   states,
   hasKeyboard,
-  container,
   draggable,
   emit,
   trigger,
-  files,
 }) => {
-  const imgRef = useRef<ImageKonva>(null);
+  const imgRef = useRef<any>(null);
 
   const [imageState, setImageState] = useState({
     imageSrc,
@@ -58,35 +54,36 @@ const ImageAgent: React.FC<ImageProps> = ({
           .indexOf(trigger);
 
         if (posNewAttr >= 0) {
-          console.log(states?.[posNewAttr]?.attributes);
-
           setImageState({
             ...imageState,
             ...states?.[posNewAttr]?.attributes,
             nextState: states?.[posNewAttr]?.attributes?.['on-touch'],
             imageSrc: states?.[posNewAttr]?.attributes?.['img'],
           });
-
-          if (imgRef.current) {
-            const newImage = new window.Image();
-
-            files.forEach((file: any) => {
-              if (file.name === states?.[posNewAttr]?.attributes?.['img']) {
-                newImage.src = file.download_url;
-              }
-            });
-
-            imgRef.current.image(newImage);
-            imgRef.current.x(Number(imageState.x));
-            imgRef.current.y(Number(imageState.y));
-            imgRef.current.width(Number(imageState.width));
-            imgRef.current.height(Number(imageState.height));
-          }
         }
       }
     },
-    [files, imageState, states],
+    [imageState, states],
   );
+
+  const actionClick = () => {
+    console.log('aciton click');
+
+    if (states.length > 0) {
+      const posNewAttr = states
+        .map((state: any) => state.name)
+        .indexOf(imageState.nextState);
+
+      if (posNewAttr >= 0) {
+        setImageState({
+          ...imageState,
+          ...states?.[posNewAttr]?.attributes,
+          nextState: states?.[posNewAttr]?.attributes?.['on-touch'],
+          imageSrc: states?.[posNewAttr]?.attributes?.['img'],
+        });
+      }
+    }
+  };
 
   useCustomEventListener(trigger, data => {
     action(trigger);
@@ -107,34 +104,85 @@ const ImageAgent: React.FC<ImageProps> = ({
   }, [height, imageSrc, width, x, y]);
 
   return (
-    <Image
-      ref={imgRef}
-      image={renderHTMLImageElement(imageSrc)}
-      height={height}
-      width={width}
-      x={x}
-      y={y}
-      onClick={() => {
-        const hasMacros = nextState?.search(':');
+    <>
+      {imageState && (
+        <>
+          {draggable ? (
+            <Draggable allowAnyClick={true} disabled={false}>
+              <S.Image
+                ref={imgRef}
+                src={imageState.imageSrc}
+                height={imageState.height}
+                width={imageState.width}
+                x={imageState.x}
+                y={imageState.y}
+                onClick={() => {
+                  if (!trigger) {
+                    actionClick();
+                  }
 
-        if (typeof hasMacros !== 'undefined' && hasMacros >= 0) {
-          const macros = nextState.split(':');
+                  const hasMacros = nextState?.search(':');
 
-          emit(macros[0], {
-            from: id,
-            trigger: macros[0],
-            page: macros[1],
-          });
-        } else {
-          emit(nextState, {
-            from: id,
-            trigger: nextState,
-            page: 0,
-          });
-        }
-      }}
-      draggable={draggable}
-    />
+                  if (typeof hasMacros !== 'undefined' && hasMacros >= 0) {
+                    const macros = nextState.split(':');
+
+                    emit(macros[0], {
+                      from: id,
+                      trigger: macros[0],
+                      page: macros[1],
+                    });
+                  } else {
+                    emit(nextState, {
+                      from: id,
+                      trigger: nextState,
+                      page: 0,
+                    });
+                  }
+                }}
+                draggable={false}
+                // stroke="red"
+                alt="img de dentro"
+              />
+            </Draggable>
+          ) : (
+            <S.Image
+              ref={imgRef}
+              src={imageState.imageSrc}
+              height={imageState.height}
+              width={imageState.width}
+              x={imageState.x}
+              y={imageState.y}
+              onClick={() => {
+                if (!trigger) {
+                  actionClick();
+                }
+
+                const hasMacros = nextState?.search(':');
+
+                if (typeof hasMacros !== 'undefined' && hasMacros >= 0) {
+                  const macros = nextState.split(':');
+
+                  emit(macros[0], {
+                    from: id,
+                    trigger: macros[0],
+                    page: macros[1],
+                  });
+                } else {
+                  emit(nextState, {
+                    from: id,
+                    trigger: nextState,
+                    page: 0,
+                  });
+                }
+              }}
+              draggable={false}
+              // stroke="red"
+              alt="img de dentro"
+            />
+          )}
+        </>
+      )}
+    </>
   );
 };
 

@@ -226,3 +226,5 @@ Além das propriedades citadas anteriormente, podemos observar outras duas que n
   </scene>
 </fable>
 ```
+
+http://localhost:3000/fable/view/alfredots/teste-pokemon

@@ -1,38 +1,35 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { Stage, Layer, Text, Image } from 'react-konva';
-import { Stage as StageType } from 'konva/types/Stage';
 import { useEngine } from '../../hooks/engine';
-import { renderHTMLImageElement } from '../../utils/renderElement';
 import Agent from '../Agent';
 import { useAssets } from '../../hooks/assets';
 
+import * as S from './styled';
+
 const Render = () => {
   const { pages, agents, errors, sceneIndex, previewOpen, emit } = useEngine();
-  const { files, getFilePath } = useAssets();
+  const { getFilePath } = useAssets();
 
   const [render, setRender] = useState({} as any);
   const [currentScene, setCurrentScene] = useState(sceneIndex);
-  const stageRef = useRef<StageType>(null);
+  const renderRef = useRef<HTMLDivElement>(null);
 
-  const [propsScreen] = useState({
-    with: 500,
-    height: 500,
-  });
+  // const [propsScreen] = useState({
+  //   with: 500,
+  //   height: 500,
+  // });
 
   useEffect(() => {
     if (errors.length === 0 || sceneIndex !== currentScene) {
       const renderScene = {
-        background: renderHTMLImageElement(
-          getFilePath(pages?.[sceneIndex].background),
-        ),
+        background: pages?.[sceneIndex].background,
         sound: pages?.[sceneIndex].sound,
         title: pages?.[sceneIndex].title,
         agents: agents?.[sceneIndex],
       };
 
+      // stageRef.current?.clear();
       console.log('Clear Stage 🖌️');
-      stageRef.current?.clear();
 
       setRender(renderScene);
       setCurrentScene(sceneIndex);
@@ -44,74 +41,61 @@ const Render = () => {
 
   useEffect(() => {
     if (!previewOpen) {
-      stageRef.current?.clear();
+      // stageRef.current?.clear();
     }
   }, [previewOpen]);
 
   return (
-    <>
-      <Stage
-        ref={stageRef}
-        tabIndex={1}
-        width={propsScreen.with}
-        height={propsScreen.height}
-      >
-        <Layer>
-          {errors.length > 0 ? (
-            <>
-              {errors.map((error: any, i: number) => (
+    <S.Render ref={renderRef}>
+      {errors.length > 0 ? (
+        <>
+          {/* {errors.map((error: any, i: number) => (
                 <Text key={i} x={10} y={20 * (i + 1)} text={error} fill="red" />
-              ))}
-            </>
-          ) : (
-            <>
-              {render.background && (
-                <Image width={500} height={500} image={render.background} />
-              )}
-              {render.title && (
-                <Text
-                  x={50}
-                  y={50}
-                  fontSize={24}
-                  fontFamily="Press Start 2P"
-                  text={render.title}
-                />
-              )}
-              {render?.agents?.map((agent: any, i: number) => (
-                <Agent
-                  key={agent.id}
-                  id={agent.id}
-                  img={getFilePath(agent.attributes.img)}
-                  sprite={getFilePath(agent.attributes.sprite)}
-                  text={agent.attributes.text}
-                  nextState={agent.attributes['on-touch']}
-                  trigger={agent.attributes['on-trigger']}
-                  height={Number(agent.attributes.height)}
-                  width={Number(agent.attributes.width)}
-                  color={agent.attributes.color}
-                  fontSize={Number(agent.attributes['font-size'])}
-                  x={Number(agent.attributes.x)}
-                  y={Number(agent.attributes.y)}
-                  repeat={[
-                    Number(agent.attributes['repeat-x']),
-                    Number(agent.attributes['repeat-y']),
-                  ]}
-                  states={agent.states}
-                  animationName={agent.attributes['animation-name']}
-                  frameCount={Number(agent.attributes['frame-count'])}
-                  animation={agent.attributes['animation']}
-                  hasKeyboard={agent.attributes['on-press']}
-                  draggable={Boolean(agent.attributes['draggable'])}
-                  stageRef={stageRef}
-                  emit={emit}
-                  files={files}
-                />
-              ))}
-            </>
+              ))} */}
+        </>
+      ) : (
+        <>
+          {render.background && (
+            <S.BackgroundScene
+              width={500}
+              height={500}
+              src={render.background}
+              draggable={false}
+              alt="ola"
+            />
           )}
-        </Layer>
-      </Stage>
-    </>
+          {render.title && <h2>{render.title}</h2>}
+          {render?.agents?.map((agent: any, i: number) => (
+            <Agent
+              key={agent.id}
+              id={agent.id}
+              img={agent.attributes.img}
+              sprite={agent.attributes.sprite}
+              text={agent.attributes.text}
+              nextState={agent.attributes['on-touch']}
+              trigger={agent.attributes['on-trigger']}
+              height={Number(agent.attributes.height)}
+              width={Number(agent.attributes.width)}
+              color={agent.attributes.color}
+              fontSize={Number(agent.attributes['font-size'])}
+              x={Number(agent.attributes.x)}
+              y={Number(agent.attributes.y)}
+              repeat={[
+                Number(agent.attributes['repeat-x']),
+                Number(agent.attributes['repeat-y']),
+              ]}
+              states={agent.states}
+              frameCount={Number(agent.attributes['frame-count'])}
+              fps={Number(agent.attributes['fps'])}
+              hasKeyboard={agent.attributes['on-press']}
+              draggable={Boolean(agent.attributes['draggable'])}
+              renderRef={renderRef}
+              emit={emit}
+            />
+          ))}
+        </>
+      )}
+    </S.Render>
   );
 };
 

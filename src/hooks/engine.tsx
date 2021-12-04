@@ -10,6 +10,7 @@ import React, {
 import { v4 as uuid } from 'uuid';
 
 import { emitCustomEvent, useCustomEventListener } from 'react-custom-events';
+import { useAssets } from './assets';
 
 export interface PageDTO {
   background: any;
@@ -41,6 +42,7 @@ const EngineProvider: React.FC = ({ children }) => {
   const [agents, setAgents] = useState<any[]>();
   const [errors, setErrors] = useState<any[]>([]);
   const [sceneIndex, setSceneIndex] = useState<number>(0);
+  const { getFilePath } = useAssets();
 
   const [previewOpen, setpreviewOpen] = useState<boolean>(false);
 
@@ -85,7 +87,10 @@ const EngineProvider: React.FC = ({ children }) => {
           setErrors(tmpErrors);
         }
 
-        return page?.attributes;
+        return {
+          ...page?.attributes,
+          background: getFilePath(page?.attributes?.['background']),
+        };
       });
 
       const agentsPages = smilDom?.children.map((page: any, numPage: number) =>
@@ -123,9 +128,17 @@ const EngineProvider: React.FC = ({ children }) => {
 
           return {
             id: uuid(),
-            attributes: agent?.attributes,
+            attributes: {
+              ...agent?.attributes,
+              img: getFilePath(agent?.attributes?.['img']),
+              sprite: getFilePath(agent?.attributes?.['sprite']),
+            },
             states: agent?.children.map((state: any) => ({
-              attributes: state?.attributes,
+              attributes: {
+                ...state?.attributes,
+                img: getFilePath(state?.attributes?.['img']),
+                sprite: getFilePath(state?.attributes?.['sprite']),
+              },
               name: state?.name,
             })),
           };
@@ -135,7 +148,7 @@ const EngineProvider: React.FC = ({ children }) => {
       setPages(newPages);
       setAgents(agentsPages);
     },
-    [errors],
+    [errors, getFilePath],
   );
 
   const resetFable = useCallback(() => {

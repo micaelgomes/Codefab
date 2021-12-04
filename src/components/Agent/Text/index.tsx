@@ -1,6 +1,4 @@
 import React, { useRef, useCallback, useState } from 'react';
-import { Text } from 'react-konva';
-import { Text as TextKonva } from 'konva/types/shapes/Text';
 
 interface TextProps {
   id: number;
@@ -13,7 +11,6 @@ interface TextProps {
   x: number;
   y: number;
   states: Array<any>;
-  container: HTMLDivElement | undefined;
 }
 
 const TextAgent: React.FC<TextProps> = ({
@@ -25,11 +22,10 @@ const TextAgent: React.FC<TextProps> = ({
   x,
   y,
   states,
-  container,
   color,
   fontSize,
 }) => {
-  const textRef = useRef<TextKonva>(null);
+  const textRef = useRef<null>(null);
 
   const [textState, setTextState] = useState({
     text,
@@ -52,30 +48,29 @@ const TextAgent: React.FC<TextProps> = ({
           nextState: states?.[posNewAttr]?.attributes?.['on-touch'],
         });
 
-        if (textRef.current) {
-          textRef.current.x(textState.x);
-          textRef.current.y(textState.y);
-          textRef.current.width(textState.width);
-          textRef.current.text(textState.text);
-        }
+        // if (textRef.current) {
+        //   textRef.current.x(textState.x);
+        //   textRef.current.y(textState.y);
+        //   textRef.current.width(textState.width);
+        //   textRef.current.text(textState.text);
+        // }
       }
     }
   }, [nextState, states, textState]);
 
   return (
-    <Text
+    <p
       ref={textRef}
-      fontSize={fontSize || 16}
-      fill={color}
-      align={'left'}
-      fontFamily="Press Start 2P"
-      text={text}
-      x={x}
-      y={y}
-      wrap="word"
-      width={width}
+      // fontSize={fontSize || 16}
+      // fill={color}
+      // align={'left'}
+      // x={x}
+      // y={y}
+      // width={width}
       onClick={action}
-    />
+    >
+      {text}
+    </p>
   );
 };
 

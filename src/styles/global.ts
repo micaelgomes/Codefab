@@ -1,5 +1,4 @@
 import { createGlobalStyle } from 'styled-components';
-import 'typeface-press-start-2p';
 import 'typeface-poppins';
 
 export default createGlobalStyle`

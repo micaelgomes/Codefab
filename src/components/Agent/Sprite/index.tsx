@@ -1,8 +1,11 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { Sprite } from 'react-konva';
-import { Sprite as SpriteKonva } from 'konva/types/shapes/Sprite';
-import { renderHTMLImageElement } from '../../../utils/renderElement';
-
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  RefObject,
+} from 'react';
+import * as S from './styled';
 export interface SpriteProps {
   id: number;
   height: number;
@@ -11,11 +14,11 @@ export interface SpriteProps {
   x: number;
   y: number;
   states: Array<any>;
-  animationName: string;
+  nextState: string;
+  renderRef: RefObject<HTMLDivElement>;
   frameCount: number;
-  animation: string;
+  fps: number;
   hasKeyboard: boolean;
-  container: HTMLDivElement | undefined;
 }
 
 const SpriteAgent: React.FC<SpriteProps> = ({
@@ -26,31 +29,13 @@ const SpriteAgent: React.FC<SpriteProps> = ({
   x,
   y,
   states,
+  nextState,
   hasKeyboard,
-  animationName,
   frameCount,
-  animation,
-  container,
+  fps,
+  renderRef,
 }) => {
-  const spriteRef = useRef<SpriteKonva>(null);
-
-  const generateAnimations = (
-    name: string,
-    count: number,
-    animation: string,
-  ) => {
-    const animations: any = {};
-
-    if (name && count && animation) {
-      const tmpAnimation: number[] = animation
-        .split(',')
-        .map(num => Number(num));
-
-      animations[animationName] = tmpAnimation;
-    }
-
-    return animations;
-  };
+  const spriteRef = useRef<any>(null);
 
   const [spriteState, setSpriteState] = useState({
     spriteSrc,
@@ -58,10 +43,29 @@ const SpriteAgent: React.FC<SpriteProps> = ({
     y,
     width,
     height,
-    animation,
-    animationName,
     frameCount,
+    fps,
+    nextState,
   });
+
+  const actionClick = () => {
+    console.log('aciton sprite click');
+
+    if (states.length > 0) {
+      const posNewAttr = states
+        .map((state: any) => state.name)
+        .indexOf(spriteState.nextState);
+
+      if (posNewAttr >= 0) {
+        setSpriteState({
+          ...spriteState,
+          ...states?.[posNewAttr]?.attributes,
+          nextState: states?.[posNewAttr]?.attributes?.['on-touch'],
+          spriteSrc: states?.[posNewAttr]?.attributes?.['sprite'],
+        });
+      }
+    }
+  };
 
   const actionFromKeyboard = useCallback(
     (e: KeyboardEvent) => {
@@ -83,7 +87,7 @@ const SpriteAgent: React.FC<SpriteProps> = ({
             // const newSprite = renderHTMLImageElement(spriteState.spriteSrc);
 
             // spriteRef.current.image(newSprite);
-            spriteRef.current.x(spriteRef.current.x() + Number(spriteState.x));
+            // spriteRef.current.x(spriteRef.current.x() + Number(spriteState.x));
             // spriteRef.current.y(spriteRef.current.y() + Number(spriteState.y));
             // spriteRef.current.width(spriteState.width);
             // spriteRef.current.height(spriteState.height);
@@ -97,12 +101,12 @@ const SpriteAgent: React.FC<SpriteProps> = ({
   );
 
   useEffect(() => {
-    spriteRef.current?.start();
+    // spriteRef.current?.start();
 
-    container?.addEventListener('keydown', actionFromKeyboard);
+    renderRef.current?.addEventListener('keydown', actionFromKeyboard);
 
     try {
-      if (spriteSrc && !animation && !animationName && !frameCount) {
+      if (spriteSrc && !frameCount) {
         throw new Error('Sprite require animation && animationName!');
       }
 
@@ -116,30 +120,29 @@ const SpriteAgent: React.FC<SpriteProps> = ({
     } catch (err) {
       console.log(err);
     }
-  }, [
-    actionFromKeyboard,
-    animation,
-    animationName,
-    container,
-    frameCount,
-    height,
-    spriteSrc,
-    width,
-  ]);
+  }, [actionFromKeyboard, frameCount, height, renderRef, spriteSrc, width]);
+
+  useEffect(() => {
+    console.log(spriteRef.current?.spriteEl);
+  }, []);
 
   return (
-    <Sprite
-      ref={spriteRef}
-      height={height}
-      width={width}
-      x={x}
-      y={y}
-      image={renderHTMLImageElement(spriteSrc)}
-      animation={animationName}
-      animations={generateAnimations(animationName, frameCount, animation)}
-      frameRate={7}
-      frameIndex={0}
-    />
+    <>
+      {spriteState && (
+        <S.Sprite
+          ref={spriteRef}
+          image={spriteState.spriteSrc}
+          widthFrame={spriteState.width}
+          heightFrame={spriteState.height}
+          x={spriteState.x}
+          y={spriteState.y}
+          steps={spriteState.frameCount}
+          fps={spriteState.fps || 10}
+          loop={true}
+          onClick={actionClick}
+        />
+      )}
+    </>
   );
 };
 

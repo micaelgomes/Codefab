@@ -96,8 +96,6 @@ const Workspace: React.FC = () => {
   };
 
   useEffect(() => {
-    setFiles([]);
-
     const getProjects = async () => {
       api
         .get(`/projects?user=${user.login}`, {

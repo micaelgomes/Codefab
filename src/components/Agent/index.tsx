@@ -1,9 +1,8 @@
 import React, { RefObject } from 'react';
-import { Stage } from 'konva/types/Stage';
 
 import Image from './Image';
 import Sprite from './Sprite';
-import Text from './Text';
+// import Text from './Text';
 
 export interface AgentProps {
   id: number;
@@ -19,15 +18,13 @@ export interface AgentProps {
   y: number;
   repeat: number[];
   states: Array<any>;
-  animationName: string;
   frameCount: number;
-  animation: string;
+  fps: number;
   hasKeyboard: boolean;
   draggable: boolean;
-  stageRef: RefObject<Stage>;
+  renderRef: RefObject<HTMLDivElement>;
   emit(name: string, data: any): any;
   trigger: string;
-  files: any;
 }
 
 const Agent: React.FC<AgentProps> = ({
@@ -42,19 +39,17 @@ const Agent: React.FC<AgentProps> = ({
   y,
   repeat,
   states,
-  animationName,
   frameCount,
-  animation,
+  fps,
   hasKeyboard,
-  stageRef,
+  renderRef,
   draggable,
   color,
   fontSize,
   emit,
   trigger,
-  files,
 }) => {
-  const container = stageRef.current?.container();
+  // const container = stageRef.current?.container();
 
   try {
     if (!sprite && !img && !text) {
@@ -78,11 +73,9 @@ const Agent: React.FC<AgentProps> = ({
           states={states}
           nextState={nextState}
           hasKeyboard={hasKeyboard}
-          container={container}
           draggable={draggable}
           emit={emit}
           trigger={trigger}
-          files={files}
         />
       )}
 
@@ -94,16 +87,16 @@ const Agent: React.FC<AgentProps> = ({
           x={x}
           y={y}
           states={states}
+          nextState={nextState}
           spriteSrc={sprite}
           hasKeyboard={hasKeyboard}
-          container={container}
-          animationName={animationName}
           frameCount={frameCount}
-          animation={animation}
+          fps={fps}
+          renderRef={renderRef}
         />
       )}
 
-      {text && (
+      {/*{text && (
         <Text
           id={id}
           text={text}
@@ -117,7 +110,7 @@ const Agent: React.FC<AgentProps> = ({
           states={states}
           container={container}
         />
-      )}
+      )} */}
     </>
   );
 };

@@ -9,16 +9,8 @@ import * as S from './styled';
 const Preview: React.FC = () => {
   const { previewOpen, setpreviewOpen, resetFable } = useEngine();
 
-  const [focus, setFocus] = useState(false);
+  const [focus] = useState(true);
   const [lock, setLock] = useState(false);
-
-  const handleFocus = useCallback(() => {
-    setFocus(true);
-  }, []);
-
-  const handleBlur = useCallback(() => {
-    setFocus(false);
-  }, []);
 
   const handleClose = useCallback(() => {
     setpreviewOpen(false);
@@ -34,17 +26,12 @@ const Preview: React.FC = () => {
     <>
       {previewOpen && (
         <Draggable allowAnyClick={true} disabled={lock}>
-          <S.Container
-            hasFocus={focus}
-            tabIndex={0}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          >
+          <S.Container hasFocus={focus} tabIndex={0}>
             <S.HeaderBar>
               <button id="close" onClick={handleClose}>
                 <FiX size={13} />
               </button>
-              <small className="notice">4º Quadrante - (500x500)</small>
+              <small className="notice">1º Quadrante - (500x500)</small>
               <button id="pin" onClick={toogleLock}>
                 <small>{lock ? 'travado' : 'flutuante'}</small>
                 {lock ? <FiLock size={13} /> : <FiUnlock size={13} />}

@@ -26,12 +26,14 @@ const Editor: React.FC = () => {
   const { repo } = useParams<PathType>();
   const location = useLocation();
   const { user } = useAuth();
-  const { setFiles, files } = useAssets();
+  const { setFiles } = useAssets();
 
   const pathname = location.pathname.split('/');
   const hasView = pathname[2] === 'view';
   const repoView = pathname[4];
   const userView = pathname[3];
+
+  const [loaded, setLoaded] = useState(false);
 
   const [open, setOpen] = useState(() => {
     const storage = JSON.parse(
@@ -113,6 +115,8 @@ const Editor: React.FC = () => {
 
         setFiles(filterAssets);
       }
+
+      setLoaded(true);
     };
 
     const getProjectViewContent = async () => {
@@ -149,6 +153,8 @@ const Editor: React.FC = () => {
 
         setFiles(filterAssets);
       }
+
+      setLoaded(true);
     };
 
     if (hasView) {
@@ -171,7 +177,7 @@ const Editor: React.FC = () => {
     <S.Container>
       <Navbar runPreview={parseXmlCode} toogleSidenav={toogleSidenav} />
 
-      {files.length > 0 && code ? (
+      {loaded ? (
         <S.Content>
           <Sidenav open={open} />
 
@@ -191,7 +197,10 @@ const Editor: React.FC = () => {
               autoCloseTags: true,
               extraKeys: {
                 'Ctrl-Space': 'autocomplete',
-                'Ctrl-S': () => saveInStorage(),
+                'Ctrl-S': () => {
+                  saveInStorage();
+                  parseXmlCode();
+                },
               },
               hintOptions: {
                 schemaInfo: tags,
