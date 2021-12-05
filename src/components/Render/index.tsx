@@ -7,28 +7,22 @@ import { useAssets } from '../../hooks/assets';
 import * as S from './styled';
 
 const Render = () => {
-  const { pages, agents, errors, sceneIndex, previewOpen, emit } = useEngine();
+  const { pages, agents, errors, sceneIndex } = useEngine();
   const { getFilePath } = useAssets();
 
   const [render, setRender] = useState({} as any);
   const [currentScene, setCurrentScene] = useState(sceneIndex);
   const renderRef = useRef<HTMLDivElement>(null);
 
-  // const [propsScreen] = useState({
-  //   with: 500,
-  //   height: 500,
-  // });
-
   useEffect(() => {
     if (errors.length === 0 || sceneIndex !== currentScene) {
       const renderScene = {
         background: pages?.[sceneIndex].background,
-        sound: pages?.[sceneIndex].sound,
+        soundtrack: pages?.[sceneIndex].soundtrack,
         title: pages?.[sceneIndex].title,
         agents: agents?.[sceneIndex],
       };
 
-      // stageRef.current?.clear();
       console.log('Clear Stage 🖌️');
 
       setRender(renderScene);
@@ -39,20 +33,17 @@ const Render = () => {
     }
   }, [agents, sceneIndex, pages, getFilePath, errors.length, currentScene]);
 
-  useEffect(() => {
-    if (!previewOpen) {
-      // stageRef.current?.clear();
-    }
-  }, [previewOpen]);
-
   return (
-    <S.Render ref={renderRef}>
+    <S.Render ref={renderRef} tabIndex={1}>
+      {render.soundtrack && (
+        <audio controls={false} autoPlay loop={true} src={render.soundtrack} />
+      )}
       {errors.length > 0 ? (
-        <>
-          {/* {errors.map((error: any, i: number) => (
-                <Text key={i} x={10} y={20 * (i + 1)} text={error} fill="red" />
-              ))} */}
-        </>
+        <S.ErrorContainer>
+          {errors.map((error: any, i: number) => (
+            <S.ErrorMessage key={i}>{error}</S.ErrorMessage>
+          ))}
+        </S.ErrorContainer>
       ) : (
         <>
           {render.background && (
@@ -74,6 +65,8 @@ const Render = () => {
               text={agent.attributes.text}
               nextState={agent.attributes['on-touch']}
               trigger={agent.attributes['on-trigger']}
+              triggerDrop={agent.attributes['drop-zone']}
+              onDrop={agent.attributes['on-drop']}
               height={Number(agent.attributes.height)}
               width={Number(agent.attributes.width)}
               color={agent.attributes.color}
@@ -90,7 +83,6 @@ const Render = () => {
               hasKeyboard={agent.attributes['on-press']}
               draggable={Boolean(agent.attributes['draggable'])}
               renderRef={renderRef}
-              emit={emit}
             />
           ))}
         </>

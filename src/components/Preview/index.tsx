@@ -25,7 +25,7 @@ const Preview: React.FC = () => {
   return (
     <>
       {previewOpen && (
-        <Draggable allowAnyClick={true} disabled={lock}>
+        <Draggable allowAnyClick={true} disabled={lock} bounds="parent">
           <S.Container hasFocus={focus} tabIndex={0}>
             <S.HeaderBar>
               <button id="close" onClick={handleClose}>

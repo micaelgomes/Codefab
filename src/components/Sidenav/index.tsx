@@ -17,7 +17,7 @@ interface PathType {
 }
 
 const Sidenav: React.FC<SidenavProps> = ({ open }) => {
-  const { files, setFiles, deleteFile } = useAssets();
+  const { files, setFiles, deleteFile, checkIfExists } = useAssets();
   const { repo } = useParams<PathType>();
   const { user } = useAuth();
 
@@ -35,9 +35,19 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
         }),
       );
 
+      let exists;
       newFiles.forEach(file => {
         filesData.append('assets', file);
+        exists = checkIfExists(file.nameFile);
       });
+
+      if (exists) {
+        alert(
+          'Ocorreu algum problema no envio...\nVeja se o nome do arquivo que está tentando enviar é diferente',
+        );
+
+        return;
+      }
 
       api
         .post(`/file?user=${user.login}&repo=${repo}`, filesData, {
@@ -51,25 +61,32 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
         })
         .catch(err => {
           console.error(err);
-          localStorage.removeItem('@codefab:user');
-          window.location.reload();
         });
 
       setFiles([...files, ...newFiles]);
     },
   });
 
-  const thumbs = files.map((file: any) => (
-    <S.Thumb key={file.name}>
-      <button onClick={() => deleteFile(file.name, repo, file.sha)}>
-        <FiXCircle size={22} />
-      </button>
-      <S.ThumbInner>
-        <S.ThumbImage src={file.download_url} alt={file.name} />
-        <small>{file.name}</small>
-      </S.ThumbInner>
-    </S.Thumb>
-  ));
+  const thumbs = files.map((file: any) => {
+    const infosFile = file.name.split('.');
+    const allowedTypes = ['mp3', 'wav', 'ogg'];
+
+    return (
+      <S.Thumb key={file.name}>
+        <button onClick={() => deleteFile(file.name, repo, file.sha)}>
+          <FiXCircle size={22} />
+        </button>
+        <S.ThumbInner>
+          {allowedTypes.includes(infosFile[1]) ? (
+            <S.ThumbImage src="/audio.png" alt={file.name} />
+          ) : (
+            <S.ThumbImage src={file.download_url} alt={file.name} />
+          )}
+          <small>{file.name}</small>
+        </S.ThumbInner>
+      </S.Thumb>
+    );
+  });
 
   return (
     <S.Container open={open}>

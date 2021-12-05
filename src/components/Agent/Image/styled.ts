@@ -17,4 +17,8 @@ export const Image = styled.img<ImageProps>`
     left: ${props.x || 0}px;
     bottom: ${props.y || 0}px;
   `}
+
+  &.mode-debugg {
+    box-shadow: 0 0 0 2px red;
+  }
 `;

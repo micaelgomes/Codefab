@@ -69,6 +69,8 @@ const SpriteAgent: React.FC<SpriteProps> = ({
 
   const actionFromKeyboard = useCallback(
     (e: KeyboardEvent) => {
+      console.log(e);
+
       if (hasKeyboard && states.length > 0) {
         const key = e.code;
         const posNewAttr = states.map((state: any) => state.name).indexOf(key);

@@ -2,7 +2,7 @@ import React, { RefObject } from 'react';
 
 import Image from './Image';
 import Sprite from './Sprite';
-// import Text from './Text';
+import Text from './Text';
 
 export interface AgentProps {
   id: number;
@@ -11,6 +11,7 @@ export interface AgentProps {
   sprite: string;
   text: string;
   nextState: string;
+  onDrop: string;
   width: number;
   color: string;
   fontSize: number;
@@ -23,8 +24,8 @@ export interface AgentProps {
   hasKeyboard: boolean;
   draggable: boolean;
   renderRef: RefObject<HTMLDivElement>;
-  emit(name: string, data: any): any;
   trigger: string;
+  triggerDrop: string;
 }
 
 const Agent: React.FC<AgentProps> = ({
@@ -33,6 +34,7 @@ const Agent: React.FC<AgentProps> = ({
   sprite,
   text,
   nextState,
+  onDrop,
   height,
   width,
   x,
@@ -46,73 +48,63 @@ const Agent: React.FC<AgentProps> = ({
   draggable,
   color,
   fontSize,
-  emit,
   trigger,
-}) => {
-  // const container = stageRef.current?.container();
+  triggerDrop,
+}) => (
+  <>
+    {img && (
+      <Image
+        id={id}
+        imageSrc={img}
+        height={height}
+        width={width}
+        x={x}
+        y={y}
+        repeat={repeat}
+        states={states}
+        nextState={nextState}
+        onDrop={onDrop}
+        hasKeyboard={hasKeyboard}
+        draggable={draggable}
+        trigger={trigger}
+        triggerDrop={triggerDrop}
+        renderRef={renderRef}
+      />
+    )}
 
-  try {
-    if (!sprite && !img && !text) {
-      throw new Error(`${id} has missing -> !sprite || img || text`);
-    }
-  } catch (err) {
-    console.log(err);
-  }
+    {sprite && (
+      <Sprite
+        id={id}
+        height={height}
+        width={width}
+        x={x}
+        y={y}
+        states={states}
+        nextState={nextState}
+        spriteSrc={sprite}
+        hasKeyboard={hasKeyboard}
+        frameCount={frameCount}
+        fps={fps}
+        renderRef={renderRef}
+      />
+    )}
 
-  return (
-    <>
-      {img && (
-        <Image
-          id={id}
-          imageSrc={img}
-          height={height}
-          width={width}
-          x={x}
-          y={y}
-          repeat={repeat}
-          states={states}
-          nextState={nextState}
-          hasKeyboard={hasKeyboard}
-          draggable={draggable}
-          emit={emit}
-          trigger={trigger}
-        />
-      )}
-
-      {sprite && (
-        <Sprite
-          id={id}
-          height={height}
-          width={width}
-          x={x}
-          y={y}
-          states={states}
-          nextState={nextState}
-          spriteSrc={sprite}
-          hasKeyboard={hasKeyboard}
-          frameCount={frameCount}
-          fps={fps}
-          renderRef={renderRef}
-        />
-      )}
-
-      {/*{text && (
-        <Text
-          id={id}
-          text={text}
-          x={x}
-          y={y}
-          width={width}
-          color={color}
-          fontSize={fontSize}
-          height={height}
-          nextState={nextState}
-          states={states}
-          container={container}
-        />
-      )} */}
-    </>
-  );
-};
+    {text && (
+      <Text
+        id={id}
+        text={text}
+        x={x}
+        y={y}
+        width={width}
+        color={color}
+        fontSize={fontSize}
+        height={height}
+        nextState={nextState}
+        states={states}
+        trigger={trigger}
+      />
+    )}
+  </>
+);
 
 export default Agent;

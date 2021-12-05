@@ -211,20 +211,29 @@ Além das propriedades citadas anteriormente, podemos observar outras duas que n
 
 
 ## Tópicos avançados
+#### Keyboard events
+```xml
+<agent img="Idle (1).png" x="100" y="90" width="80" height="100" on-press="true">
+  <KeyD x="5"/>
+  <KeyA x="-5"/>
+</agent>
+```
 #### Animação de Sprite
 ```xml
 <fable>
   <scene background="bg.png">
 
-    <agent
-      sprite="sprite_name.png"
-      x="0" y="290" width="64" height="44"
-      animation-name="run"
-      frame-count="6"
-      animation="0, 0, 164, 113, 164, 0, 164, 113, 328, 0, 164, 113, 492, 0, 164, 113, 656, 0, 164, 113, 820, 0, 164, 113" />
+    <agent sprite="idle.png" x="60" y="90" width="164" height="113" frame-count="6" fps="8" on-touch="up">
+    	<up sprite="run.png" x="60" y="90" width="164" height="113" frame-count="8" fps="8" />
+    </agent>
 
   </scene>
 </fable>
 ```
 
+draggable="true" on-drop="cortada"
+drop-zone="cortada"
+
 http://localhost:3000/fable/view/alfredots/teste-pokemon
+
+https://www.w3.org/wiki/CSS/Properties/color/keywords

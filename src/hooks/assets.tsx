@@ -11,6 +11,7 @@ import { useAuth } from './auth';
 interface EngineDataContext {
   files: any[];
   setFiles: Dispatch<SetStateAction<any[]>>;
+  checkIfExists: (name: string) => boolean | undefined;
   getFilePath: any;
   deleteFile: any;
 }
@@ -30,6 +31,24 @@ const AssetsProvider: React.FC = ({ children }) => {
           return resul[0].download_url;
         }
       }
+    }
+
+    return undefined;
+  };
+
+  const checkIfExists = (name: string) => {
+    let founded = false;
+
+    if (name) {
+      if (files.length > 0) {
+        files.forEach((file: any) => {
+          if (file.path === name) {
+            founded = true;
+          }
+        });
+      }
+
+      return founded;
     }
 
     return undefined;
@@ -68,6 +87,7 @@ const AssetsProvider: React.FC = ({ children }) => {
         files,
         setFiles,
         getFilePath,
+        checkIfExists,
         deleteFile,
       }}
     >

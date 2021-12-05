@@ -81,6 +81,8 @@ const Editor: React.FC = () => {
   };
 
   useEffect(() => {
+    setpreviewOpen(false);
+
     const getProjectContent = async () => {
       const responseFable = await api.get(
         `/project/fable?user=${user.login}&repo=${repo}`,
@@ -168,6 +170,7 @@ const Editor: React.FC = () => {
     repo,
     repoView,
     setFiles,
+    setpreviewOpen,
     user.access_token,
     user.login,
     userView,

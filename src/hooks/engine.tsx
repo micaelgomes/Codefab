@@ -8,13 +8,12 @@ import React, {
 } from 'react';
 
 import { v4 as uuid } from 'uuid';
-
 import { emitCustomEvent, useCustomEventListener } from 'react-custom-events';
 import { useAssets } from './assets';
 
 export interface PageDTO {
-  background: any;
-  sound?: string;
+  background: string;
+  soundtrack?: string;
   title?: string;
 }
 
@@ -29,6 +28,7 @@ interface EngineDataContext {
   previewOpen: boolean;
   setpreviewOpen: Dispatch<SetStateAction<boolean>>;
   emit(name: string, data: any): any;
+  emitDropEvent(name: string, data: any): any;
 }
 
 interface SmilDomProps extends XMLDocument {
@@ -49,6 +49,7 @@ const EngineProvider: React.FC = ({ children }) => {
   const createFable = useCallback(
     (smilDom: SmilDomProps) => {
       const reservedWords = ['fable', 'page', 'agent'] as const;
+      setErrors([]);
 
       console.clear();
       console.log(
@@ -58,7 +59,7 @@ const EngineProvider: React.FC = ({ children }) => {
 
       if (smilDom.children.length === 0) {
         const tmpErrors = errors;
-        tmpErrors.push(`a Fable deve ter pelo menos uma <page>.`);
+        tmpErrors.push(`Fable deve ter pelo menos uma <page>.`);
 
         setErrors(tmpErrors);
       }
@@ -74,7 +75,7 @@ const EngineProvider: React.FC = ({ children }) => {
         } else {
           if (page.children.length === 0) {
             const tmpErrors = errors;
-            tmpErrors.push(`a Page deve ter pelo menos um <agent>.`);
+            tmpErrors.push(`Page ${i + 1} deve ter pelo menos um <agent>.`);
 
             setErrors(tmpErrors);
           }
@@ -90,38 +91,15 @@ const EngineProvider: React.FC = ({ children }) => {
         return {
           ...page?.attributes,
           background: getFilePath(page?.attributes?.['background']),
+          soundtrack: getFilePath(page?.attributes?.['soundtrack']),
         };
       });
 
       const agentsPages = smilDom?.children.map((page: any, numPage: number) =>
         page?.children?.map((agent: any, i: number) => {
-          const { img, sprite, text, x, y, width, height } = agent?.attributes;
-
           if (!reservedWords.includes(agent.name)) {
             const tmpErrors = errors;
             tmpErrors.push(`${agent.name} não é palavra reservada`);
-
-            setErrors(tmpErrors);
-          }
-
-          if (!x || !y || !width || !height) {
-            const tmpErrors = errors;
-            tmpErrors.push(
-              `Agent ${i + 1} - page ${
-                numPage + 1
-              } - está sem (x, y, width, height)`,
-            );
-
-            setErrors(tmpErrors);
-          }
-
-          if (!img && !sprite && !text) {
-            const tmpErrors = errors;
-            tmpErrors.push(
-              `Agent ${i + 1} - page ${
-                numPage + 1
-              } - sem conteúdo (img | sprite | text)`,
-            );
 
             setErrors(tmpErrors);
           }
@@ -164,6 +142,10 @@ const EngineProvider: React.FC = ({ children }) => {
     emitCustomEvent(nameEvent, data);
   }, []);
 
+  const emitDropEvent = useCallback((nameEvent: string, data: any) => {
+    emitCustomEvent(nameEvent, data);
+  }, []);
+
   useCustomEventListener('_NEXT_PAGE', () => {
     if (pages && sceneIndex + 1 < pages.length) {
       setSceneIndex(sceneIndex + 1);
@@ -178,6 +160,8 @@ const EngineProvider: React.FC = ({ children }) => {
 
   useCustomEventListener('_GOTO_PAGE', (data: any) => {
     const numPage = Number(data.page) - 1;
+
+    console.log(numPage);
 
     if (pages && numPage < pages.length) {
       setSceneIndex(numPage);
@@ -197,6 +181,7 @@ const EngineProvider: React.FC = ({ children }) => {
         previewOpen,
         setpreviewOpen,
         emit,
+        emitDropEvent,
       }}
     >
       {children}
