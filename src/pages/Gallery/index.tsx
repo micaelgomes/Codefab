@@ -7,6 +7,7 @@ import { api } from '../../services/api';
 
 const Gallery: React.FC = () => {
   const [images, setImages] = useState([]);
+  const allowedsFiles = ['mp3', 'wav', 'ogg'];
 
   useEffect(() => {
     api
@@ -36,15 +37,34 @@ const Gallery: React.FC = () => {
                 <div key={i}>
                   <S.ThemeTitle>{image.theme}</S.ThemeTitle>
                   <S.WrapperTheme>
-                    {image.images.map((path: string) => (
-                      <li key={`/assets/${image.theme}/${path}`}>
-                        <S.AssetImg
-                          src={`/assets/${image.theme}/${path}`}
-                          alt={path}
-                          loading="lazy"
-                        />
-                      </li>
-                    ))}
+                    {image.images.map((path: string) => {
+                      const infoFiles = path.split('.');
+
+                      return (
+                        <>
+                          {allowedsFiles.includes(infoFiles[1]) ? (
+                            <S.AssetAudio
+                              key={`/assets/${image.theme}/${path}`}
+                            >
+                              <S.AssetImg
+                                src="/audio.png"
+                                alt={path}
+                                loading="lazy"
+                              />
+                              <p>{path}</p>
+                            </S.AssetAudio>
+                          ) : (
+                            <li key={`/assets/${image.theme}/${path}`}>
+                              <S.AssetImg
+                                src={`/assets/${image.theme}/${path}`}
+                                alt={path}
+                                loading="lazy"
+                              />
+                            </li>
+                          )}
+                        </>
+                      );
+                    })}
                   </S.WrapperTheme>
                 </div>
               ))}

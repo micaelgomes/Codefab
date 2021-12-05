@@ -45,6 +45,21 @@ export const AssetImg = styled.img`
   max-width: 100px;
 `;
 
+export const AssetAudio = styled.li`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  & + li {
+    margin-left: 16px;
+  }
+
+  p {
+    margin-top: 4px;
+  }
+`;
+
 export const ThemeTitle = styled.h1`
   margin: 1rem;
   margin-top: 1.5rem;
