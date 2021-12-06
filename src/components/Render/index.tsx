@@ -35,9 +35,6 @@ const Render = () => {
 
   return (
     <S.Render ref={renderRef} tabIndex={1}>
-      {render.soundtrack && (
-        <audio controls={false} autoPlay loop={true} src={render.soundtrack} />
-      )}
       {errors.length > 0 ? (
         <S.ErrorContainer>
           {errors.map((error: any, i: number) => (
@@ -46,7 +43,15 @@ const Render = () => {
         </S.ErrorContainer>
       ) : (
         <>
-          {render.background && (
+          {render.soundtrack && (
+            <audio
+              controls={false}
+              autoPlay
+              loop={true}
+              src={render.soundtrack}
+            />
+          )}
+          {render?.background && (
             <S.BackgroundScene
               width={500}
               height={500}
@@ -55,12 +60,14 @@ const Render = () => {
               alt="ola"
             />
           )}
-          {render.title && <h2>{render.title}</h2>}
+
+          {render?.title && <h2>{render.title}</h2>}
           {render?.agents?.map((agent: any, i: number) => (
             <Agent
               key={agent.id}
               id={agent.id}
               img={agent.attributes.img}
+              video={agent.attributes.video}
               sprite={agent.attributes.sprite}
               text={agent.attributes.text}
               nextState={agent.attributes['on-touch']}

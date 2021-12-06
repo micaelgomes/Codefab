@@ -33,6 +33,7 @@ interface EngineDataContext {
 
 interface SmilDomProps extends XMLDocument {
   children: any;
+  attributes: any;
 }
 
 const EngineContext = createContext<EngineDataContext>({} as EngineDataContext);
@@ -49,7 +50,6 @@ const EngineProvider: React.FC = ({ children }) => {
   const createFable = useCallback(
     (smilDom: SmilDomProps) => {
       const reservedWords = ['fable', 'page', 'agent'] as const;
-      setErrors([]);
 
       console.clear();
       console.log(
@@ -62,6 +62,19 @@ const EngineProvider: React.FC = ({ children }) => {
         tmpErrors.push(`Fable deve ter pelo menos uma <page>.`);
 
         setErrors(tmpErrors);
+      }
+
+      if (smilDom?.attributes?.['start-in']) {
+        const startIn = Number(smilDom?.attributes?.['start-in']);
+
+        if (startIn < smilDom?.children?.length) {
+          setSceneIndex(startIn);
+        } else {
+          const tmpErrors = errors;
+          tmpErrors.push(`'start-in' deve está dentro da quantidade de pages`);
+
+          setErrors(tmpErrors);
+        }
       }
 
       const newPages = smilDom?.children.map((page: any, i: number) => {
@@ -97,9 +110,45 @@ const EngineProvider: React.FC = ({ children }) => {
 
       const agentsPages = smilDom?.children.map((page: any, numPage: number) =>
         page?.children?.map((agent: any, i: number) => {
+          const { img, sprite, video, text, x, y, width, height } =
+            agent?.attributes;
+
           if (!reservedWords.includes(agent.name)) {
             const tmpErrors = errors;
             tmpErrors.push(`${agent.name} não é palavra reservada`);
+
+            setErrors(tmpErrors);
+          }
+
+          if (img || sprite || video) {
+            if (!x || !y || !width || !height) {
+              const tmpErrors = errors;
+              tmpErrors.push(
+                `Agent ${i + 1} - page ${
+                  numPage + 1
+                } - está sem (x, y, width, height)`,
+              );
+
+              setErrors(tmpErrors);
+            }
+          } else {
+            if (!x || !y) {
+              const tmpErrors = errors;
+              tmpErrors.push(
+                `Agent ${i + 1} - na page ${numPage + 1} - está sem (x, y)`,
+              );
+
+              setErrors(tmpErrors);
+            }
+          }
+
+          if (!img && !sprite && !text) {
+            const tmpErrors = errors;
+            tmpErrors.push(
+              `Agent ${i + 1} - page ${
+                numPage + 1
+              } - sem conteúdo (img | sprite | text | video)`,
+            );
 
             setErrors(tmpErrors);
           }
@@ -110,6 +159,7 @@ const EngineProvider: React.FC = ({ children }) => {
               ...agent?.attributes,
               img: getFilePath(agent?.attributes?.['img']),
               sprite: getFilePath(agent?.attributes?.['sprite']),
+              video: getFilePath(agent?.attributes?.['video']),
             },
             states: agent?.children.map((state: any) => ({
               attributes: {
@@ -126,7 +176,7 @@ const EngineProvider: React.FC = ({ children }) => {
       setPages(newPages);
       setAgents(agentsPages);
     },
-    [errors, getFilePath],
+    [errors, getFilePath, setErrors],
   );
 
   const resetFable = useCallback(() => {
@@ -160,8 +210,6 @@ const EngineProvider: React.FC = ({ children }) => {
 
   useCustomEventListener('_GOTO_PAGE', (data: any) => {
     const numPage = Number(data.page) - 1;
-
-    console.log(numPage);
 
     if (pages && numPage < pages.length) {
       setSceneIndex(numPage);

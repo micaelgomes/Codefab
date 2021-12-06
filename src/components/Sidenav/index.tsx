@@ -24,7 +24,7 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
     maxFiles: 1,
-    accept: 'image/jpeg, image/png, audio/*, video/mp4',
+    accept: 'image/jpeg, image/png, audio/mp3, audio/wav, video/mp4',
     onDrop: acceptedFiles => {
       const filesData = new FormData();
 
@@ -69,7 +69,7 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
 
   const thumbs = files.map((file: any) => {
     const infosFile = file.name.split('.');
-    const allowedTypes = ['mp3', 'wav', 'ogg'];
+    const allowedTypes = ['mp3', 'wav', 'ogg', 'mp4', 'wmv'];
 
     return (
       <S.Thumb key={file.name}>
@@ -78,7 +78,13 @@ const Sidenav: React.FC<SidenavProps> = ({ open }) => {
         </button>
         <S.ThumbInner>
           {allowedTypes.includes(infosFile[1]) ? (
-            <S.ThumbImage src="/audio.png" alt={file.name} />
+            <>
+              {infosFile[1] === 'mp4' ? (
+                <S.ThumbImage src="/video.png" alt={file.name} />
+              ) : (
+                <S.ThumbImage src="/audio.png" alt={file.name} />
+              )}
+            </>
           ) : (
             <S.ThumbImage src={file.download_url} alt={file.name} />
           )}

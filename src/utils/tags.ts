@@ -2,7 +2,7 @@ export const tags = {
   '!top': ['fable', 'page', 'agent'],
   '!attrs': {},
   fable: {
-    attrs: {},
+    attrs: { 'start-in': null },
     children: ['page'],
   },
   page: {

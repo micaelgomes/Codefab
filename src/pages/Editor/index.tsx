@@ -202,7 +202,7 @@ const Editor: React.FC = () => {
                 'Ctrl-Space': 'autocomplete',
                 'Ctrl-S': () => {
                   saveInStorage();
-                  parseXmlCode();
+                  // parseXmlCode();
                 },
               },
               hintOptions: {

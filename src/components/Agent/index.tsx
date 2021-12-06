@@ -3,12 +3,14 @@ import React, { RefObject } from 'react';
 import Image from './Image';
 import Sprite from './Sprite';
 import Text from './Text';
+import Video from './Video';
 
 export interface AgentProps {
   id: number;
   height: number;
   img: string;
   sprite: string;
+  video: string;
   text: string;
   nextState: string;
   onDrop: string;
@@ -50,6 +52,7 @@ const Agent: React.FC<AgentProps> = ({
   fontSize,
   trigger,
   triggerDrop,
+  video,
 }) => (
   <>
     {img && (
@@ -102,6 +105,19 @@ const Agent: React.FC<AgentProps> = ({
         nextState={nextState}
         states={states}
         trigger={trigger}
+      />
+    )}
+
+    {video && (
+      <Video
+        id={id}
+        videoSrc={video}
+        height={height}
+        width={width}
+        x={x}
+        y={y}
+        draggable={draggable}
+        renderRef={renderRef}
       />
     )}
   </>

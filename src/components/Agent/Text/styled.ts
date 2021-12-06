@@ -1,12 +1,12 @@
 import styled, { css } from 'styled-components';
 
 interface TextProps {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   x: number;
   y: number;
-  color: string;
-  fontSize: number;
+  color?: string;
+  fontSize?: number;
 }
 
 export const Text = styled.p<TextProps>`

@@ -22,3 +22,10 @@ export const Image = styled.img<ImageProps>`
     box-shadow: 0 0 0 2px red;
   }
 `;
+
+export const TextError = styled.p`
+  color: red;
+  font-size: 16px;
+  font-family: monospace;
+  font-weight: 600;
+`;

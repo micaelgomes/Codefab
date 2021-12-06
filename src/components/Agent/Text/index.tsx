@@ -5,16 +5,16 @@ import * as S from './styled';
 
 interface TextProps {
   id: number;
-  height: number;
+  height?: number;
   text: string;
-  color: string;
-  fontSize: number;
-  nextState: string;
-  trigger: string;
-  width: number;
+  color?: string;
+  fontSize?: number;
+  nextState?: string;
+  trigger?: string;
+  width?: number;
   x: number;
   y: number;
-  states: Array<any>;
+  states?: Array<any>;
 }
 
 const TextAgent: React.FC<TextProps> = ({
@@ -45,7 +45,7 @@ const TextAgent: React.FC<TextProps> = ({
 
   const action = useCallback(
     trigger => {
-      if (states.length > 0) {
+      if (states && states.length > 0) {
         const posNewAttr = states
           .map((state: any) => state.name)
           .indexOf(trigger);
@@ -63,7 +63,7 @@ const TextAgent: React.FC<TextProps> = ({
   );
 
   const actionClick = useCallback(() => {
-    if (states.length > 0) {
+    if (states && states.length > 0) {
       const posNewAttr = states
         .map((state: any) => state.name)
         .indexOf(textState.nextState);
@@ -78,7 +78,7 @@ const TextAgent: React.FC<TextProps> = ({
     }
   }, [states, textState]);
 
-  useCustomEventListener(trigger, () => {
+  useCustomEventListener(trigger || '', () => {
     action(trigger);
   });
 
@@ -88,59 +88,44 @@ const TextAgent: React.FC<TextProps> = ({
       tmpErrors.push(`Agente está sem (x, y)`);
       setErrors(tmpErrors);
     }
-  }, [errors, height, width, x, y]);
+  }, [errors, x, y]);
 
   return (
     <>
       {textState && (
-        <>
-          {errors.length === 0 ? (
-            <S.Text
-              fontSize={textState.fontSize}
-              color={textState.color}
-              x={textState.x}
-              y={textState.y}
-              width={textState.width}
-              height={textState.height}
-              onClick={() => {
-                actionClick();
+        <S.Text
+          fontSize={textState.fontSize}
+          color={textState.color}
+          x={textState.x}
+          y={textState.y}
+          width={textState.width}
+          height={textState.height}
+          onClick={() => {
+            actionClick();
 
-                if (nextState) {
-                  const hasMacros = nextState?.search(':');
+            if (nextState) {
+              const hasMacros = nextState?.search(':');
 
-                  if (typeof hasMacros !== 'undefined' && hasMacros >= 0) {
-                    const macros = nextState.split(':');
+              if (typeof hasMacros !== 'undefined' && hasMacros >= 0) {
+                const macros = nextState.split(':');
 
-                    emit(macros[0], {
-                      from: id,
-                      trigger: macros[0],
-                      page: macros[1],
-                    });
-                  } else {
-                    emit(nextState, {
-                      from: id,
-                      trigger: nextState,
-                      page: 0,
-                    });
-                  }
-                }
-              }}
-            >
-              {textState.text}
-            </S.Text>
-          ) : (
-            <S.Text
-              fontSize={fontSize}
-              color="red"
-              x={x}
-              y={y}
-              width={width}
-              height={height}
-            >
-              {errors[0]}
-            </S.Text>
-          )}
-        </>
+                emit(macros[0], {
+                  from: id,
+                  trigger: macros[0],
+                  page: macros[1],
+                });
+              } else {
+                emit(nextState, {
+                  from: id,
+                  trigger: nextState,
+                  page: 0,
+                });
+              }
+            }
+          }}
+        >
+          {textState.text}
+        </S.Text>
       )}
     </>
   );

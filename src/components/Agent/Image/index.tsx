@@ -107,6 +107,7 @@ const ImageAgent: React.FC<ImageProps> = ({
           setImageState({
             ...imageState,
             x: imageState.x + Number(states?.[posNewAttr]?.attributes?.['x']),
+            y: imageState.y + Number(states?.[posNewAttr]?.attributes?.['y']),
           });
         }
       }
@@ -121,9 +122,11 @@ const ImageAgent: React.FC<ImageProps> = ({
   useCustomEventListener(triggerDrop, (data: any) => {
     const x1 = data.x;
     const y1 = data.y;
+    const trigger = data.trigger;
 
     if (x1 >= x && x1 <= x + width && y1 >= y && y1 <= y + height) {
       action(triggerDrop);
+      emit(trigger, {});
     }
   });
 
@@ -173,6 +176,7 @@ const ImageAgent: React.FC<ImageProps> = ({
                 emitDropEvent(onDrop, {
                   x: Math.abs(ui.x + x) + width / 2,
                   y: Math.abs(ui.y - y) + height / 2,
+                  trigger,
                 });
               }}
             >
