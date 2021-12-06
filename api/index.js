@@ -5,6 +5,7 @@ const fetch = require('node-fetch');
 const FormData = require('form-data');
 const multer = require('multer');
 const upload = multer();
+const Base64 = require('js-base64');
 
 require('dotenv').config();
 
@@ -306,12 +307,11 @@ app.get('/api/project/fable', async (req, res) => {
   })
     .then(response =>
       response.json().then(responseJson => {
-        const buffer = Buffer.from(responseJson.content, 'base64');
-        const content = buffer.toString('ascii');
+        const content = responseJson.content;
 
         return res.status(200).json({
           ...responseJson,
-          fable: content,
+          fable: Base64.decode(content),
         });
       }),
     )
