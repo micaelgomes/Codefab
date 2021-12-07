@@ -14,6 +14,7 @@ export interface AgentProps {
   text: string;
   nextState: string;
   onDrop: string;
+  onZone: string;
   width: number;
   color: string;
   fontSize: number;
@@ -37,6 +38,7 @@ const Agent: React.FC<AgentProps> = ({
   text,
   nextState,
   onDrop,
+  onZone,
   height,
   width,
   x,
@@ -67,6 +69,7 @@ const Agent: React.FC<AgentProps> = ({
         states={states}
         nextState={nextState}
         onDrop={onDrop}
+        onZone={onZone}
         hasKeyboard={hasKeyboard}
         draggable={draggable}
         trigger={trigger}

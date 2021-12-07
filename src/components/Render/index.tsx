@@ -74,6 +74,7 @@ const Render = () => {
               trigger={agent.attributes['on-trigger']}
               triggerDrop={agent.attributes['drop-zone']}
               onDrop={agent.attributes['on-drop']}
+              onZone={agent.attributes['on-zone']}
               height={Number(agent.attributes.height)}
               width={Number(agent.attributes.width)}
               color={agent.attributes.color}

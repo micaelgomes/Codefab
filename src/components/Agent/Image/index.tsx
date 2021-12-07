@@ -11,6 +11,7 @@ type ImageProps = {
   imageSrc: string;
   nextState: string;
   onDrop: string;
+  onZone: string;
   width: number;
   x: number;
   y: number;
@@ -28,6 +29,7 @@ const ImageAgent: React.FC<ImageProps> = ({
   imageSrc,
   nextState,
   onDrop,
+  onZone,
   height,
   width,
   x,
@@ -122,11 +124,13 @@ const ImageAgent: React.FC<ImageProps> = ({
   useCustomEventListener(triggerDrop, (data: any) => {
     const x1 = data.x;
     const y1 = data.y;
-    const trigger = data.trigger;
+    const onZone = data.onZone;
 
     if (x1 >= x && x1 <= x + width && y1 >= y && y1 <= y + height) {
       action(triggerDrop);
-      emit(trigger, {});
+      console.log(onZone, imageSrc);
+
+      emit(onZone, {});
     }
   });
 
@@ -176,7 +180,7 @@ const ImageAgent: React.FC<ImageProps> = ({
                 emitDropEvent(onDrop, {
                   x: Math.abs(ui.x + x) + width / 2,
                   y: Math.abs(ui.y - y) + height / 2,
-                  trigger,
+                  onZone,
                 });
               }}
             >
