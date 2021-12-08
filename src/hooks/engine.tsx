@@ -142,7 +142,7 @@ const EngineProvider: React.FC = ({ children }) => {
             }
           }
 
-          if (!img && !sprite && !text) {
+          if (!img && !sprite && !text && !video) {
             const tmpErrors = errors;
             tmpErrors.push(
               `Agent ${i + 1} - page ${
