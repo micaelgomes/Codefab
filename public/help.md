@@ -138,7 +138,7 @@ Além das propriedades citadas anteriormente, podemos observar outras duas que n
 
 Para renderizar imagens segue o mesmo princípio, a tabela abaixo exibe as propriedades necessárias
 
-| Propriedades | descrição                                                                                                       | é obrigatório? |
+| Propriedades | descrição                                                                                                       | obrigatório? |
 |--------------|-----------------------------------------------------------------------------------------------------------------|----------------|
 | img         | nome da imagem que foi importada para o projeto. Ex: `name-image.png`                                                               | sim            |
 | x            | posição no eixo horizontal, pode variar de 0 a 500. números negativos ou maiores que 500 ficam fora da tela. | sim            |
@@ -166,7 +166,7 @@ Para renderizar imagens segue o mesmo princípio, a tabela abaixo exibe as propr
 
 ### Desenhando Videos
 
-| Propriedades | descrição                                                                                                       | é obrigatório? |
+| Propriedades | descrição                                                                                                       | obrigatório? |
 |--------------|-----------------------------------------------------------------------------------------------------------------|----------------|
 | video         | nome do video que foi importado para o projeto. Ex: `name-video.mp4`                                                               | sim            |
 | x            | posição no eixo horizontal, pode variar de 0 a 500. números negativos ou maiores que 500 ficam fora da tela. | sim            |
@@ -249,5 +249,5 @@ Para renderizar imagens segue o mesmo princípio, a tabela abaixo exibe as propr
 </fable>
 ```
 
-# Dúvidas e comentários
+# 🚩 Dúvidas e comentários
 <iframe className="forms" src="https://docs.google.com/forms/d/e/1FAIpQLScG5PHI-9oOTUfHUklxDLEKbzOstvQHKL6tGluOzh9RNK2CsQ/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Carregando…</iframe>

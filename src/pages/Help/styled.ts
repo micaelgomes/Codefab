@@ -55,7 +55,9 @@ export const Content = styled.div`
     &.forms {
       margin-top: 1rem;
       max-width: 100%;
-      height: 900px;
+      height: 825px;
+      background-color: #cfcfc2;
+      border-radius: 8px;
     }
   }
 
