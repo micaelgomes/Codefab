@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
 export const Content = styled.div`
   padding: 0 1rem;
   width: 100%;
-  max-width: 1100px;
+  max-width: 800px;
   margin: 1rem auto;
   color: #fff;
 
@@ -27,12 +27,34 @@ export const Content = styled.div`
     }
   }
 
+  h1 {
+    margin-top: 2.5rem;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 1rem;
+  }
+
   p {
     margin: 1rem 0;
   }
 
   hr {
     margin: 1rem 0;
+  }
+
+  iframe {
+    max-width: 600px;
+    height: 400px;
+    width: 100%;
+  }
+
+  table {
+    margin: 1rem 0 4rem;
   }
 
   pre {

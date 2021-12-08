@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import * as S from './styled';
@@ -27,6 +29,8 @@ const Help: React.FC = () => {
 
           <ReactMarkdown
             children={help}
+            rehypePlugins={[rehypeRaw]}
+            remarkPlugins={[remarkGfm]}
             components={{
               code({ node, inline, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || '');

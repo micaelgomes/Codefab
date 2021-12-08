@@ -13,9 +13,9 @@ const Routes: React.FC = () => {
       <Route path="/" isPrivate exact component={Workspace} />
       <Route path="/fable/view/:repo" isPrivate component={Editor} />
       <Route path="/fable/:repo" isPrivate component={Editor} />
-      <Route path="/help" isPrivate component={Help} />
       <Route path="/gallery" isPrivate component={Gallery} />
-      <Route path="/login" exact component={Login} />
+      <Route path="/help" isPrivate component={Help} />
+      <Route path="/login" component={Login} />
     </Switch>
   );
 };

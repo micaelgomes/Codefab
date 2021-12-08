@@ -232,3 +232,11 @@ run: [
 
 </fable>
 ```
+
+### Keboard events
+```xml
+<agent img="Idle (1).png" x="100" y="90" width="80" height="100" on-press="true">
+  <KeyD x="5"/>
+  <KeyA x="-5"/>
+</agent>
+```

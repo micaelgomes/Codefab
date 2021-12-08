@@ -1,4 +1,42 @@
-## Fábulas
+## Antes de começar...
+Se você já tem experiência com HTML e versionamento de código utilizando Git, pode pular direto para a seção do Fábulas. Porém, se estes termos não são conhecidos por você fique por aqui e veja as recomendações.
+
+O codefab é uma plataforma que funciona com a integração em um serviço de versionamento de código. Essa plataforma se chama [GitHub](https://github.com/), onde é possível realizar  hospedagem de código-fonte e arquivos com controle de versão usando o Git. Para ficar mais claro, vou deixar um video explicando os motivos de você entender este ramo da tecnologia.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DqTITcMq68k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Além de uma conta no Github, é interessante entender o que é uma tag, já que é um conceito importante para escrever uma fábula.
+
+#### O que é uma tag?
+Tags em geral são estruturas de linguagem de marcação, seguindo a forma `<tag>`, que contém instruções para os navegadores no momento em que são lidas. Se tiver mais interesse no assungo [acesse W3Shools](https://www.w3schools.com/xml/dom_nodetype.asp), lá você irá encontrar conteúdo gratuito e de qualidade.
+
+Se ainda quiser saber mais:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3oSIqIqzN3M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+# 🚀 Começando no Codefab
+### Login na aplicação
+
+<iframe src="https://player.vimeo.com/video/654356505?h=78aa6f624a&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="login"></iframe>
+
+### Menu do usuário
+
+<iframe src="https://player.vimeo.com/video/654356550?h=d4f835497c&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="menu do usuario"></iframe>
+
+### Botões de ação
+
+<iframe src="https://player.vimeo.com/video/654357670?h=8158f370ba&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="bot&amp;otilde;es"></iframe>
+
+### Galeria e Guia de ajuda
+
+<iframe src="https://player.vimeo.com/video/654356462?h=d8adf3cb1a&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="guia de ajuda e galeria"></iframe>
+
+
+## Criando um projeto
+
+<iframe src="https://player.vimeo.com/video/654356087?h=c8ca8e1db7&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="criando uma fabula.mp4"></iframe>
+
+## Vamos escrever Fábulas
 O Modelo Fábulas surge a partir de uma análise de elementos comuns na criação de e-Books. No playground, a fábula é declarada com o uso da tag `<fable>`.
 
 ```xml
@@ -9,12 +47,14 @@ O Modelo Fábulas surge a partir de uma análise de elementos comuns na criaçã
 </fable>
 ```
 
-### O que é uma tag?
-Tags em geral são estruturas de linguagem de marcação, seguindo a forma `<tag>`, que contém instruções para os navegadores no momento em que são lidas. Se tiver mais interesse no assungo [acesse W3Shools](https://www.w3schools.com), lá você irá encontrar conteúdo gratuito e de qualidade.
-
 ## Pages
 
 A page é uma respresentação de uma página de um livro Físico. Para ser declarada é usada a tag `<page>`. Cada Page da história pode ser composta por diferentes objetos de mídia (Imagem, Texto, Sprite).
+
+| Propriedades | descrição                                                      | obrigatório? |
+|--------------|----------------------------------------------------------------|--------------|
+| background   | Imagem de fundo da page                                        | sim          |
+| soundtrack   | Trilha sonora que será executada apenas page que for declarada | não          |
 
 
 ```xml
@@ -27,9 +67,19 @@ A page é uma respresentação de uma página de um livro Físico. Para ser decl
 
 A page tem uma característica interessante, que é a utilização de propriedades. Desta forma, é possível definir uma imagem de fundo, o background da page.
 
+Além disso é possível usar uma trilha sonora através da propriedade `soundtrack`.
+
+#### Exemplos de como usar :
 ```xml
 <fable>
   <page background="name_image.png">
+  <!-- CONTEÚDO DA FÁBULA -->
+  </page>
+</fable>
+```
+```xml
+<fable>
+  <page background="name_image.png" soundtrack="intro.wav">
   <!-- CONTEÚDO DA FÁBULA -->
   </page>
 </fable>
@@ -43,31 +93,57 @@ Agentes são o último elo da cadeia, é quem é reponsável por carregar os dif
 <fable>
   <page>
 
-    <agent></agent>
+    <agent></agent> ou <agent />
 
   </page>
 </fable>
 ```
+
 
 Assim como a `<page>` tem uma propriedade de background, a tag `<agent>` tem algumas que são obrigatórias para serem desenhadas.
 ```xml
   <agent x="40" y="350" width="500" height="100"></agent>
 ```
 ### Desenhando Texto
-Além das propriedades citadas anteriormente, podemos observar outras duas que não são obrigatórias: `font-size="22"` e `color="blue" `. Para o tamanho da fonte é usado um número natural, e para a cor é usado o nome da cor da em inglês.
+Além das propriedades citadas anteriormente, podemos observar outras duas que não são obrigatórias: `font-size="22"` e `color="blue"`. Para o tamanho da fonte é usado um número natural, e para a cor é usado o nome da cor, que pode ser encontrada no [guia de cores aceitas no CSS](https://www.w3.org/wiki/CSS/Properties/color/keywords).
+
+
+| Propriedades | descrição                                                                                                       | obrigatório? |
+|--------------|-----------------------------------------------------------------------------------------------------------------|----------------|
+| text         | conteúdo que será desenhado                                                                                   | sim            |
+| x            | posição no eixo horizontal, pode variar de 0 a 500. números negativos ou maiores que 500 ficam fora da tela. | sim            |
+| y            | posição no eixo vertical, pode variar de 0 a 500. números negativos ou maiores que 500 ficam fora da tela.   | sim            |
+| width        | largura do texto na tela                                                                                        | não           |
+| height       | comprimento do texto na tela                                                                                    | não           |
+| color        | cor do texto                                                                                                    | não           |
+| font-size    | tamanho da fonte do texto                                                                                       | não           |
+
+#### Exemplos de como usar :
 
 ```xml
 <fable>
   <page>
 
     <agent
-      text="Clique em uma carta" font-size="22" color="blue"
-      x="40" y="350" width="500" height="100" />
+      text="Clique em uma carta" font-size="22" color="blue" x="40" y="350" width="500" height="100" />
 
   </page>
 </fable>
 ```
 ### Desenhando Imagens
+
+Para renderizar imagens segue o mesmo princípio, a tabela abaixo exibe as propriedades necessárias
+
+| Propriedades | descrição                                                                                                       | é obrigatório? |
+|--------------|-----------------------------------------------------------------------------------------------------------------|----------------|
+| img         | nome da imagem que foi importada para o projeto. Ex: `name-image.png`                                                               | sim            |
+| x            | posição no eixo horizontal, pode variar de 0 a 500. números negativos ou maiores que 500 ficam fora da tela. | sim            |
+| y            | posição no eixo vertical, pode variar de 0 a 500. números negativos ou maiores que 500 ficam fora da tela.   | sim            |
+| width        | largura da imagem na tela                                                                                        | sim           |
+| height       | comprimento da imagem na tela                                                                                    | sim           |
+
+
+#### Exemplos de como usar :
 
 ```xml
 <fable>
@@ -78,9 +154,19 @@ Além das propriedades citadas anteriormente, podemos observar outras duas que n
   </page>
 </fable>
 ```
+
 ## Exemplos
 
-#### Primeira fábula
+### Explicando o Exemplo de Gatilhos
+
+<iframe src="https://player.vimeo.com/video/654356151?h=7f0243d05d&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="exemplo 1.mp4"></iframe>
+
+
+### Explicando o Exemplo de Navegação entre pages
+
+<iframe src="https://player.vimeo.com/video/654356377?h=7a2bf01434&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="exemplo 2.mp4"></iframe>
+
+#### Exemplo de fábula básica
 ```xml
 <fable>
   <scene background="bg.png">
@@ -99,125 +185,25 @@ Além das propriedades citadas anteriormente, podemos observar outras duas que n
 </fable>
 ```
 
-#### Action Agents - Exemplo 1
-```xml
-<fable>
-  <scene background="bg.png">
-
-    <agent img="1.png" x="0" y="400" width="100" height="100" />
-    <agent img="2.png" x="100" y="400" width="100" height="100" />
-    <agent img="2.png" x="200" y="400" width="100" height="100" />
-    <agent img="2.png" x="300" y="400" width="100" height="100" />
-    <agent img="2.png" x="400" y="400" width="100" height="100" />
-
-    <agent
-      img="Tree_2.png" x="310" y="250" width="150" height="150"
-      on-touch="cortada" on-trigger="cortada">
-
-      <cortada img="Tree_1.png" y="350" width="100" height="50" on-touch="inteira" on-trigger="inteira" />
-
-    </agent>
-
-  </scene>
-</fable>`
-```
-
-#### Action Agents - Exemplo 2
-```xml
-<fable>
-  <scene background="bg.png">
-
-    <agent img="1.png" x="0" y="400" width="100" height="100" />
-    <agent img="2.png" x="100" y="400" width="100" height="100" />
-    <agent img="2.png" x="200" y="400" width="100" height="100" />
-    <agent img="2.png" x="300" y="400" width="100" height="100" />
-    <agent img="2.png" x="400" y="400" width="100" height="100" />
-
-    <agent img="block.png" x="350" y="200" width="200" height="200" />
-    <agent img="door_1.png" x="400" y="275" width="75" height="125" on-touch="destrancada">
-
-      <destrancada img="door_2.png" on-touch="aberta" />
-
-    </agent>
-
-  </scene>
-</fable>
-```
-
-#### Trabalhando com Multi-Pages
-```xml
-<fable width="" height="" title="" thumb="" start-in="2">
-
-  <page background="bg.png">
-
-    <agent text="Clique na placa para seguir" x="40" y="30" width="250" />
-
-  	<agent img="cavaleiro.png" x="100" y="285" width="100" height="125" on-trigger="" />
-
-    <terra img="block.png" x="50" y="400" width="200" height="200" />
-    <penhasco img="13.png" x="400" y="350" width="100" height="75" />
-
-    <agent img="Sign_2.png" x="420" y="300" width="50" height="50" on-touch="_NEXT_PAGE" />
-
-    <agua img="17.png" x="0" y="450" width="100" height="100" />
-    <agua img="17.png" x="100" y="450" width="100" height="100" />
-    <agua img="17.png" x="200" y="450" width="100" height="100" />
-    <agua img="17.png" x="300" y="450" width="100" height="100" />
-    <agua img="17.png" x="400" y="450" width="100" height="100" />
-
-  </page>
-
-  <page background="noite.png">
-    <agent text="Anoiteceu e tu nem viu..." x="40" y="20" width="350" font-size="26" color="white" />
-
-  	<agent img="cavaleiro.png" x="100" y="285" width="100" height="125" on-trigger="" />
-
-    <agent img="Tree_3.png" x="325" y="150" width="175" height="250" />
-    <agent img="SnowMan.png" x="425" y="320" width="75" height="85" on-touch="_NEXT_PAGE" />
-    <agent img="box.png" x="325" y="350" width="50" height="50" />
-
-    <agua img="1.png" x="0" y="400" width="100" height="100" />
-    <agua img="2.png" x="100" y="400" width="100" height="100" />
-    <agua img="2.png" x="200" y="400" width="100" height="100" />
-    <agua img="2.png" x="300" y="400" width="100" height="100" />
-    <agua img="2.png" x="400" y="400" width="100" height="100" />
-
-  </page>
-
-  <page background="noite_dark.png">
-    <agent text="Auuuuuu..." x="40" y="20" width="350" font-size="18" color="white" />
-
-  	<agent img="Dead (9).png" x="20" y="310" width="110" height="100" on-trigger="" />
-
-    <agent img="Tree.png" x="325" y="150" width="175" height="250" />
-    <agent img="TombStone (2).png" x="325" y="350" width="50" height="50" on-touch="_NEXT_PAGE" />
-    <agent img="TombStone (1).png" x="275" y="350" width="50" height="50" on-touch="_NEXT_PAGE" />
-
-    <agua img="Tile (1).png" x="0" y="400" width="100" height="100" />
-    <agua img="Tile (2).png" x="100" y="400" width="100" height="100" />
-    <agua img="Tile (2).png" x="200" y="400" width="100" height="100" />
-    <agua img="Tile (2).png" x="300" y="400" width="100" height="100" />
-    <agua img="Tile (2).png" x="400" y="400" width="100" height="100" />
-
-    <agent img="Bone (1).png" x="375" y="425" width="50" height="50" on-touch="THE_END" />
-    <agent img="evo.png" x="100" y="260" width="150" height="150" on-touch="THE_END" />
+## Outros Exemplos
 
 
-  </page>
+#### Elementos Básicos
+<a href="www.codefab.tk/fable/view/micaelteste/Elementos-basicos">www.codefab.tk/fable/view/micaelteste/Elementos-basicos</a>
 
+#### Drag and Drop
+<a href="www.codefab.tk/fable/view/micaelteste/drop-zone">www.codefab.tk/fable/view/micaelteste/drop-zone</a>
 
-</fable>
-```
+#### Trabalhando com Multi-Pages (Navegação)
+<a href="www.codefab.tk/fable/view/micaelteste/navegacao-pages">www.codefab.tk/fable/view/micaelteste/navegacao-pages</a>
 
+#### Gatilhos
+<a href="www.codefab.tk/fable/view/micaelteste/entendendo-gatilhos">www.codefab.tk/fable/view/micaelteste/entendendo-gatilhos</a>
+
+#### Fabula completa de exemplo
+<a href="www.codefab.tk/fable/view/micaelteste/O-pequeno-cavaleiro">www.codefab.tk/fable/view/micaelteste/O-pequeno-cavaleiro</a>
 
 ## Tópicos avançados
-#### Keyboard events
-```xml
-<agent img="Idle (1).png" x="100" y="90" width="80" height="100" on-press="true">
-  <KeyD x="5"/>
-  <KeyA x="-5"/>
-</agent>
-```
 #### Animação de Sprite
 ```xml
 <fable>
@@ -231,9 +217,3 @@ Além das propriedades citadas anteriormente, podemos observar outras duas que n
 </fable>
 ```
 
-draggable="true" on-drop="cortada"
-drop-zone="cortada"
-
-http://localhost:3000/fable/view/alfredots/teste-pokemon
-
-https://www.w3.org/wiki/CSS/Properties/color/keywords
