@@ -89,6 +89,24 @@ const ImageAgent: React.FC<ImageProps> = ({
           nextState: states?.[posNewAttr]?.attributes?.['on-touch'],
           imageSrc: states?.[posNewAttr]?.attributes?.['img'],
         });
+      } else {
+        const hasMacros = imageState.nextState?.search(':');
+
+        if (typeof hasMacros !== 'undefined' && hasMacros >= 0) {
+          const macros = imageState.nextState.split(':');
+
+          emit(macros[0], {
+            from: id,
+            trigger: macros[0],
+            page: macros[1],
+          });
+        } else {
+          emit(imageState.nextState, {
+            from: id,
+            trigger: imageState.nextState,
+            page: 0,
+          });
+        }
       }
     }
   };
