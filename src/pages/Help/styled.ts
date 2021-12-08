@@ -51,6 +51,12 @@ export const Content = styled.div`
     max-width: 600px;
     height: 400px;
     width: 100%;
+
+    &.forms {
+      margin-top: 1rem;
+      max-width: 100%;
+      height: 900px;
+    }
   }
 
   table {

@@ -120,7 +120,8 @@ Além das propriedades citadas anteriormente, podemos observar outras duas que n
 | height       | comprimento do texto na tela                                                                                    | não           |
 | color        | cor do texto                                                                                                    | não           |
 | font-size    | tamanho da fonte do texto                                                                                       | não           |
-
+| on-touch    | propriedade para disparar eventos. O valor dela será propagado para todos os agentes que tem gatilhos                                                                                        | não           |
+| on-trigger    | propriedade para ouvir os eventos que são disparados                                                                                       | não           |
 #### Exemplos de como usar :
 
 ```xml
@@ -144,7 +145,12 @@ Para renderizar imagens segue o mesmo princípio, a tabela abaixo exibe as propr
 | y            | posição no eixo vertical, pode variar de 0 a 500. números negativos ou maiores que 500 ficam fora da tela.   | sim            |
 | width        | largura da imagem na tela                                                                                        | sim           |
 | height       | comprimento da imagem na tela                                                                                    | sim           |
-
+| on-touch    | propriedade para disparar eventos. O valor dela será propagado para todos os agentes que tem gatilhos                                                                                        | não           |
+| on-trigger    | propriedade para ouvir os eventos que são disparados                                                                                       | não           |
+| draggable    | propriedade para poder arrastar o agente pelo preview                                                                                        | não           |
+| drop-zone    | o agente que possuir esta propriedade é capaz de detectar colisões com outro agente que possuir a propriedade `draggable`                                                                           | não           |
+| on-drop    | Aqui será o evento disparado após o drag and drop disparados                                                                                       | não           |
+| on-zone    | Traduzindo "na-zona", é um efeito colateral. Evento disparado após o drop de um agent com `draggable`                                                                                      | não           |
 
 #### Exemplos de como usar :
 
@@ -153,6 +159,29 @@ Para renderizar imagens segue o mesmo princípio, a tabela abaixo exibe as propr
   <page>
 
     <agent img="name_image.png" x="100" y="100" width="100" height="100" />
+
+  </page>
+</fable>
+```
+
+### Desenhando Videos
+
+| Propriedades | descrição                                                                                                       | é obrigatório? |
+|--------------|-----------------------------------------------------------------------------------------------------------------|----------------|
+| video         | nome do video que foi importado para o projeto. Ex: `name-video.mp4`                                                               | sim            |
+| x            | posição no eixo horizontal, pode variar de 0 a 500. números negativos ou maiores que 500 ficam fora da tela. | sim            |
+| y            | posição no eixo vertical, pode variar de 0 a 500. números negativos ou maiores que 500 ficam fora da tela.   | sim            |
+| width        | largura da imagem na tela                                                                                        | sim           |
+| height       | comprimento da imagem na tela                                                                                    | sim           |
+| draggable    | propriedade para poder arrastar o agente pelo preview                                                                                        | não           |
+
+#### Exemplos de como usar :
+
+```xml
+<fable>
+  <page>
+
+    <agent video="mov.mp4" x="50" y="50" width="300" height="300" draggable="true" />
 
   </page>
 </fable>
@@ -220,3 +249,5 @@ Para renderizar imagens segue o mesmo princípio, a tabela abaixo exibe as propr
 </fable>
 ```
 
+# Dúvidas e comentários
+<iframe className="forms" src="https://docs.google.com/forms/d/e/1FAIpQLScG5PHI-9oOTUfHUklxDLEKbzOstvQHKL6tGluOzh9RNK2CsQ/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Carregando…</iframe>
