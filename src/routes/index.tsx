@@ -13,9 +13,10 @@ const Routes: React.FC = () => {
       <Route path="/" isPrivate exact component={Workspace} />
       <Route path="/fable/view/:repo" isPrivate component={Editor} />
       <Route path="/fable/:repo" isPrivate component={Editor} />
+      <Route path="/fable" isPrivate component={Editor} />
       <Route path="/gallery" isPrivate component={Gallery} />
-      <Route path="/help" isPrivate component={Help} />
       <Route path="/login" component={Login} />
+      <Route path="/help" component={Help} />
     </Switch>
   );
 };

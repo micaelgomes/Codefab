@@ -15,6 +15,9 @@ Se ainda quiser saber mais:
 <iframe width="560" height="315" src="https://www.youtube.com/embed/3oSIqIqzN3M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 # 🚀 Começando no Codefab
+
+<a href="https://www.codefab.tk/">Link do Playground - Codefab</a>
+
 ### Login na aplicação
 
 <iframe src="https://player.vimeo.com/video/654356505?h=78aa6f624a&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="login"></iframe>
@@ -25,7 +28,7 @@ Se ainda quiser saber mais:
 
 ### Botões de ação
 
-<iframe src="https://player.vimeo.com/video/654357670?h=8158f370ba&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="bot&amp;otilde;es"></iframe>
+<iframe src="https://player.vimeo.com/video/654362180?h=cd49d6f49b&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="600" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="bot&amp;otilde;es"></iframe>
 
 ### Galeria e Guia de ajuda
 

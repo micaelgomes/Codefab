@@ -8,9 +8,11 @@ import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import * as S from './styled';
 import { FiInfo } from 'react-icons/fi';
 import Navbar from '../../components/Navbar';
+import { useAuth } from '../../hooks/auth';
 
 const Help: React.FC = () => {
   const [help, setHelp] = useState('');
+  const { user } = useAuth();
 
   useEffect(() => {
     fetch('/help.md').then(res => res.text().then(text => setHelp(text)));
@@ -18,7 +20,7 @@ const Help: React.FC = () => {
 
   return (
     <S.Container>
-      <Navbar />
+      {!!user && <Navbar />}
 
       <S.Wrapper>
         <S.Content>
