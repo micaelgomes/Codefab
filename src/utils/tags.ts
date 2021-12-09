@@ -30,6 +30,7 @@ export const tags = {
       'on-trigger': null,
       'on-press': ['true', 'false'],
       'on-drop': null,
+      'on-zone': null,
       'drop-zone': null,
     },
     children: [],

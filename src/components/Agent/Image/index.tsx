@@ -68,7 +68,8 @@ const ImageAgent: React.FC<ImageProps> = ({
             ...imageState,
             ...states?.[posNewAttr]?.attributes,
             nextState: states?.[posNewAttr]?.attributes?.['on-touch'],
-            imageSrc: states?.[posNewAttr]?.attributes?.['img'],
+            imageSrc:
+              states?.[posNewAttr]?.attributes?.['img'] || imageState.imageSrc,
           });
         }
       }
@@ -87,7 +88,8 @@ const ImageAgent: React.FC<ImageProps> = ({
           ...imageState,
           ...states?.[posNewAttr]?.attributes,
           nextState: states?.[posNewAttr]?.attributes?.['on-touch'],
-          imageSrc: states?.[posNewAttr]?.attributes?.['img'],
+          imageSrc:
+            states?.[posNewAttr]?.attributes?.['img'] || imageState.imageSrc,
         });
       } else {
         const hasMacros = imageState.nextState?.search(':');
